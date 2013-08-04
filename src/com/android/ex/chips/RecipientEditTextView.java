@@ -89,7 +89,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Matcher;
 
-import com.android.calendar.R;
+import edu.bupt.calendar.R;
 
 /**
  * RecipientEditTextView is an auto complete text view for use with applications

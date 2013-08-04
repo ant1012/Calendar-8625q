@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.android.calendar;
+package edu.bupt.calendar;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;

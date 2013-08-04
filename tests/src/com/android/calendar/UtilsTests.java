@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package com.android.calendar;
+package edu.bupt.calendar;
 
-import com.android.calendar.CalendarUtils.TimeZoneUtils;
+import edu.bupt.calendar.CalendarUtils.TimeZoneUtils;
 
 import android.content.res.Configuration;
 import android.content.res.Resources.NotFoundException;
@@ -36,8 +36,8 @@ import junit.framework.TestCase;
  * Test class for verifying helper functions in Calendar's Utils
  *
  * You can run these tests with the following command:
- * "adb shell am instrument -w -e class com.android.calendar.UtilsTests
- *          com.android.calendar.tests/android.test.InstrumentationTestRunner"
+ * "adb shell am instrument -w -e class edu.bupt.calendar.UtilsTests
+ *          edu.bupt.calendar.tests/android.test.InstrumentationTestRunner"
  */
 public class UtilsTests extends TestCase {
     HashMap<String, Boolean> mIsDuplicateName;

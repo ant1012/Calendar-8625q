@@ -14,13 +14,13 @@
  * the License.
  */
 
-package com.android.calendar.event;
+package edu.bupt.calendar.event;
 
-import com.android.calendar.AbstractCalendarActivity;
-import com.android.calendar.AsyncQueryService;
-import com.android.calendar.CalendarEventModel;
-import com.android.calendar.CalendarEventModel.ReminderEntry;
-import com.android.calendar.R;
+import edu.bupt.calendar.AbstractCalendarActivity;
+import edu.bupt.calendar.AsyncQueryService;
+import edu.bupt.calendar.CalendarEventModel;
+import edu.bupt.calendar.CalendarEventModel.ReminderEntry;
+import edu.bupt.calendar.R;
 import com.android.common.Rfc822Validator;
 
 import android.content.ContentProvider;

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.android.calendar;
+package edu.bupt.calendar;
 
 import android.test.AndroidTestCase;
 import android.test.suitebuilder.annotation.MediumTest;

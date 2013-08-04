@@ -18,7 +18,7 @@
 <resources>
 
     <!-- MultiStateButton doesn't define any special attributes -->
-    <declare-styleable name="com.android.calendar.MultiStateButton"></declare-styleable>
+    <declare-styleable name="edu.bupt.calendar.MultiStateButton"></declare-styleable>
     <declare-styleable name="RecipientEditTextView">
         <attr name="invalidChipBackground" format="reference" />
         <attr name="chipBackground" format="reference" />

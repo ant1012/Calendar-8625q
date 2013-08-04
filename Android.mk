@@ -5,7 +5,7 @@ include $(CLEAR_VARS)
 chips_dir := ../../../frameworks/ex/chips/res
 res_dirs := $(chips_dir) res
 
-LOCAL_EMMA_COVERAGE_FILTER := +com.android.calendar.*
+LOCAL_EMMA_COVERAGE_FILTER := +edu.bupt.calendar.*
 
 LOCAL_MODULE_TAGS := optional
 

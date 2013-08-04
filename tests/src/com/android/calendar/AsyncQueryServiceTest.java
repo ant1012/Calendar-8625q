@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package com.android.calendar;
+package edu.bupt.calendar;
 
-import com.android.calendar.AsyncQueryService.Operation;
-import com.android.calendar.AsyncQueryServiceHelper.OperationInfo;
+import edu.bupt.calendar.AsyncQueryService.Operation;
+import edu.bupt.calendar.AsyncQueryServiceHelper.OperationInfo;
 
 import android.content.ComponentName;
 import android.content.ContentProvider;

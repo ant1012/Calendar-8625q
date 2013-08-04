@@ -29,7 +29,7 @@ import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.android.calendar.R;
+import edu.bupt.calendar.R;
 import com.android.ex.chips.Queries.Query;
 
 import java.util.ArrayList;

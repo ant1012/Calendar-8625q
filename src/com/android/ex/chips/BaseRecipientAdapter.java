@@ -53,7 +53,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.android.calendar.R;
+import edu.bupt.calendar.R;
 
 /**
  * Adapter for showing a recipient list.

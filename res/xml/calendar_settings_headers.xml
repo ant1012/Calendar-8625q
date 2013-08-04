@@ -16,9 +16,9 @@
 
 <preference-headers
         xmlns:android="http://schemas.android.com/apk/res/android">
-    <header android:fragment="com.android.calendar.GeneralPreferences"
+    <header android:fragment="edu.bupt.calendar.GeneralPreferences"
             android:title="@string/menu_general_preferences" />
 
-    <header android:fragment="com.android.calendar.AboutPreferences"
+    <header android:fragment="edu.bupt.calendar.AboutPreferences"
             android:title="@string/menu_about_preferences" />
 </preference-headers>

@@ -89,7 +89,7 @@
 
         <PreferenceScreen
             android:key="preferences_quick_responses"
-            android:fragment="com.android.calendar.QuickResponseSettings"
+            android:fragment="edu.bupt.calendar.QuickResponseSettings"
             android:title="@string/quick_response_settings"
             android:summary="@string/quick_response_settings_summary" />
      </PreferenceCategory>

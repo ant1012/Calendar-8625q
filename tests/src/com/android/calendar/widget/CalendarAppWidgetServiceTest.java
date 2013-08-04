@@ -15,10 +15,10 @@
 ** limitations under the License.
 */
 
-package com.android.calendar.widget;
+package edu.bupt.calendar.widget;
 
-import com.android.calendar.widget.CalendarAppWidgetModel.EventInfo;
-import com.android.calendar.widget.CalendarAppWidgetService.CalendarFactory;
+import edu.bupt.calendar.widget.CalendarAppWidgetModel.EventInfo;
+import edu.bupt.calendar.widget.CalendarAppWidgetService.CalendarFactory;
 
 import android.database.MatrixCursor;
 import android.test.AndroidTestCase;
@@ -30,7 +30,7 @@ import android.view.View;
 
 import java.util.TimeZone;
 
-// adb shell am instrument -w -e class com.android.calendar.widget.CalendarAppWidgetServiceTest
+// adb shell am instrument -w -e class edu.bupt.calendar.widget.CalendarAppWidgetServiceTest
 //   com.google.android.calendar.tests/android.test.InstrumentationTestRunner
 
 
