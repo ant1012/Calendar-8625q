@@ -990,6 +990,12 @@ public class EventInfoFragment extends DialogFragment implements
             mDeleteHelper.delete(mStartMillis, mEndMillis, mEventId, -1,
                     onDeleteRunnable);
             break;
+            
+            /** zzz */
+        case R.id.info_action_share:
+            Log.d("EventInfoFragment", "info_action_share");
+            
+            break;
         default:
             break;
         }
@@ -1818,6 +1824,13 @@ public class EventInfoFragment extends DialogFragment implements
         if (edit != null) {
             edit.setVisible(mCanModifyEvent);
             edit.setEnabled(mCanModifyEvent);
+        }
+
+        /** zzz */
+        MenuItem share = mMenu.findItem(R.id.info_action_share);
+        if (share != null) {
+            share.setVisible(mCanModifyCalendar);
+            share.setEnabled(mCanModifyCalendar);
         }
     }
 
