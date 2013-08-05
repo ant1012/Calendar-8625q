@@ -39,6 +39,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Locale;
 
+import edu.bupt.calendar.Lunar;
+
 public class AgendaByDayAdapter extends BaseAdapter {
     private static final int TYPE_DAY = 0;
     private static final int TYPE_MEETING = 1;
@@ -51,7 +53,8 @@ public class AgendaByDayAdapter extends BaseAdapter {
     private int mTodayJulianDay;
     private Time mTmpTime;
     private String mTimeZone;
-    // Note: Formatter is not thread safe. Fine for now as it is only used by the main thread.
+    // Note: Formatter is not thread safe. Fine for now as it is only used by
+    // the main thread.
     private final Formatter mFormatter;
     private final StringBuilder mStringBuilder;
 
@@ -74,7 +77,8 @@ public class AgendaByDayAdapter extends BaseAdapter {
     public AgendaByDayAdapter(Context context) {
         mContext = context;
         mAgendaAdapter = new AgendaAdapter(context, R.layout.agenda_item);
-        mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        mInflater = (LayoutInflater) mContext
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mStringBuilder = new StringBuilder(50);
         mFormatter = new Formatter(mStringBuilder, Locale.getDefault());
         mTimeZone = Utils.getTimeZone(context, mTZUpdater);
@@ -94,7 +98,7 @@ public class AgendaByDayAdapter extends BaseAdapter {
             return -1;
         }
 
-        for (int i = position; i >=0; i --) {
+        for (int i = position; i >= 0; i--) {
             RowInfo row = mRowInfo.get(i);
             if (row != null && row.mType == TYPE_DAY)
                 return i;
@@ -102,17 +106,18 @@ public class AgendaByDayAdapter extends BaseAdapter {
         return -1;
     }
 
-    // Returns the number of items in a section defined by a specific header location
+    // Returns the number of items in a section defined by a specific header
+    // location
     public int getHeaderItemsCount(int position) {
         if (mRowInfo == null) {
             return -1;
         }
         int count = 0;
-        for (int i = position +1; i < mRowInfo.size(); i++) {
+        for (int i = position + 1; i < mRowInfo.size(); i++) {
             if (mRowInfo.get(i).mType != TYPE_MEETING) {
                 return count;
             }
-            count ++;
+            count++;
         }
         return count;
     }
@@ -155,8 +160,8 @@ public class AgendaByDayAdapter extends BaseAdapter {
 
     @Override
     public int getItemViewType(int position) {
-        return mRowInfo != null && mRowInfo.size() > position ?
-                mRowInfo.get(position).mType : TYPE_DAY;
+        return mRowInfo != null && mRowInfo.size() > position ? mRowInfo
+                .get(position).mType : TYPE_DAY;
     }
 
     public boolean isDayHeaderView(int position) {
@@ -188,9 +193,12 @@ public class AgendaByDayAdapter extends BaseAdapter {
                 // Create a new AgendaView with a ViewHolder for fast access to
                 // views w/o calling findViewById()
                 holder = new ViewHolder();
-                agendaDayView = mInflater.inflate(R.layout.agenda_day, parent, false);
-                holder.dayView = (TextView) agendaDayView.findViewById(R.id.day);
-                holder.dateView = (TextView) agendaDayView.findViewById(R.id.date);
+                agendaDayView = mInflater.inflate(R.layout.agenda_day, parent,
+                        false);
+                holder.dayView = (TextView) agendaDayView
+                        .findViewById(R.id.day);
+                holder.dateView = (TextView) agendaDayView
+                        .findViewById(R.id.date);
                 holder.julianDay = row.mDay;
                 holder.grayed = false;
                 agendaDayView.setTag(holder);
@@ -207,23 +215,28 @@ public class AgendaByDayAdapter extends BaseAdapter {
             }
 
             // Build the text for the day of the week.
-            // Should be yesterday/today/tomorrow (if applicable) + day of the week
+            // Should be yesterday/today/tomorrow (if applicable) + day of the
+            // week
 
             Time date = mTmpTime;
             long millis = date.setJulianDay(row.mDay);
             int flags = DateUtils.FORMAT_SHOW_WEEKDAY;
             mStringBuilder.setLength(0);
 
-            String dayViewText = Utils.getDayOfWeekString(row.mDay, mTodayJulianDay, millis,
-                    mContext);
+            String dayViewText = Utils.getDayOfWeekString(row.mDay,
+                    mTodayJulianDay, millis, mContext);
+
+            /** zzz */
+            Lunar.setLunar(date.year, date.month, date.monthDay);
+            dayViewText += Lunar.getLunarWithComma();
 
             // Build text for the date
             // Format should be month day
 
             mStringBuilder.setLength(0);
             flags = DateUtils.FORMAT_SHOW_DATE;
-            String dateViewText = DateUtils.formatDateRange(mContext, mFormatter, millis, millis,
-                    flags, mTimeZone).toString();
+            String dateViewText = DateUtils.formatDateRange(mContext,
+                    mFormatter, millis, millis, flags, mTimeZone).toString();
 
             if (AgendaWindowAdapter.BASICLOG) {
                 dayViewText += " P:" + position;
@@ -232,22 +245,30 @@ public class AgendaByDayAdapter extends BaseAdapter {
             holder.dayView.setText(dayViewText);
             holder.dateView.setText(dateViewText);
 
-            // Set the background of the view, it is grayed for day that are in the past and today
+            // Set the background of the view, it is grayed for day that are in
+            // the past and today
             if (row.mDay > mTodayJulianDay) {
-                agendaDayView.setBackgroundResource(R.drawable.agenda_item_bg_primary);
+                agendaDayView
+                        .setBackgroundResource(R.drawable.agenda_item_bg_primary);
                 holder.grayed = false;
             } else {
-                agendaDayView.setBackgroundResource(R.drawable.agenda_item_bg_secondary);
+                agendaDayView
+                        .setBackgroundResource(R.drawable.agenda_item_bg_secondary);
                 holder.grayed = true;
             }
             return agendaDayView;
         } else if (row.mType == TYPE_MEETING) {
-            View itemView = mAgendaAdapter.getView(row.mPosition, convertView, parent);
-            AgendaAdapter.ViewHolder holder = ((AgendaAdapter.ViewHolder) itemView.getTag());
+            View itemView = mAgendaAdapter.getView(row.mPosition, convertView,
+                    parent);
+            AgendaAdapter.ViewHolder holder = ((AgendaAdapter.ViewHolder) itemView
+                    .getTag());
             TextView title = holder.title;
-            // The holder in the view stores information from the cursor, but the cursor has no
-            // notion of multi-day event and the start time of each instance of a multi-day event
-            // is the same.  RowInfo has the correct info , so take it from there.
+            // The holder in the view stores information from the cursor, but
+            // the cursor has no
+            // notion of multi-day event and the start time of each instance of
+            // a multi-day event
+            // is the same. RowInfo has the correct info , so take it from
+            // there.
             holder.startTimeMilli = row.mEventStartTimeMilli;
             boolean allDay = holder.allDay;
             if (AgendaWindowAdapter.BASICLOG) {
@@ -256,9 +277,11 @@ public class AgendaByDayAdapter extends BaseAdapter {
                 title.setText(title.getText());
             }
 
-            // if event in the past or started already, un-bold the title and set the background
-            if ((!allDay && row.mEventStartTimeMilli <= System.currentTimeMillis()) ||
-                    (allDay && row.mDay <= mTodayJulianDay)) {
+            // if event in the past or started already, un-bold the title and
+            // set the background
+            if ((!allDay && row.mEventStartTimeMilli <= System
+                    .currentTimeMillis())
+                    || (allDay && row.mDay <= mTodayJulianDay)) {
                 itemView.setBackgroundResource(R.drawable.agenda_item_bg_secondary);
                 title.setTypeface(Typeface.DEFAULT);
                 holder.grayed = true;
@@ -298,13 +321,16 @@ public class AgendaByDayAdapter extends BaseAdapter {
         for (int position = 0; cursor.moveToNext(); position++) {
             int startDay = cursor.getInt(AgendaWindowAdapter.INDEX_START_DAY);
             long id = cursor.getLong(AgendaWindowAdapter.INDEX_EVENT_ID);
-            long startTime =  cursor.getLong(AgendaWindowAdapter.INDEX_BEGIN);
-            long endTime =  cursor.getLong(AgendaWindowAdapter.INDEX_END);
-            long instanceId = cursor.getLong(AgendaWindowAdapter.INDEX_INSTANCE_ID);
+            long startTime = cursor.getLong(AgendaWindowAdapter.INDEX_BEGIN);
+            long endTime = cursor.getLong(AgendaWindowAdapter.INDEX_END);
+            long instanceId = cursor
+                    .getLong(AgendaWindowAdapter.INDEX_INSTANCE_ID);
             boolean allDay = cursor.getInt(AgendaWindowAdapter.INDEX_ALL_DAY) != 0;
             if (allDay) {
-                startTime = Utils.convertAlldayUtcToLocal(tempTime, startTime, mTimeZone);
-                endTime = Utils.convertAlldayUtcToLocal(tempTime, endTime, mTimeZone);
+                startTime = Utils.convertAlldayUtcToLocal(tempTime, startTime,
+                        mTimeZone);
+                endTime = Utils.convertAlldayUtcToLocal(tempTime, endTime,
+                        mTimeZone);
             }
             // Skip over the days outside of the adapter's range
             startDay = Math.max(startDay, dayAdapterInfo.start);
@@ -324,7 +350,8 @@ public class AgendaByDayAdapter extends BaseAdapter {
                     boolean dayHeaderAdded = false;
                     for (int currentDay = prevStartDay + 1; currentDay <= startDay; currentDay++) {
                         dayHeaderAdded = false;
-                        Iterator<MultipleDayInfo> iter = multipleDayList.iterator();
+                        Iterator<MultipleDayInfo> iter = multipleDayList
+                                .iterator();
                         while (iter.hasNext()) {
                             MultipleDayInfo info = iter.next();
                             // If this event has ended then remove it from the
@@ -343,11 +370,12 @@ public class AgendaByDayAdapter extends BaseAdapter {
                             long nextMidnight = Utils.getNextMidnight(tempTime,
                                     info.mEventStartTimeMilli, mTimeZone);
 
-                            long infoEndTime = (info.mEndDay == currentDay) ?
-                                    info.mEventEndTimeMilli : nextMidnight;
-                            rowInfo.add(new RowInfo(TYPE_MEETING, currentDay, info.mPosition,
-                                    info.mEventId, info.mEventStartTimeMilli,
-                                    infoEndTime, info.mInstanceId, info.mAllDay));
+                            long infoEndTime = (info.mEndDay == currentDay) ? info.mEventEndTimeMilli
+                                    : nextMidnight;
+                            rowInfo.add(new RowInfo(TYPE_MEETING, currentDay,
+                                    info.mPosition, info.mEventId,
+                                    info.mEventStartTimeMilli, infoEndTime,
+                                    info.mInstanceId, info.mAllDay));
 
                             info.mEventStartTimeMilli = nextMidnight;
                         }
@@ -363,8 +391,8 @@ public class AgendaByDayAdapter extends BaseAdapter {
             }
 
             // Add in the event for this cursor position
-            rowInfo.add(new RowInfo(TYPE_MEETING, startDay, position, id, startTime, endTime,
-                    instanceId, allDay));
+            rowInfo.add(new RowInfo(TYPE_MEETING, startDay, position, id,
+                    startTime, endTime, instanceId, allDay));
 
             // If this event spans multiple days, then add it to the multipleDay
             // list.
@@ -380,10 +408,9 @@ public class AgendaByDayAdapter extends BaseAdapter {
         }
 
         // There are no more cursor events but we might still have multiple-day
-        // events left.  So create day headers and events for those.
+        // events left. So create day headers and events for those.
         if (prevStartDay > 0) {
-            for (int currentDay = prevStartDay + 1; currentDay <= dayAdapterInfo.end;
-                    currentDay++) {
+            for (int currentDay = prevStartDay + 1; currentDay <= dayAdapterInfo.end; currentDay++) {
                 boolean dayHeaderAdded = false;
                 Iterator<MultipleDayInfo> iter = multipleDayList.iterator();
                 while (iter.hasNext()) {
@@ -401,12 +428,13 @@ public class AgendaByDayAdapter extends BaseAdapter {
                         rowInfo.add(new RowInfo(TYPE_DAY, currentDay));
                         dayHeaderAdded = true;
                     }
-                    long nextMidnight = Utils.getNextMidnight(tempTime, info.mEventStartTimeMilli,
-                            mTimeZone);
-                    long infoEndTime =
-                            (info.mEndDay == currentDay) ? info.mEventEndTimeMilli : nextMidnight;
-                    rowInfo.add(new RowInfo(TYPE_MEETING, currentDay, info.mPosition,
-                            info.mEventId, info.mEventStartTimeMilli, infoEndTime,
+                    long nextMidnight = Utils.getNextMidnight(tempTime,
+                            info.mEventStartTimeMilli, mTimeZone);
+                    long infoEndTime = (info.mEndDay == currentDay) ? info.mEventEndTimeMilli
+                            : nextMidnight;
+                    rowInfo.add(new RowInfo(TYPE_MEETING, currentDay,
+                            info.mPosition, info.mEventId,
+                            info.mEventStartTimeMilli, infoEndTime,
                             info.mInstanceId, info.mAllDay));
 
                     info.mEventStartTimeMilli = nextMidnight;
@@ -420,10 +448,12 @@ public class AgendaByDayAdapter extends BaseAdapter {
         // mType is either a day header (TYPE_DAY) or an event (TYPE_MEETING)
         final int mType;
 
-        final int mDay;          // Julian day
-        final int mPosition;     // cursor position (not used for TYPE_DAY)
-        // This is used to mark a day header as the first day with events that is "today"
-        // or later. This flag is used by the adapter to create a view with a visual separator
+        final int mDay; // Julian day
+        final int mPosition; // cursor position (not used for TYPE_DAY)
+        // This is used to mark a day header as the first day with events that
+        // is "today"
+        // or later. This flag is used by the adapter to create a view with a
+        // visual separator
         // between the past and the present/future
         boolean mFirstDayAfterYesterday;
         final long mEventId;
@@ -432,8 +462,8 @@ public class AgendaByDayAdapter extends BaseAdapter {
         final long mInstanceId;
         final boolean mAllDay;
 
-        RowInfo(int type, int julianDay, int position, long id, long startTime, long endTime,
-                long instanceId, boolean allDay) {
+        RowInfo(int type, int julianDay, int position, long id, long startTime,
+                long endTime, long instanceId, boolean allDay) {
             mType = type;
             mDay = julianDay;
             mPosition = position;
@@ -467,8 +497,8 @@ public class AgendaByDayAdapter extends BaseAdapter {
         final long mInstanceId;
         final boolean mAllDay;
 
-        MultipleDayInfo(int position, int endDay, long id, long startTime, long endTime,
-                long instanceId, boolean allDay) {
+        MultipleDayInfo(int position, int endDay, long id, long startTime,
+                long endTime, long instanceId, boolean allDay) {
             mPosition = position;
             mEndDay = endDay;
             mEventId = id;
@@ -480,23 +510,27 @@ public class AgendaByDayAdapter extends BaseAdapter {
     }
 
     /**
-     * Finds the position in the cursor of the event that best matches the time and Id.
-     * It will try to find the event that has the specified id and start time, if such event
-     * doesn't exist, it will return the event with a matching id that is closest to the start time.
-     * If the id doesn't exist, it will return the event with start time closest to the specified
-     * time.
-     * @param time - start of event in milliseconds (or any arbitrary time if event id is unknown)
-     * @param id - Event id (-1 if unknown).
-     * @return Position of event (if found) or position of nearest event according to the time.
-     *         Zero if no event found
+     * Finds the position in the cursor of the event that best matches the time
+     * and Id. It will try to find the event that has the specified id and start
+     * time, if such event doesn't exist, it will return the event with a
+     * matching id that is closest to the start time. If the id doesn't exist,
+     * it will return the event with start time closest to the specified time.
+     * 
+     * @param time
+     *            - start of event in milliseconds (or any arbitrary time if
+     *            event id is unknown)
+     * @param id
+     *            - Event id (-1 if unknown).
+     * @return Position of event (if found) or position of nearest event
+     *         according to the time. Zero if no event found
      */
     public int findEventPositionNearestTime(Time time, long id) {
         if (mRowInfo == null) {
             return 0;
         }
         long millis = time.toMillis(false /* use isDst */);
-        long minDistance =  Integer.MAX_VALUE;  // some big number
-        long IdFoundMinDistance =  Integer.MAX_VALUE;  // some big number
+        long minDistance = Integer.MAX_VALUE; // some big number
+        long IdFoundMinDistance = Integer.MAX_VALUE; // some big number
         int minIndex = 0;
         int idFoundMinIndex = 0;
         int eventInTimeIndex = -1;
@@ -526,7 +560,8 @@ public class AgendaByDayAdapter extends BaseAdapter {
                     return index;
                 }
 
-                // Not an exact match, Save event index if it is the closest to time so far
+                // Not an exact match, Save event index if it is the closest to
+                // time so far
                 long distance = Math.abs(millis - row.mEventStartTimeMilli);
                 if (distance < minDistance) {
                     IdFoundMinDistance = distance;
@@ -536,16 +571,17 @@ public class AgendaByDayAdapter extends BaseAdapter {
             }
             if (!idFound) {
                 // Found an event that contains the requested time
-                if (millis >= row.mEventStartTimeMilli && millis <= row.mEventEndTimeMilli) {
+                if (millis >= row.mEventStartTimeMilli
+                        && millis <= row.mEventEndTimeMilli) {
                     if (row.mAllDay) {
                         if (allDayEventInTimeIndex == -1) {
                             allDayEventInTimeIndex = index;
                             allDayEventDay = row.mDay;
                         }
-                    } else if (eventInTimeIndex == -1){
+                    } else if (eventInTimeIndex == -1) {
                         eventInTimeIndex = index;
                     }
-                } else if (eventInTimeIndex == -1){
+                } else if (eventInTimeIndex == -1) {
                     // Save event index if it is the closest to time so far
                     long distance = Math.abs(millis - row.mEventStartTimeMilli);
                     if (distance < minDistance) {
@@ -564,8 +600,9 @@ public class AgendaByDayAdapter extends BaseAdapter {
         // Event which occurs at the searched time
         if (eventInTimeIndex != -1) {
             return eventInTimeIndex;
-        // All day event which occurs at the same day of the searched time as long as there is
-        // no regular event at the same day
+            // All day event which occurs at the same day of the searched time
+            // as long as there is
+            // no regular event at the same day
         } else if (allDayEventInTimeIndex != -1 && minDay != allDayEventDay) {
             return allDayEventInTimeIndex;
         }
@@ -573,11 +610,10 @@ public class AgendaByDayAdapter extends BaseAdapter {
         return minIndex;
     }
 
-
     /**
-     * Returns a flag indicating if this position is the first day after "yesterday" that has
-     * events in it.
-     *
+     * Returns a flag indicating if this position is the first day after
+     * "yesterday" that has events in it.
+     * 
      * @return a flag indicating if this is the "first day after yesterday"
      */
     public boolean isFirstDayAfterYesterday(int position) {
@@ -591,8 +627,9 @@ public class AgendaByDayAdapter extends BaseAdapter {
 
     /**
      * Finds the Julian day containing the event at the given position.
-     *
-     * @param position the list position of an event
+     * 
+     * @param position
+     *            the list position of an event
      * @return the Julian day containing that event
      */
     public int findJulianDayFromPosition(int position) {
@@ -601,7 +638,8 @@ public class AgendaByDayAdapter extends BaseAdapter {
         }
 
         int len = mRowInfo.size();
-        if (position >= len) return 0;  // no row info at this position
+        if (position >= len)
+            return 0; // no row info at this position
 
         for (int index = position; index >= 0; index--) {
             RowInfo row = mRowInfo.get(index);
@@ -615,8 +653,9 @@ public class AgendaByDayAdapter extends BaseAdapter {
     /**
      * Marks the current row as the first day that has events after "yesterday".
      * Used to mark the separation between the past and the present/future
-     *
-     * @param position in the adapter
+     * 
+     * @param position
+     *            in the adapter
      */
     public void setAsFirstDayAfterYesterday(int position) {
         if (mRowInfo == null || position < 0 || position > mRowInfo.size()) {
@@ -627,12 +666,13 @@ public class AgendaByDayAdapter extends BaseAdapter {
     }
 
     /**
-     * Converts a list position to a cursor position.  The list contains
-     * day headers as well as events.  The cursor contains only events.
-     *
-     * @param listPos the list position of an event
-     * @return the corresponding cursor position of that event
-     *         if the position point to day header , it will give the position of the next event
+     * Converts a list position to a cursor position. The list contains day
+     * headers as well as events. The cursor contains only events.
+     * 
+     * @param listPos
+     *            the list position of an event
+     * @return the corresponding cursor position of that event if the position
+     *         point to day header , it will give the position of the next event
      *         negated.
      */
     public int getCursorPosition(int listPos) {

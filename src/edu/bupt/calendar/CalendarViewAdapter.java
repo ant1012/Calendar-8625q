@@ -31,6 +31,8 @@ import android.widget.TextView;
 import java.util.Formatter;
 import java.util.Locale;
 
+import edu.bupt.calendar.Lunar;
+
 
 /*
  * The MenuSpinnerAdapter defines the look of the ActionBar's pull down menu
@@ -333,6 +335,11 @@ public class CalendarViewAdapter extends BaseAdapter {
             dayOfWeek = DateUtils.formatDateRange(mContext, mFormatter, mMilliTime, mMilliTime,
                     DateUtils.FORMAT_SHOW_WEEKDAY, mTimeZone).toString();
         }
+
+        /** zzz */
+        Lunar.setLunar(t.year, t.month, t.monthDay);
+        dayOfWeek += Lunar.getLunarWithComma();
+        
         return dayOfWeek.toUpperCase();
     }
 
