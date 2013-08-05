@@ -12,6 +12,9 @@ package edu.bupt.calendar;
 
 import java.util.Date;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+
 public final class Lunar {
     private static int monCyl;
     private static int dayCyl;
@@ -124,8 +127,13 @@ public final class Lunar {
         return isLeap;
     }
 
-    public static void setLunar(int year, int month, int day) {
-        if(!isSetShowLunar) {
+    public static void setLunar(Context context, int year, int month, int day) {
+
+        SharedPreferences prefs = GeneralPreferences
+                .getSharedPreferences(context);
+        setShowLunch(prefs.getBoolean(GeneralPreferences.KEY_SHOW_LUNAR, false));
+
+        if (!isSetShowLunar) {
             return;
         }
         syear = year;
@@ -137,7 +145,7 @@ public final class Lunar {
     }
 
     public static String getLunar() {
-        if(!isSetShowLunar) {
+        if (!isSetShowLunar) {
             return "";
         }
         int sy = (year - 4) % 12;
@@ -163,14 +171,14 @@ public final class Lunar {
     }
 
     public static String getLunarDay() {
-        if(!isSetShowLunar) {
+        if (!isSetShowLunar) {
             return "";
         }
         return cDay(getDay());
     }
 
     public static String getLunarDayForDisplay() {
-        if(!isSetShowLunar) {
+        if (!isSetShowLunar) {
             return "";
         }
         String dayName = "";
@@ -189,21 +197,21 @@ public final class Lunar {
     }
 
     public static String getLunarWithComma() {
-        if(!isSetShowLunar) {
+        if (!isSetShowLunar) {
             return "";
         }
         return " , " + getLunarMonth() + getLunarDay();
     }
-    
+
     public static String getLunarMonth() {
-        if(!isSetShowLunar) {
+        if (!isSetShowLunar) {
             return "";
         }
         return monthNong[getMonth()] + "月";
     }
 
     public static String getLunarYear() {
-        if(!isSetShowLunar) {
+        if (!isSetShowLunar) {
             return "";
         }
         int animalYear = (year - 4) % 12;

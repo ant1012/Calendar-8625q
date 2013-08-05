@@ -295,6 +295,18 @@ public class GeneralPreferences extends PreferenceFragment implements
         } else if (preference == mVibrateWhen) {
             mVibrateWhen.setValue((String) newValue);
             mVibrateWhen.setSummary(mVibrateWhen.getEntry());
+        }
+        /** zzz */
+        else if (preference == mShowLunar) {
+            mShowLunar.setChecked((Boolean) newValue);
+            Lunar.setShowLunch((Boolean) newValue);
+            Activity act = getActivity();
+            Intent intent = new Intent(
+                    Utils.getWidgetScheduledUpdateAction(act));
+            intent.setDataAndType(CalendarContract.CONTENT_URI,
+                    Utils.APPWIDGET_DATA_TYPE);
+            act.sendBroadcast(intent);
+            return true;
         } else {
             return true;
         }

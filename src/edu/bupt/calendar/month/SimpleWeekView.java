@@ -312,7 +312,8 @@ public class SimpleWeekView extends View {
             }
 
             /** zzz */
-            Lunar.setLunar(time.year, time.month, time.monthDay);
+            Context context = getContext();
+            Lunar.setLunar(context, time.year, time.month, time.monthDay);
             mLunarNumbers[i] = Lunar.getLunarDayForDisplay();
 
             mDayNumbers[i] = Integer.toString(time.monthDay++);
