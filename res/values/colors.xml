@@ -166,6 +166,6 @@
     <color name="appwidget_no_events">#ffffffff</color>
     
     <!-- zzz -->
-    <color name="month_weekend">#FF660000</color>
+    <color name="month_weekend">#FF006666</color>
     <color name="month_festival">#FF660000</color>
 </resources>

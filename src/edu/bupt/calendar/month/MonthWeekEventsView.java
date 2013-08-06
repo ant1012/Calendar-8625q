@@ -510,14 +510,8 @@ public class MonthWeekEventsView extends SimpleWeekView {
             Log.d("EXTRA", "mWeekNumPaint ascent=" + mWeekNumPaint.ascent()
                     + " descent=" + mWeekNumPaint.descent());
         }
+
         /** zzz */
-        mWeekendPaint = new Paint();
-        mWeekendPaint.setFakeBoldText(false);
-        mWeekendPaint.setAntiAlias(true);
-        mWeekendPaint.setTextSize(TEXT_SIZE_WEEK_NUM);
-        mWeekendPaint.setColor(mWeekendColor);
-        mWeekendPaint.setStyle(Style.FILL);
-        mWeekendPaint.setTextAlign(Align.RIGHT);
         mFestivalPaint = new Paint();
         mFestivalPaint.setFakeBoldText(false);
         mFestivalPaint.setAntiAlias(true);
@@ -756,14 +750,22 @@ public class MonthWeekEventsView extends SimpleWeekView {
                 mMonthNumPaint.setColor(isFocusMonth ? mMonthNumColor
                         : mMonthNumOtherColor);
             }
+
+            /** zzz */
+            else if (mWeekends[i] == true) {
+                mMonthNumPaint.setColor(mWeekendColor);
+            } else {
+                mMonthNumPaint.setColor(mMonthNumColor);
+            }
+
             x = computeDayLeftPosition(i - offset)
                     - (SIDE_PADDING_MONTH_NUMBER);
             canvas.drawText(mDayNumbers[i], x, y, mMonthNumPaint);
 
             /** zzz */
             canvas.drawText(mLunarNumbers[i], x, y + 25, mMonthNumPaint);
-            mFestivalPaint.setColor(mFestivalColor);
-            canvas.drawText(mFestivals[i], x + 5, y + 50, mFestivalPaint);
+            // mFestivalPaint.setColor(mFestivalColor);
+            canvas.drawText(mFestivals[i], x, y + 50, mFestivalPaint);
 
             if (isBold) {
                 mMonthNumPaint.setFakeBoldText(isBold = false);

@@ -14,6 +14,7 @@ import java.util.Date;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 public final class Lunar {
     private static int monCyl;
@@ -140,7 +141,7 @@ public final class Lunar {
         smonth = month;
         sday = day;
 
-        Date sDObj = new Date(syear - 1900, smonth, sday);
+        Date sDObj = new Date(syear - 1900, smonth -1, sday);
         Lunar1(sDObj);
     }
 
@@ -201,6 +202,10 @@ public final class Lunar {
 
         return disp;
     }
+    
+    // public static boolean isWeekend() {
+    //
+    // }
 
     public static boolean isFestival() {
         if (Festival.showSFtv(smonth, sday) != ""
@@ -211,9 +216,19 @@ public final class Lunar {
     }
 
     public static String getFestival() {
-        return Festival.showSFtv(smonth, sday) //
-                + " " //
-                + Festival.showLFtv(month, day, monthDays(year, month));
+        String sf = Festival.showSFtv(smonth, sday);
+        Log.d("zzz", "" + smonth +" "+ sday);
+        String lf = Festival.showLFtv(month, day, monthDays(year, month));
+        
+        if (sf != "") {
+            if (lf != ""){
+                return sf + "/" + lf;
+            } else {
+                return sf;
+            }
+        } else {
+            return lf;
+        }
     }
 
     public static String getLunarWithComma() {
