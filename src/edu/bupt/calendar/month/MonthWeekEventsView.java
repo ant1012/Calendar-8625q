@@ -176,7 +176,9 @@ public class MonthWeekEventsView extends SimpleWeekView {
 
     /** zzz */
     protected int mWeekendColor;
+    protected int mWeekendOtherColor;
     protected int mFestivalColor;
+    protected int mFestivalOtherColor;
 
     private final TodayAnimatorListener mAnimatorListener = new TodayAnimatorListener();
 
@@ -349,7 +351,9 @@ public class MonthWeekEventsView extends SimpleWeekView {
 
         /** zzz */
         mWeekendColor = res.getColor(R.color.month_weekend);
+        mWeekendOtherColor = res.getColor(R.color.month_weekend_other);
         mFestivalColor = res.getColor(R.color.month_festival);
+        mFestivalOtherColor = res.getColor(R.color.month_festival_other);
     }
 
     /**
@@ -753,9 +757,11 @@ public class MonthWeekEventsView extends SimpleWeekView {
 
             /** zzz */
             else if (mWeekends[i] == true) {
-                mMonthNumPaint.setColor(mWeekendColor);
+                mMonthNumPaint.setColor(isFocusMonth ? mWeekendColor
+                        : mWeekendOtherColor);
             } else {
-                mMonthNumPaint.setColor(mMonthNumColor);
+                mMonthNumPaint.setColor(isFocusMonth ? mMonthNumColor
+                        : mMonthNumOtherColor);
             }
 
             x = computeDayLeftPosition(i - offset)
@@ -764,7 +770,8 @@ public class MonthWeekEventsView extends SimpleWeekView {
 
             /** zzz */
             canvas.drawText(mLunarNumbers[i], x, y + 25, mMonthNumPaint);
-            // mFestivalPaint.setColor(mFestivalColor);
+            mFestivalPaint.setColor(isFocusMonth ? mFestivalColor
+                    : mFestivalOtherColor);
             canvas.drawText(mFestivals[i], x, y + 50, mFestivalPaint);
 
             if (isBold) {

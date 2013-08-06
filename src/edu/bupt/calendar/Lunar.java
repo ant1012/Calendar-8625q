@@ -217,7 +217,6 @@ public final class Lunar {
 
     public static String getFestival() {
         String sf = Festival.showSFtv(smonth, sday);
-        Log.d("zzz", "" + smonth +" "+ sday);
         String lf = Festival.showLFtv(month, day, monthDays(year, month));
         
         if (sf != "") {

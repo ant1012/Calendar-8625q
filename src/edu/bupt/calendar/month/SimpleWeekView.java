@@ -30,7 +30,6 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.text.format.DateUtils;
 import android.text.format.Time;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.accessibility.AccessibilityEvent;
@@ -321,10 +320,8 @@ public class SimpleWeekView extends View {
             /** zzz */
             Context context = getContext();
             Lunar.setLunar(context, time.year, time.month + 1, time.monthDay);
-            Log.d("zzz", "" + time.month + " " + time.monthDay);
             mLunarNumbers[i] = Lunar.getLunarDayForDisplay();
             mFestivals[i] = Lunar.getFestival();
-//            Log.d("zzz", "" + time.weekDay);
             mWeekends[i] = (time.weekDay == 0 || time.weekDay == 6) ? true: false;
 
             mDayNumbers[i] = Integer.toString(time.monthDay++);

@@ -717,10 +717,12 @@ public class Utils {
 
         if (events == null || events.isEmpty() || dayXs == null || dayXs.length < 1
                 || bottom - top < 8 || minPixels < 0) {
-            Log.e(TAG,
-                    "Bad values for createDNAStrands! events:" + events + " dayXs:"
-                            + Arrays.toString(dayXs) + " bot-top:" + (bottom - top) + " minPixels:"
-                            + minPixels);
+            
+            /** zzz */
+//            Log.e(TAG,
+//                    "Bad values for createDNAStrands! events:" + events + " dayXs:"
+//                            + Arrays.toString(dayXs) + " bot-top:" + (bottom - top) + " minPixels:"
+//                            + minPixels);
             return null;
         }
 

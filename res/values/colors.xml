@@ -167,5 +167,7 @@
     
     <!-- zzz -->
     <color name="month_weekend">#FF006666</color>
+    <color name="month_weekend_other">#66006666</color>
     <color name="month_festival">#FF660000</color>
+    <color name="month_festival_other">#66660000</color>
 </resources>
