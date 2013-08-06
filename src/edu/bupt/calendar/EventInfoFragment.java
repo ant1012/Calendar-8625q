@@ -1266,7 +1266,7 @@ public class EventInfoFragment extends DialogFragment implements
                 textView.setText(location.trim());
                 try {
                     /** zzz */
-//                    Linkify.addLinks(textView, mWildcardPattern, "geo:0,0?q=");
+                    Linkify.addLinks(textView, mWildcardPattern, "geo:0,0?q=");
                     // linkifyTextView(textView);
                 } catch (Exception ex) {
                     // unexpected
