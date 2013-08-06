@@ -174,6 +174,10 @@ public class MonthWeekEventsView extends SimpleWeekView {
     private int mAnimateTodayAlpha = 0;
     private ObjectAnimator mTodayAnimator = null;
 
+    /** zzz */
+    protected int mWeekendColor;
+    protected int mFestivalColor;
+
     private final TodayAnimatorListener mAnimatorListener = new TodayAnimatorListener();
 
     class TodayAnimatorListener extends AnimatorListenerAdapter {
@@ -342,6 +346,10 @@ public class MonthWeekEventsView extends SimpleWeekView {
         mTodayAnimateColor = res.getColor(R.color.today_highlight_color);
         mClickedDayColor = res.getColor(R.color.day_clicked_background_color);
         mTodayDrawable = res.getDrawable(R.drawable.today_blue_week_holo_light);
+
+        /** zzz */
+        mWeekendColor = res.getColor(R.color.month_weekend);
+        mFestivalColor = res.getColor(R.color.month_festival);
     }
 
     /**
@@ -502,6 +510,21 @@ public class MonthWeekEventsView extends SimpleWeekView {
             Log.d("EXTRA", "mWeekNumPaint ascent=" + mWeekNumPaint.ascent()
                     + " descent=" + mWeekNumPaint.descent());
         }
+        /** zzz */
+        mWeekendPaint = new Paint();
+        mWeekendPaint.setFakeBoldText(false);
+        mWeekendPaint.setAntiAlias(true);
+        mWeekendPaint.setTextSize(TEXT_SIZE_WEEK_NUM);
+        mWeekendPaint.setColor(mWeekendColor);
+        mWeekendPaint.setStyle(Style.FILL);
+        mWeekendPaint.setTextAlign(Align.RIGHT);
+        mFestivalPaint = new Paint();
+        mFestivalPaint.setFakeBoldText(false);
+        mFestivalPaint.setAntiAlias(true);
+        mFestivalPaint.setTextSize(TEXT_SIZE_WEEK_NUM);
+        mFestivalPaint.setColor(mFestivalColor);
+        mFestivalPaint.setStyle(Style.FILL);
+        mFestivalPaint.setTextAlign(Align.RIGHT);
     }
 
     @Override
@@ -739,6 +762,8 @@ public class MonthWeekEventsView extends SimpleWeekView {
 
             /** zzz */
             canvas.drawText(mLunarNumbers[i], x, y + 25, mMonthNumPaint);
+            mFestivalPaint.setColor(mFestivalColor);
+            canvas.drawText(mFestivals[i], x + 5, y + 50, mFestivalPaint);
 
             if (isBold) {
                 mMonthNumPaint.setFakeBoldText(isBold = false);

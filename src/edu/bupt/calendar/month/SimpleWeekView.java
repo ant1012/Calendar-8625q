@@ -115,6 +115,8 @@ public class SimpleWeekView extends View {
     protected Rect r = new Rect();
     protected Paint p = new Paint();
     protected Paint mMonthNumPaint;
+    protected Paint mWeekendPaint;
+    protected Paint mFestivalPaint;
     protected Drawable mSelectedDayLine;
 
     // Cache the number strings so we don't have to recompute them each time
@@ -171,6 +173,7 @@ public class SimpleWeekView extends View {
 
     /** zzz */
     protected String[] mLunarNumbers;
+    protected String[] mFestivals;
 
     public SimpleWeekView(Context context) {
         super(context);
@@ -260,6 +263,7 @@ public class SimpleWeekView extends View {
 
         /** zzz */
         mLunarNumbers = new String[mNumCells];
+        mFestivals = new String[mNumCells];
 
         // If we're showing the week number calculate it based on Monday
         int i = 0;
@@ -315,6 +319,7 @@ public class SimpleWeekView extends View {
             Context context = getContext();
             Lunar.setLunar(context, time.year, time.month, time.monthDay);
             mLunarNumbers[i] = Lunar.getLunarDayForDisplay();
+            mFestivals[i] = Lunar.getFestival();
 
             mDayNumbers[i] = Integer.toString(time.monthDay++);
             time.normalize(true);

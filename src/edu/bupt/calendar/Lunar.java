@@ -178,22 +178,42 @@ public final class Lunar {
     }
 
     public static String getLunarDayForDisplay() {
-        if (!isSetShowLunar) {
-            return "";
+        String disp = "";
+        if (isSetShowLunar) {
+            if (getDay() == 1) {
+                disp += getLunarMonth();
+            } else {
+                disp += cDay(getDay());
+            }
         }
-        String dayName = "";
-        dayName = Festival.showSFtv(smonth, sday);
-        dayName = Festival.showLFtv(month, day, monthDays(year, month));
+        // String dayNames = "";
+        // String dayNamel = "";
+        // dayNames = Festival.showSFtv(smonth, sday);
+        // dayNamel = Festival.showLFtv(month, day, monthDays(year, month));
+        //
+        // // 节假日
+        // if (dayNames != "") {
+        // disp += "\n" + dayNames;
+        // }
+        // if (dayNamel != "") {
+        // disp += "\n" + dayNamel;
+        // }
 
-        // 初一
-        if (getDay() == 1 && dayName == "") {
-            return getLunarMonth();
-        }
-        // 节假日
-        if (dayName != "")
-            return dayName;
-        // 平时
-        return cDay(getDay());
+        return disp;
+    }
+
+    public static boolean isFestival() {
+        if (Festival.showSFtv(smonth, sday) != ""
+                || Festival.showLFtv(month, day, monthDays(year, month)) != "")
+            return true;
+
+        return false;
+    }
+
+    public static String getFestival() {
+        return Festival.showSFtv(smonth, sday) //
+                + " " //
+                + Festival.showLFtv(month, day, monthDays(year, month));
     }
 
     public static String getLunarWithComma() {
@@ -337,9 +357,7 @@ public final class Lunar {
         return ((lunarInfo[(y - 1900)] & 65536 >> m) == 0) ? 29 : 30;
     }
 
-    /** zzz */
     public static void setShowLunch(boolean b) {
-        // TODO
         isSetShowLunar = b;
     }
 }
