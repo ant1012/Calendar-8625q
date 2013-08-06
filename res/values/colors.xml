@@ -66,8 +66,8 @@
     <color name="month_event_extra_color">#FF666666</color>
     <color name="month_event_other_color">#FF666666</color>
     <color name="month_event_extra_other_color">#4C999999</color>
-    <color name="month_saturday">#80333333</color>	<!-- 双休日title -->
-    <color name="month_sunday">#80333333</color>	<!-- 双休日title -->
+    <color name="month_saturday">#66aaee</color>	<!-- 双休日title,原来#80333333 -->
+    <color name="month_sunday">#66aaee</color>	<!-- 双休日title,原来#80333333 -->
     <color name="month_grid_lines">#ffCCCCCC</color>	<!-- 月视图下所有分割线 -->
     <color name="month_other_month_day_number">#ff939497</color>	<!-- 010 不知道作用-->
 
@@ -75,8 +75,8 @@
 
     <color name="month_other_bgcolor">#f6fbf6</color>  <!-- 月视图下其他月背景,原来#FFEEEEEE -->
     <color name="month_selected_week_bgcolor">#FFDDDDDD</color>  <!-- 毛线? -->
-    <color name="month_today_bgcolor">#faeff0</color>	 <!-- 月视图下当日背景色,原来#FFFFFFFF -->
-    <color name="month_bgcolor">#f9f6f0</color>  <!-- 月视图下当月背景色,原来#FFE5E5E5 -->
+    <color name="month_today_bgcolor">#f8eedd</color>	 <!-- 月视图下当日背景色,原来#FFFFFFFF -->
+    <color name="month_bgcolor">#f9f6f0</color>  <!-- 月视图下当月背景色,原来#FFE5E5E5  -->
 
 
 
