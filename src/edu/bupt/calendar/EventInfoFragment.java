@@ -994,8 +994,11 @@ public class EventInfoFragment extends DialogFragment implements
             
             /** zzz */
         case R.id.info_action_share:
-            ICalendar.Component component = new ICalendar.Component("VCALENDAR", null);
-            component.addProperty(new ICalendar.Property("VERSION", "2.0"));
+            ICalendar.Component component = new ICalendar.Component(ICalendar.Component.VCALENDAR, null);
+            ICalendar.Component child = new ICalendar.Component(ICalendar.Component.VEVENT, component);
+            child.addProperty(new ICalendar.Property(ICalendar.Property.DTSTART, String.valueOf(mStartMillis)));
+            child.addProperty(new ICalendar.Property(ICalendar.Property.DTEND, String.valueOf(mEndMillis)));
+            component.addChild(child);
             Log.d("info_action_share", component.toString());
             break;
         default:
