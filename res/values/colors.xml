@@ -73,10 +73,10 @@
 
 
 
-    <color name="month_other_bgcolor">#FFEEEEEE</color>  <!-- 月视图下其他月背景 -->
+    <color name="month_other_bgcolor">#f6fbf6</color>  <!-- 月视图下其他月背景,原来#FFEEEEEE -->
     <color name="month_selected_week_bgcolor">#FFDDDDDD</color>  <!-- 毛线? -->
-    <color name="month_today_bgcolor">#FFFFFFFF</color>	 <!-- 月视图下当日背景色 -->
-    <color name="month_bgcolor">#FFE5E5E5</color>  <!-- 月视图下当月背景色 -->
+    <color name="month_today_bgcolor">#faeff0</color>	 <!-- 月视图下当日背景色,原来#FFFFFFFF -->
+    <color name="month_bgcolor">#f9f6f0</color>  <!-- 月视图下当月背景色,原来#FFE5E5E5 -->
 
 
 
@@ -125,9 +125,9 @@
     <color name="new_event_hint_text_color">#FFFFFFFF</color>
 
     <!-- Text color of a clicked event in the day/week view -->
-    <color name="day_event_clicked_background_color">#f50d3c</color>	<!-- #8033B5E5 -->
+    <color name="day_event_clicked_background_color">#8033B5E5</color>	
     <!-- background color for for clicked days in month view-->
-    <color name="day_clicked_background_color">#FF33B5E5</color>	<!-- 选定瞬间(跳转前)被选日背景色 -->
+    <color name="day_clicked_background_color">#66aaee</color>	<!-- 选定瞬间(跳转前)被选日背景色,原来#FF33B5E5 -->
     <!-- background color for the past -->
     <color name="day_past_background_color"> #FFDDDDDD</color>	<!-- 过去的日子的日视图背景色 -->
 
@@ -166,10 +166,10 @@
     <color name="appwidget_no_events">#ffffffff</color>
     
     <!-- zzz -->
-    <color name="month_weekend">#66aaee</color>  <!-- 010蓝 -->
+    <color name="month_weekend">#66aaee</color>  <!-- 蓝 -->
     <color name="month_weekend_other">#775dabf4</color>	
-    <color name="month_festival">#ff99cc00</color>	<!-- 010果绿 -->
+    <color name="month_festival">#ff99cc00</color>	<!-- 果绿 -->
     <color name="month_festival_other">#8899cc00</color>	
-    
+    <!-- #f50d3c -->
    
 </resources>
