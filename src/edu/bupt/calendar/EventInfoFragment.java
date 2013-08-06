@@ -104,6 +104,7 @@ import edu.bupt.calendar.event.EditEventActivity;
 import edu.bupt.calendar.event.EditEventHelper;
 import edu.bupt.calendar.event.EventViewUtils;
 import com.android.calendarcommon.EventRecurrence;
+import com.android.calendarcommon.ICalendar;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -993,8 +994,9 @@ public class EventInfoFragment extends DialogFragment implements
             
             /** zzz */
         case R.id.info_action_share:
-            Log.d("EventInfoFragment", "info_action_share");
-            
+            ICalendar.Component component = new ICalendar.Component("VCALENDAR", null);
+            component.addProperty(new ICalendar.Property("VERSION", "2.0"));
+            Log.d("info_action_share", component.toString());
             break;
         default:
             break;
