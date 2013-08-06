@@ -56,10 +56,10 @@
     <color name="mini_month_bg_color">#FFFFFFFF</color>
     <color name="mini_month_today_outline_color">#FF000000</color>
 
-    <color name="month_day_number">#FF666666</color>
-    <color name="month_mini_day_number">#FF000000</color>
-    <color name="month_day_number_other">#FFCCCCCC</color>
-    <color name="month_week_num_color">#FF999999</color>
+ 	<color name="month_day_number">#FF666666</color>  <!-- 010这是改月背景的 -->
+	<color name="month_mini_day_number">#FF000000</color>   <!-- 010这是改日背景的 -->
+    <color name="month_day_number_other">#FFCCCCCC</color>   <!-- 010不知道作用-->
+    <color name="month_week_num_color">#FF999999</color>	<!-- 010 不知道作用-->
     <color name="month_day_names_color">#FF999999</color>
     <color name="month_today_number">#FF333333</color>
     <color name="month_event_color">#FF333333</color>
@@ -166,8 +166,10 @@
     <color name="appwidget_no_events">#ffffffff</color>
     
     <!-- zzz -->
-    <color name="month_weekend">#FF006666</color>
-    <color name="month_weekend_other">#66006666</color>
-    <color name="month_festival">#FF660000</color>
-    <color name="month_festival_other">#66660000</color>
+    <color name="month_weekend">#66aaee</color>  <!-- 010蓝 -->
+    <color name="month_weekend_other">#775dabf4</color>	
+    <color name="month_festival">#ff99cc00</color>	<!-- 010果绿 -->
+    <color name="month_festival_other">#8899cc00</color>	
+    
+   
 </resources>
