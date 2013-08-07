@@ -107,6 +107,7 @@ import com.android.calendarcommon.ICalendar;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -1011,25 +1012,30 @@ public class EventInfoFragment extends DialogFragment implements
                     .getText().toString()));
             component.addChild(child);
             Log.d("info_action_share", component.toString());
-            String fileName = mTitle.getText().toString() + mStartMillis
-                    + ".ics";
+
+            File tempFile = null;
             try {
-                FileOutputStream fout = mContext.getApplicationContext()
-                        .openFileOutput(fileName, Context.MODE_PRIVATE);
+                tempFile = File.createTempFile(mTitle.getText().toString(),
+                        ".ics", mContext.getExternalCacheDir());
+                FileOutputStream fos = new FileOutputStream(tempFile);
                 byte[] bytes = component.toString().getBytes();
-                fout.write(bytes);
-                fout.close();
+                fos.write(bytes);
+                fos.close();
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
-            File file = new File(mContext.getFilesDir() + "/" + fileName);
+            // Intent i = new Intent(Intent.ACTION_SEND_MULTIPLE);
+            // ArrayList<Uri> uris = new ArrayList<Uri>();
+            // uris.add(Uri.parse("file://" + tempFile.getAbsolutePath()));
+
             Intent i = new Intent(Intent.ACTION_SEND);
-            i.setType("message/rfc822"); // 真机上使用这行
-            i.setType("text/plain");
+            i.setType("application/octet-stream");
             i.putExtra(Intent.EXTRA_SUBJECT, mTitle.getText().toString());
-            i.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
-            startActivity(Intent.createChooser(i, getText(R.string.select_email_app)));
+            // i.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
+            i.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(tempFile));
+            startActivity(Intent.createChooser(i,
+                    getText(R.string.select_email_app)));
 
             break;
         default:
