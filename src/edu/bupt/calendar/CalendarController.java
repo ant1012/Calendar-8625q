@@ -774,7 +774,6 @@ public class CalendarController {
     /** zzz */
     private void launchImport() {
         Log.d("sendEvent", "EventType.LAUNCH_IMPORT");
-        
     }
     
     

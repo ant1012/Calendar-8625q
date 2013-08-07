@@ -811,9 +811,9 @@ public class AllInOneActivity extends Activity implements EventHandler,
                 return false;
                 
             /** zzz */
-            case R.id.action_import:
-                mController.sendEvent(this, EventType.LAUNCH_IMPORT, null, null, 0, 0);
-                return true;
+//            case R.id.action_import:
+//                mController.sendEvent(this, EventType.LAUNCH_IMPORT, null, null, 0, 0);
+//                return true;
                 
             default:
                 return false;
