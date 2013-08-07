@@ -775,8 +775,7 @@ public class CalendarController {
     private void launchImport() {
         Log.d("sendEvent", "EventType.LAUNCH_IMPORT");
     }
-    
-    
+
     /**
      * Performs a manual refresh of calendars in all known accounts.
      */

@@ -111,6 +111,9 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <data android:mimeType="vnd.android.cursor.dir/event" />
             </intent-filter>
+            <intent-filter>
+                <data android:pathPattern=".*.ics" />
+            </intent-filter>
         </activity-alias>
 
         <activity android:name="GoogleCalendarUriIntentFilter" android:label="@string/app_label"
