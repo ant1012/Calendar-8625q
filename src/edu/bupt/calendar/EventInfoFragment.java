@@ -20,7 +20,6 @@ import static android.provider.CalendarContract.EXTRA_EVENT_ALL_DAY;
 import static android.provider.CalendarContract.EXTRA_EVENT_BEGIN_TIME;
 import static android.provider.CalendarContract.EXTRA_EVENT_END_TIME;
 import static edu.bupt.calendar.CalendarController.EVENT_EDIT_ON_LAUNCH;
-
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
@@ -94,7 +93,6 @@ import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import edu.bupt.calendar.CalendarController.EventInfo;
 import edu.bupt.calendar.CalendarController.EventType;
 import edu.bupt.calendar.CalendarEventModel.Attendee;
@@ -103,9 +101,12 @@ import edu.bupt.calendar.event.AttendeesView;
 import edu.bupt.calendar.event.EditEventActivity;
 import edu.bupt.calendar.event.EditEventHelper;
 import edu.bupt.calendar.event.EventViewUtils;
+
 import com.android.calendarcommon.EventRecurrence;
 import com.android.calendarcommon.ICalendar;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -991,18 +992,45 @@ public class EventInfoFragment extends DialogFragment implements
             mDeleteHelper.delete(mStartMillis, mEndMillis, mEventId, -1,
                     onDeleteRunnable);
             break;
-            
-            /** zzz */
+
+        /** zzz */
         case R.id.info_action_share:
-            ICalendar.Component component = new ICalendar.Component(ICalendar.Component.VCALENDAR, null);
-            ICalendar.Component child = new ICalendar.Component(ICalendar.Component.VEVENT, component);
-            child.addProperty(new ICalendar.Property("DTSTART", String.valueOf(mStartMillis)));
-            child.addProperty(new ICalendar.Property("DTEND", String.valueOf(mEndMillis)));
-            child.addProperty(new ICalendar.Property("SUMMARY", mTitle.getText().toString()));
-            child.addProperty(new ICalendar.Property("LOCATION", mWhere.getText().toString()));
-            child.addProperty(new ICalendar.Property("SUMMARY", mDesc.getText().toString()));
+            ICalendar.Component component = new ICalendar.Component(
+                    ICalendar.Component.VCALENDAR, null);
+            ICalendar.Component child = new ICalendar.Component(
+                    ICalendar.Component.VEVENT, component);
+            child.addProperty(new ICalendar.Property("DTSTART", String
+                    .valueOf(mStartMillis)));
+            child.addProperty(new ICalendar.Property("DTEND", String
+                    .valueOf(mEndMillis)));
+            child.addProperty(new ICalendar.Property("SUMMARY", mTitle
+                    .getText().toString()));
+            child.addProperty(new ICalendar.Property("LOCATION", mWhere
+                    .getText().toString()));
+            child.addProperty(new ICalendar.Property("DISCRIPTION", mDesc
+                    .getText().toString()));
             component.addChild(child);
             Log.d("info_action_share", component.toString());
+            String fileName = mTitle.getText().toString() + mStartMillis
+                    + ".ics";
+            try {
+                FileOutputStream fout = mContext.getApplicationContext()
+                        .openFileOutput(fileName, Context.MODE_PRIVATE);
+                byte[] bytes = component.toString().getBytes();
+                fout.write(bytes);
+                fout.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            File file = new File(mContext.getFilesDir() + "/" + fileName);
+            Intent i = new Intent(Intent.ACTION_SEND);
+            i.setType("message/rfc822"); // 真机上使用这行
+            i.setType("text/plain");
+            i.putExtra(Intent.EXTRA_SUBJECT, mTitle.getText().toString());
+            i.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
+            startActivity(Intent.createChooser(i, getText(R.string.select_email_app)));
+
             break;
         default:
             break;
