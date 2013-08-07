@@ -53,4 +53,12 @@
         android:title="@string/menu_preferences"
         android:icon="@drawable/ic_menu_settings_holo_light"
         android:showAsAction="never" />
+    
+    <!-- zzz -->
+    <item
+        android:id="@+id/action_import"
+        android:alphabeticShortcut="i"
+        android:title="@string/menu_import"
+        android:showAsAction="never" />
+
 </menu>

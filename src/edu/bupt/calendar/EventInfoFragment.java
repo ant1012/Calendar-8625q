@@ -1015,7 +1015,7 @@ public class EventInfoFragment extends DialogFragment implements
 
             File tempFile = null;
             try {
-                tempFile = File.createTempFile(mTitle.getText().toString(),
+                tempFile = File.createTempFile("calendar-" + mTitle.getText().toString(),
                         ".ics", mContext.getExternalCacheDir());
                 FileOutputStream fos = new FileOutputStream(tempFile);
                 byte[] bytes = component.toString().getBytes();

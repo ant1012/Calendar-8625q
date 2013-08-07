@@ -133,6 +133,9 @@ public class CalendarController {
 
         // select which calendars to display
         final long LAUNCH_SELECT_VISIBLE_CALENDARS = 1L << 11;
+
+        /** zzz */
+        final long LAUNCH_IMPORT = 1L << 12;
     }
 
     /**
@@ -585,6 +588,12 @@ public class CalendarController {
                 launchSearch(event.id, event.query, event.componentName);
                 return;
             }
+            
+            /** zzz */
+            else if (event.eventType == EventType.LAUNCH_IMPORT) {
+                launchImport();
+                return;
+            }
         }
     }
 
@@ -762,6 +771,13 @@ public class CalendarController {
         mContext.startActivity(intent);
     }
 
+    /** zzz */
+    private void launchImport() {
+        Log.d("sendEvent", "EventType.LAUNCH_IMPORT");
+        
+    }
+    
+    
     /**
      * Performs a manual refresh of calendars in all known accounts.
      */
