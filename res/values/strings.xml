@@ -807,5 +807,6 @@
     <string name="copy_email">Copy email address</string>
     <string name="copy_number">Copy phone number</string>
     <string name="preferences_show_lunar_title">Show lunar calendar</string>
+    <string name="share_label">"Share"</string>
 
 </resources>

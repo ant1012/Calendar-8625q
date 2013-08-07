@@ -18,7 +18,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/info_action_share"
         android:alphabeticShortcut="e"
-        android:title="@string/edit_label"
+        android:title="@string/share_label"
         android:icon="@drawable/ic_menu_share_holo_light"
         android:showAsAction="withText|always"
         android:enabled="false"
