@@ -999,6 +999,8 @@ public class EventInfoFragment extends DialogFragment implements
             child.addProperty(new ICalendar.Property("DTSTART", String.valueOf(mStartMillis)));
             child.addProperty(new ICalendar.Property("DTEND", String.valueOf(mEndMillis)));
             child.addProperty(new ICalendar.Property("SUMMARY", mTitle.getText().toString()));
+            child.addProperty(new ICalendar.Property("LOCATION", mWhere.getText().toString()));
+            child.addProperty(new ICalendar.Property("SUMMARY", mDesc.getText().toString()));
             component.addChild(child);
             Log.d("info_action_share", component.toString());
             break;
