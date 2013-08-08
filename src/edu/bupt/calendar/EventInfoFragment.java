@@ -24,6 +24,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.Service;
@@ -994,57 +995,87 @@ public class EventInfoFragment extends DialogFragment implements
                     onDeleteRunnable);
             break;
 
-        /** zzz */
+        /** zzz */    
         case R.id.info_action_share:
-            ICalendar.Component component = new ICalendar.Component(
-                    ICalendar.Component.VCALENDAR, null);
-            ICalendar.Component child = new ICalendar.Component(
-                    ICalendar.Component.VEVENT, component);
-            child.addProperty(new ICalendar.Property("DTSTART", String
-                    .valueOf(mStartMillis)));
-            child.addProperty(new ICalendar.Property("DTEND", String
-                    .valueOf(mEndMillis)));
-            child.addProperty(new ICalendar.Property("SUMMARY", mTitle
-                    .getText().toString()));
-            child.addProperty(new ICalendar.Property("LOCATION", mWhere
-                    .getText().toString()));
-            child.addProperty(new ICalendar.Property("DISCRIPTION", mDesc
-                    .getText().toString()));
-            component.addChild(child);
-            Log.d("info_action_share", component.toString());
-
-            File tempFile = null;
-            try {
-                tempFile = File.createTempFile("calendar-" + mTitle.getText().toString(),
-                        ".ics", mContext.getExternalCacheDir());
-                FileOutputStream fos = new FileOutputStream(tempFile);
-                byte[] bytes = component.toString().getBytes();
-                fos.write(bytes);
-                fos.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            // Intent i = new Intent(Intent.ACTION_SEND_MULTIPLE);
-            // ArrayList<Uri> uris = new ArrayList<Uri>();
-            // uris.add(Uri.parse("file://" + tempFile.getAbsolutePath()));
-
-            Intent i = new Intent(Intent.ACTION_SEND);
-            i.setType("application/octet-stream");
-            i.putExtra(Intent.EXTRA_SUBJECT, mTitle.getText().toString());
-            // i.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
-            i.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(tempFile));
-//            startActivity(Intent.createChooser(i,
-//                    getText(R.string.select_email_app)));
-
+            /** ccczzz */        
+        	shareDialog();
             break;
         default:
             break;
         }
         return super.onOptionsItemSelected(item);
     }
+    /*** ccczzz */
+    private void shareDialog() {
+		// TODO Auto-generated method stub
+    	AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+    	builder.setTitle("共享方式");
+    	builder.setItems(new String[] { "信息", "邮件" }, new DialogInterface.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface arg0, int arg1) {
+				// TODO Auto-generated method stub
+				switch(arg1){
+				case 0:
+					Log.i("selected item", "message");
+					break;
+					
+				case 1:
+					Log.i("selected item", "mail");
+		        	ICalendar.Component component = new ICalendar.Component(
+		                    ICalendar.Component.VCALENDAR, null);
+		            ICalendar.Component child = new ICalendar.Component(
+		                    ICalendar.Component.VEVENT, component);
+		            child.addProperty(new ICalendar.Property("DTSTART", String
+		                    .valueOf(mStartMillis)));
+		            child.addProperty(new ICalendar.Property("DTEND", String
+		                    .valueOf(mEndMillis)));
+		            child.addProperty(new ICalendar.Property("SUMMARY", mTitle
+		                    .getText().toString()));
+		            child.addProperty(new ICalendar.Property("LOCATION", mWhere
+		                    .getText().toString()));
+		            child.addProperty(new ICalendar.Property("DISCRIPTION", mDesc
+		                    .getText().toString()));
+		            component.addChild(child);
+		            Log.d("info_action_share", component.toString());
 
-    @Override
+		            File tempFile = null;
+		            try {
+		                tempFile = File.createTempFile("calendar-" + mTitle.getText().toString(),
+		                        ".ics", mContext.getExternalCacheDir());
+		                FileOutputStream fos = new FileOutputStream(tempFile);
+		                byte[] bytes = component.toString().getBytes();
+		                fos.write(bytes);
+		                fos.close();
+		            } catch (Exception e) {
+		                e.printStackTrace();
+		            }
+
+		            // Intent i = new Intent(Intent.ACTION_SEND_MULTIPLE);
+		            // ArrayList<Uri> uris = new ArrayList<Uri>();
+		            // uris.add(Uri.parse("file://" + tempFile.getAbsolutePath()));
+
+		            Intent i = new Intent(Intent.ACTION_SEND);
+		            i.setType("application/octet-stream");
+		            i.putExtra(Intent.EXTRA_SUBJECT, mTitle.getText().toString());
+		            // i.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
+		            i.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(tempFile));
+		            startActivity(Intent.createChooser(i,
+		            getText(R.string.select_email_app)));
+					break;
+				default:
+					break;
+				}
+			}
+		});
+    	builder.setNegativeButton("取消", null).show();
+    	
+    	
+    	
+    	
+	}
+
+	@Override
     public void onDestroyView() {
 
         if (!mEventDeletionStarted) {
@@ -2342,6 +2373,7 @@ public class EventInfoFragment extends DialogFragment implements
             }
         };
     }
+    
 
     public long getEventId() {
         return mEventId;
