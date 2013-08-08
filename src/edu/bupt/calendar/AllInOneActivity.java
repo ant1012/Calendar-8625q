@@ -76,7 +76,7 @@ import edu.bupt.calendar.CalendarController.EventInfo;
 import edu.bupt.calendar.CalendarController.EventType;
 import edu.bupt.calendar.CalendarController.ViewType;
 import edu.bupt.calendar.agenda.AgendaFragment;
-import edu.bupt.calendar.festival.TestActivity;
+import edu.bupt.calendar.festival.FestivalListActivity;
 import edu.bupt.calendar.month.MonthByWeekFragment;
 import edu.bupt.calendar.selectcalendars.SelectVisibleCalendarsFragment;
 
@@ -794,7 +794,7 @@ public class AllInOneActivity extends Activity implements EventHandler,
                 
             case R.id.action_festival:
                 //mController.sendEvent(this, EventType.LAUNCH_SETTINGS, null, null, 0, 0);
-            	Intent intent = new Intent(AllInOneActivity.this,TestActivity.class);
+            	Intent intent = new Intent(AllInOneActivity.this,FestivalListActivity.class);
             	startActivity(intent);
             	 
             	

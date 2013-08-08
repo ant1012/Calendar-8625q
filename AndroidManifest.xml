@@ -99,7 +99,7 @@
         
         
         
-        <activity android:name="edu.bupt.calendar.festival.TestActivity"
+        <activity android:name="edu.bupt.calendar.festival.FestivalListActivity"
             android:theme="@style/CalendarTheme.WithActionBar">
         </activity>
 

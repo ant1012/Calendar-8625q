@@ -39,7 +39,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class TestActivity extends Activity {
+public class FestivalListActivity extends Activity {
 
     ListView lv;
     List<Map<String, Object>> data;
@@ -51,8 +51,6 @@ public class TestActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-        // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
 
         data = getData();
@@ -64,11 +62,7 @@ public class TestActivity extends Activity {
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1,
                     int position, long id) {
-                // TODO Auto-generated method stub
-                // currentPosition=position;
-
                 sendEditEventByTime(position);
-
             }
 
         });
@@ -79,7 +73,10 @@ public class TestActivity extends Activity {
                 R.layout.agenda_header_footer, null);
 
         String curTime = currentTime2.format("%Y-%m-%d");
-        mFooterView.setText("触摸可查看" + curTime + "之后的活动");
+
+        /** zzz */
+        mFooterView.setText(getString(R.string.show_newer_events, curTime));
+
         mFooterView.setOnClickListener(new OnClickListener() {
 
             @Override
@@ -92,8 +89,11 @@ public class TestActivity extends Activity {
                         currentTime2.month, currentTime2.year);
                 currentTime2.normalize(true);
                 String curTime = currentTime2.format("%Y-%m-%d");
-                Log.v("TestActivity", "current Time: " + curTime);
-                mFooterView.setText("触摸可查看" + curTime + "之后的活动");
+                Log.v("FestivalListActivity", "current Time: " + curTime);
+
+                /** zzz */
+                mFooterView.setText(getString(R.string.show_newer_events,
+                        curTime));
 
                 adapter.notifyDataSetChanged();
 
@@ -109,7 +109,7 @@ public class TestActivity extends Activity {
                 // String name = (String) list.get(i).get("title");
                 // Time time = (Time) list.get(i).get("info");
                 // String s=time.format("%Y-%m-%d");
-                // Log.v("TestActivity", "festival: "+name+" date: "+s);
+                // Log.v("FestivalListActivity", "festival: "+name+" date: "+s);
                 //
                 // }
                 // Time b = (Time) list.get(1).get("info");
@@ -255,7 +255,7 @@ public class TestActivity extends Activity {
     public void sendEditEvent(Time startTime, Time endTime) {
 
         Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setClass(TestActivity.this, EditEventActivity.class);
+        intent.setClass(FestivalListActivity.this, EditEventActivity.class);
         intent.putExtra(EXTRA_EVENT_BEGIN_TIME, startTime.toMillis(false));
         intent.putExtra(EXTRA_EVENT_END_TIME, endTime.toMillis(false));
         intent.putExtra(EXTRA_EVENT_ALL_DAY, true);
@@ -315,7 +315,7 @@ public class TestActivity extends Activity {
                 String s = festivalTime2.format("%Y-%m-%d");
 
                 list.add(map);
-                Log.v("TestActivity", " method: festival: " + festival
+                Log.v("FestivalListActivity", " method: festival: " + festival
                         + " date: " + s);
             }
 
@@ -368,7 +368,7 @@ public class TestActivity extends Activity {
                 String s = festivalTime2.format("%Y-%m-%d");
 
                 list.add(map);
-                Log.v("TestActivity", " method: festival: " + festival
+                Log.v("FestivalListActivity", " method: festival: " + festival
                         + " date: " + s);
             }
 
