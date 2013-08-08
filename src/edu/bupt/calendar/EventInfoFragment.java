@@ -56,6 +56,7 @@ import android.provider.ContactsContract;
 import android.provider.ContactsContract.CommonDataKinds;
 import android.provider.ContactsContract.Intents;
 import android.provider.ContactsContract.QuickContact;
+import android.telephony.SmsManager;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
@@ -109,9 +110,11 @@ import com.android.calendarcommon.ICalendar;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -1018,6 +1021,22 @@ public class EventInfoFragment extends DialogFragment implements
 				switch(arg1){
 				case 0:
 					Log.i("selected item", "message");
+					Uri uri = Uri.parse("smsto:");
+					StringBuffer sb = new StringBuffer();
+					sb.append(new ICalendar.Property("开始时间", contentIsEmpty(String
+		                    .valueOf(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(mStartMillis)))) + "\r\n");					
+					sb.append(new ICalendar.Property("结束时间", contentIsEmpty(String
+		                    .valueOf(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(mEndMillis)))) + "\r\n");
+					sb.append(new ICalendar.Property("活动名称", contentIsEmpty(mTitle
+		                    .getText().toString())) + "\r\n");
+					sb.append(new ICalendar.Property("地点", contentIsEmpty(mWhere
+		                    .getText().toString())) + "\r\n");
+					sb.append(new ICalendar.Property("说明",  contentIsEmpty(mDesc
+		                    .getText().toString())) );
+					
+					Intent it = new Intent(Intent.ACTION_SENDTO, uri); 
+					it.putExtra("sms_body", sb.toString());
+					startActivity(it);
 					break;
 					
 				case 1:
@@ -1066,6 +1085,12 @@ public class EventInfoFragment extends DialogFragment implements
 				default:
 					break;
 				}
+			}
+			/*** ccczzz */
+			private String contentIsEmpty(String valueOf) {
+				// TODO Auto-generated method stub
+				String content = valueOf.isEmpty() ? "空" : valueOf;
+				return content;
 			}
 		});
     	builder.setNegativeButton(R.string.share_cancel, null).show();
