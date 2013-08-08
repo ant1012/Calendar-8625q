@@ -48,6 +48,14 @@
         android:icon="@drawable/ic_menu_select_visible_calendars_holo_light"
         android:showAsAction="never" />
     <item
+        android:id="@+id/action_festival"
+        android:title="@string/menu_select_festival"
+        android:icon="@drawable/ic_menu_select_visible_calendars_holo_light"
+        android:showAsAction="never" />
+    
+    
+    
+    <item
         android:id="@+id/action_settings"
         android:alphabeticShortcut="s"
         android:title="@string/menu_preferences"

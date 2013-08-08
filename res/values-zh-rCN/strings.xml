@@ -64,6 +64,9 @@
     <string name="goto_today" msgid="9162136434410891230">"今天"</string>
     <string name="menu_preferences" msgid="9120238479503233925">"设置"</string>
     <string name="menu_select_visible_calendars" msgid="735670432781741817">"要显示的日历"</string>
+    
+    <string name="menu_select_festival" msgid="735670432781741818">"节日列表"</string>
+    
     <string name="search" msgid="550656004486017426">"搜索"</string>
     <string name="hide_controls" msgid="830320505938520882">"隐藏控件"</string>
     <string name="show_controls" msgid="715520586028062621">"显示控件"</string>

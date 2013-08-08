@@ -96,6 +96,12 @@
         <activity android:name=".event.EditEventActivity"
             android:theme="@style/CalendarTheme.WithActionBar">
         </activity>
+        
+        
+        
+        <activity android:name=".zzz.TestActivity"
+            android:theme="@style/CalendarTheme.WithActionBar">
+        </activity>
 
         <activity-alias android:name="EditEventActivity"
             android:targetActivity=".event.EditEventActivity"

@@ -61,6 +61,7 @@
     <string name="goto_today" msgid="9162136434410891230">"Today"</string>
     <string name="menu_preferences" msgid="9120238479503233925">"Settings"</string>
     <string name="menu_select_visible_calendars" msgid="735670432781741817">"Calendars to be displayed"</string>
+    <string name="menu_select_festival" msgid="735670432781741818">"Festival list to be displayed"</string>
     <string name="search" msgid="550656004486017426">"Search"</string>
     <string name="hide_controls" msgid="830320505938520882">"Hide controls"</string>
     <string name="show_controls" msgid="715520586028062621">"Show controls"</string>

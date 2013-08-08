@@ -71,6 +71,7 @@ import android.widget.RelativeLayout.LayoutParams;
 import android.widget.SearchView;
 import android.widget.SearchView.OnSuggestionListener;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import edu.bupt.calendar.CalendarController.EventHandler;
 import edu.bupt.calendar.CalendarController.EventInfo;
@@ -79,6 +80,7 @@ import edu.bupt.calendar.CalendarController.ViewType;
 import edu.bupt.calendar.agenda.AgendaFragment;
 import edu.bupt.calendar.month.MonthByWeekFragment;
 import edu.bupt.calendar.selectcalendars.SelectVisibleCalendarsFragment;
+import edu.bupt.calendar.zzz.TestActivity;
 
 import java.io.IOException;
 import java.util.List;
@@ -790,6 +792,18 @@ public class AllInOneActivity extends Activity implements EventHandler,
             case R.id.action_settings:
                 mController.sendEvent(this, EventType.LAUNCH_SETTINGS, null, null, 0, 0);
                 return true;
+                
+                
+            case R.id.action_festival:
+                //mController.sendEvent(this, EventType.LAUNCH_SETTINGS, null, null, 0, 0);
+            	Intent intent = new Intent(AllInOneActivity.this,TestActivity.class);
+            	startActivity(intent);
+            	 
+            	
+            	
+            	Toast.makeText(getApplicationContext(), "Hello You Clicked once!", 8000).show();
+            	return true;
+
             case R.id.action_hide_controls:
                 mHideControls = !mHideControls;
                 Utils.setSharedPreference(
