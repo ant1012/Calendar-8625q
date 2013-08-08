@@ -4,7 +4,7 @@
  * 
  */
 
-package edu.bupt.calendar;
+package edu.bupt.calendar.festival;
 
 /*******************************************************************************
  * Festival.java,此类为一个节日类,包括公历和农历的节日.

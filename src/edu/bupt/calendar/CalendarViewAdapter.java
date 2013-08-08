@@ -17,7 +17,7 @@
 package edu.bupt.calendar;
 
 import edu.bupt.calendar.CalendarController.ViewType;
-
+import edu.bupt.calendar.festival.Lunar;
 import android.content.Context;
 import android.os.Handler;
 import android.text.format.DateUtils;
@@ -30,8 +30,6 @@ import android.widget.TextView;
 
 import java.util.Formatter;
 import java.util.Locale;
-
-import edu.bupt.calendar.Lunar;
 
 
 /*

@@ -19,7 +19,7 @@ package edu.bupt.calendar.agenda;
 import edu.bupt.calendar.R;
 import edu.bupt.calendar.Utils;
 import edu.bupt.calendar.agenda.AgendaWindowAdapter.DayAdapterInfo;
-
+import edu.bupt.calendar.festival.Lunar;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Typeface;
@@ -38,8 +38,6 @@ import java.util.Formatter;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Locale;
-
-import edu.bupt.calendar.Lunar;
 
 public class AgendaByDayAdapter extends BaseAdapter {
     private static final int TYPE_DAY = 0;

@@ -20,7 +20,6 @@ import static android.provider.CalendarContract.EXTRA_EVENT_ALL_DAY;
 import static android.provider.CalendarContract.EXTRA_EVENT_BEGIN_TIME;
 import static android.provider.CalendarContract.EXTRA_EVENT_END_TIME;
 import static android.provider.CalendarContract.Attendees.ATTENDEE_STATUS;
-
 import android.accounts.AccountManager;
 import android.accounts.AccountManagerCallback;
 import android.accounts.AccountManagerFuture;
@@ -72,15 +71,14 @@ import android.widget.SearchView;
 import android.widget.SearchView.OnSuggestionListener;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import edu.bupt.calendar.CalendarController.EventHandler;
 import edu.bupt.calendar.CalendarController.EventInfo;
 import edu.bupt.calendar.CalendarController.EventType;
 import edu.bupt.calendar.CalendarController.ViewType;
 import edu.bupt.calendar.agenda.AgendaFragment;
+import edu.bupt.calendar.festival.TestActivity;
 import edu.bupt.calendar.month.MonthByWeekFragment;
 import edu.bupt.calendar.selectcalendars.SelectVisibleCalendarsFragment;
-import edu.bupt.calendar.zzz.TestActivity;
 
 import java.io.IOException;
 import java.util.List;

@@ -8,10 +8,11 @@
  * 
  */
 
-package edu.bupt.calendar;
+package edu.bupt.calendar.festival;
 
 import java.util.Date;
 
+import edu.bupt.calendar.GeneralPreferences;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;

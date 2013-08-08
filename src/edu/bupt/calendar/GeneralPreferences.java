@@ -38,8 +38,8 @@ import android.provider.CalendarContract.CalendarCache;
 import android.provider.SearchRecentSuggestions;
 import android.text.TextUtils;
 import android.widget.Toast;
-
 import edu.bupt.calendar.alerts.AlertReceiver;
+import edu.bupt.calendar.festival.Lunar;
 
 public class GeneralPreferences extends PreferenceFragment implements
         OnSharedPreferenceChangeListener, OnPreferenceChangeListener {

@@ -168,6 +168,7 @@ public class EditEventActivity extends AbstractCalendarActivity {
                     Log.d(TAG, parent.getPropertyNames().toString());
                     for (ICalendar.Component child : parent.getComponents()) {
                         Log.d(TAG, child.toString());
+                        
                     }
 
                 } catch (FileNotFoundException e) {

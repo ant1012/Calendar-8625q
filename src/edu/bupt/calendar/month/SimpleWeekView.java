@@ -18,7 +18,6 @@ package edu.bupt.calendar.month;
 
 import edu.bupt.calendar.R;
 import edu.bupt.calendar.Utils;
-
 import android.app.Service;
 import android.content.Context;
 import android.content.res.Resources;
@@ -38,7 +37,7 @@ import android.view.accessibility.AccessibilityManager;
 import java.security.InvalidParameterException;
 import java.util.HashMap;
 
-import edu.bupt.calendar.Lunar;
+import edu.bupt.calendar.festival.Lunar;
 
 /**
  * <p>
