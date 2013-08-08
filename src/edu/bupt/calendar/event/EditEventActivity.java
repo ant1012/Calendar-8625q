@@ -55,7 +55,8 @@ public class EditEventActivity extends AbstractCalendarActivity {
 
         mEventInfo = getEventInfoFromIntent(icicle);
 
-        mEditFragment = (EditEventFragment) getFragmentManager().findFragmentById(R.id.main_frame);
+        mEditFragment = (EditEventFragment) getFragmentManager()
+                .findFragmentById(R.id.main_frame);
 
         mIsMultipane = Utils.getConfigBool(this, R.bool.multiple_pane_config);
 
@@ -65,12 +66,14 @@ public class EditEventActivity extends AbstractCalendarActivity {
                     ActionBar.DISPLAY_HOME_AS_UP | ActionBar.DISPLAY_SHOW_HOME
                             | ActionBar.DISPLAY_SHOW_TITLE);
             getActionBar().setTitle(
-                    mEventInfo.id == -1 ? R.string.event_create : R.string.event_edit);
-        }
-        else {
-            getActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM,
-                    ActionBar.DISPLAY_HOME_AS_UP | ActionBar.DISPLAY_SHOW_HOME|
-                    ActionBar.DISPLAY_SHOW_TITLE | ActionBar.DISPLAY_SHOW_CUSTOM);
+                    mEventInfo.id == -1 ? R.string.event_create
+                            : R.string.event_edit);
+        } else {
+            getActionBar().setDisplayOptions(
+                    ActionBar.DISPLAY_SHOW_CUSTOM,
+                    ActionBar.DISPLAY_HOME_AS_UP | ActionBar.DISPLAY_SHOW_HOME
+                            | ActionBar.DISPLAY_SHOW_TITLE
+                            | ActionBar.DISPLAY_SHOW_CUSTOM);
         }
 
         if (mEditFragment == null) {
@@ -81,8 +84,9 @@ public class EditEventActivity extends AbstractCalendarActivity {
 
             mEditFragment = new EditEventFragment(mEventInfo, false, intent);
 
-            mEditFragment.mShowModifyDialogOnLaunch = getIntent().getBooleanExtra(
-                    CalendarController.EVENT_EDIT_ON_LAUNCH, false);
+            mEditFragment.mShowModifyDialogOnLaunch = getIntent()
+                    .getBooleanExtra(CalendarController.EVENT_EDIT_ON_LAUNCH,
+                            false);
 
             FragmentTransaction ft = getFragmentManager().beginTransaction();
             ft.replace(R.id.main_frame, mEditFragment);
@@ -132,6 +136,13 @@ public class EditEventActivity extends AbstractCalendarActivity {
             info.extraLong = CalendarController.EXTRA_CREATE_ALL_DAY;
         } else {
             info.extraLong = 0;
+        }
+
+        /** zzz */
+        if (data != null) {
+            Uri uri = Uri.parse(data.toString());
+            String filename = uri.getPath();
+            Log.d(TAG, filename);
         }
         return info;
     }
