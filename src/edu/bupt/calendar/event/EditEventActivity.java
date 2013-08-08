@@ -20,6 +20,14 @@ import static android.provider.CalendarContract.EXTRA_EVENT_BEGIN_TIME;
 import static android.provider.CalendarContract.EXTRA_EVENT_END_TIME;
 import static android.provider.CalendarContract.EXTRA_EVENT_ALL_DAY;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
+import com.android.calendarcommon.ICalendar;
+import com.android.calendarcommon.ICalendar.FormatException;
+
 import android.app.ActionBar;
 import android.app.FragmentTransaction;
 import android.content.Intent;
@@ -28,7 +36,6 @@ import android.os.Bundle;
 import android.text.format.Time;
 import android.util.Log;
 import android.view.MenuItem;
-
 import edu.bupt.calendar.AbstractCalendarActivity;
 import edu.bupt.calendar.CalendarController;
 import edu.bupt.calendar.CalendarController.EventInfo;
@@ -142,7 +149,35 @@ public class EditEventActivity extends AbstractCalendarActivity {
         if (data != null) {
             Uri uri = Uri.parse(data.toString());
             String filename = uri.getPath();
-            Log.d(TAG, filename);
+            File file = new File(filename);
+            if (file.exists()) {
+                FileInputStream fin;
+                try {
+                    fin = new FileInputStream(file);
+                    int buffersize = fin.available();
+                    byte buffer[] = new byte[buffersize];
+                    fin.read(buffer);
+                    fin.close();
+                    String vcal = new String(buffer);
+
+//                    ICalendar.Component component = new ICalendar.Component(
+//                            ICalendar.Component.VCALENDAR, null);
+                    ICalendar.Component parent = ICalendar.parseCalendar(vcal);
+
+                    Log.d(TAG, parent.getName());
+                    Log.d(TAG, parent.getPropertyNames().toString());
+                    for (ICalendar.Component child : parent.getComponents()) {
+                        Log.d(TAG, child.toString());
+                    }
+
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (FormatException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
         return info;
     }
