@@ -814,5 +814,9 @@
     <string name="share_msg">Message</string>
     <string name="share_mail">Mail</string>
     <string name="share_cancel">Cancel</string>
+    <string name="title_activity_event_import">EventImportActivity</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

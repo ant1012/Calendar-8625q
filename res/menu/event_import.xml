@@ -1,0 +1,16 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/action_cancel"
+        android:alphabeticShortcut="c"
+        android:icon="@drawable/ic_menu_cancel_holo_light"
+        android:showAsAction="withText|always"
+        android:title="@string/discard_label"/>
+    <item
+        android:id="@+id/action_done"
+        android:alphabeticShortcut="d"
+        android:icon="@drawable/ic_menu_done_holo_light"
+        android:showAsAction="withText|always"
+        android:title="@string/save_label"/>
+
+</menu>

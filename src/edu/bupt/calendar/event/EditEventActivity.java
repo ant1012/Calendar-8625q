@@ -20,14 +20,6 @@ import static android.provider.CalendarContract.EXTRA_EVENT_BEGIN_TIME;
 import static android.provider.CalendarContract.EXTRA_EVENT_END_TIME;
 import static android.provider.CalendarContract.EXTRA_EVENT_ALL_DAY;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-
-import com.android.calendarcommon.ICalendar;
-import com.android.calendarcommon.ICalendar.FormatException;
-
 import android.app.ActionBar;
 import android.app.FragmentTransaction;
 import android.content.Intent;
@@ -36,6 +28,7 @@ import android.os.Bundle;
 import android.text.format.Time;
 import android.util.Log;
 import android.view.MenuItem;
+
 import edu.bupt.calendar.AbstractCalendarActivity;
 import edu.bupt.calendar.CalendarController;
 import edu.bupt.calendar.CalendarController.EventInfo;
@@ -62,8 +55,7 @@ public class EditEventActivity extends AbstractCalendarActivity {
 
         mEventInfo = getEventInfoFromIntent(icicle);
 
-        mEditFragment = (EditEventFragment) getFragmentManager()
-                .findFragmentById(R.id.main_frame);
+        mEditFragment = (EditEventFragment) getFragmentManager().findFragmentById(R.id.main_frame);
 
         mIsMultipane = Utils.getConfigBool(this, R.bool.multiple_pane_config);
 
@@ -73,14 +65,12 @@ public class EditEventActivity extends AbstractCalendarActivity {
                     ActionBar.DISPLAY_HOME_AS_UP | ActionBar.DISPLAY_SHOW_HOME
                             | ActionBar.DISPLAY_SHOW_TITLE);
             getActionBar().setTitle(
-                    mEventInfo.id == -1 ? R.string.event_create
-                            : R.string.event_edit);
-        } else {
-            getActionBar().setDisplayOptions(
-                    ActionBar.DISPLAY_SHOW_CUSTOM,
-                    ActionBar.DISPLAY_HOME_AS_UP | ActionBar.DISPLAY_SHOW_HOME
-                            | ActionBar.DISPLAY_SHOW_TITLE
-                            | ActionBar.DISPLAY_SHOW_CUSTOM);
+                    mEventInfo.id == -1 ? R.string.event_create : R.string.event_edit);
+        }
+        else {
+            getActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM,
+                    ActionBar.DISPLAY_HOME_AS_UP | ActionBar.DISPLAY_SHOW_HOME|
+                    ActionBar.DISPLAY_SHOW_TITLE | ActionBar.DISPLAY_SHOW_CUSTOM);
         }
 
         if (mEditFragment == null) {
@@ -91,9 +81,8 @@ public class EditEventActivity extends AbstractCalendarActivity {
 
             mEditFragment = new EditEventFragment(mEventInfo, false, intent);
 
-            mEditFragment.mShowModifyDialogOnLaunch = getIntent()
-                    .getBooleanExtra(CalendarController.EVENT_EDIT_ON_LAUNCH,
-                            false);
+            mEditFragment.mShowModifyDialogOnLaunch = getIntent().getBooleanExtra(
+                    CalendarController.EVENT_EDIT_ON_LAUNCH, false);
 
             FragmentTransaction ft = getFragmentManager().beginTransaction();
             ft.replace(R.id.main_frame, mEditFragment);
@@ -143,42 +132,6 @@ public class EditEventActivity extends AbstractCalendarActivity {
             info.extraLong = CalendarController.EXTRA_CREATE_ALL_DAY;
         } else {
             info.extraLong = 0;
-        }
-
-        /** zzz */
-        if (data != null) {
-            Uri uri = Uri.parse(data.toString());
-            String filename = uri.getPath();
-            File file = new File(filename);
-            if (file.exists()) {
-                FileInputStream fin;
-                try {
-                    fin = new FileInputStream(file);
-                    int buffersize = fin.available();
-                    byte buffer[] = new byte[buffersize];
-                    fin.read(buffer);
-                    fin.close();
-                    String vcal = new String(buffer);
-
-//                    ICalendar.Component component = new ICalendar.Component(
-//                            ICalendar.Component.VCALENDAR, null);
-                    ICalendar.Component parent = ICalendar.parseCalendar(vcal);
-
-                    Log.d(TAG, parent.getName());
-                    Log.d(TAG, parent.getPropertyNames().toString());
-                    for (ICalendar.Component child : parent.getComponents()) {
-                        Log.d(TAG, child.toString());
-                        
-                    }
-
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                } catch (FormatException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
         }
         return info;
     }
