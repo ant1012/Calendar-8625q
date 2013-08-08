@@ -11,6 +11,9 @@
 #proguard.config=${sdk.dir}/tools/proguard/proguard-android.txt:proguard-project.txt
 
 # Project target.
+<<<<<<< HEAD
+=======
 
 # zzz
+>>>>>>> origin/working
 target=android-16

@@ -41,7 +41,8 @@
     <!-- zzz -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
-    <uses-sdk android:minSdkVersion="15"></uses-sdk>
+    <!-- zzz -->
+    <uses-sdk android:minSdkVersion="16"></uses-sdk>
 
     <application android:name="CalendarApplication"
             android:label="@string/app_label" android:icon="@mipmap/ic_launcher_calendar"
@@ -111,6 +112,17 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <data android:mimeType="vnd.android.cursor.dir/event" />
             </intent-filter>
+
+            <!-- zzz -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="file"/>
+                <data android:mimeType="*/*"/>
+                <data android:pathPattern=".*\.ics" />
+            </intent-filter>
+
         </activity-alias>
 
         <activity android:name="GoogleCalendarUriIntentFilter" android:label="@string/app_label"
