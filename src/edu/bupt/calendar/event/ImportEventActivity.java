@@ -26,8 +26,10 @@ public class ImportEventActivity extends AbstractCalendarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.simple_frame_layout);
 
-        getDataFromFile();
+        // getDataFromFile();
 
+        mImportFragment = (ImportEventFragment) getFragmentManager()
+                .findFragmentById(R.id.main_frame);
         mImportFragment = new ImportEventFragment();
         getFragmentManager().beginTransaction()
                 .replace(R.id.main_frame, mImportFragment).commit();

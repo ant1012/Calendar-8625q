@@ -1,6 +1,7 @@
 package edu.bupt.calendar.event;
 
 import edu.bupt.calendar.R;
+import edu.bupt.calendar.event.EditEventFragment.Done;
 import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
@@ -11,8 +12,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 
-public class ImportEventFragment extends Fragment {
+public class ImportEventFragment extends EditEventFragment {
     private static final String TAG = "ImportEventFragment";
+    private EditEventView mView;
+    private Activity mContext;
 
     public ImportEventFragment() {
         // Required empty public constructor
@@ -27,14 +30,13 @@ public class ImportEventFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
         Log.d(TAG, "onCreateView");
-        View view;
-        view = inflater.inflate(R.layout.edit_event, null);
-        return view;
+        return super.onCreateView(inflater, container, savedInstanceState);
     }
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+        mContext = activity;
     }
 
     @Override

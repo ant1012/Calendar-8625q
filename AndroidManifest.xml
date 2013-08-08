@@ -132,6 +132,18 @@
 
                 <data android:mimeType="vnd.android.cursor.dir/event" />
             </intent-filter>
+            
+            <!-- zzz -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="file" />
+                <data android:mimeType="*/*" />
+                <data android:pathPattern=".*\.ics" />
+            </intent-filter>
         </activity-alias>
 
         <activity
@@ -284,16 +296,6 @@
         <activity
             android:name="edu.bupt.calendar.event.ImportEventActivity"
             android:label="@string/title_activity_event_import" >
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data android:scheme="file" />
-                <data android:mimeType="*/*" />
-                <data android:pathPattern=".*\.ics" />
-            </intent-filter>
         </activity>
     </application>
 

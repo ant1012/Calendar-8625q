@@ -1078,7 +1078,7 @@ public class EventInfoFragment extends DialogFragment implements
 		            i.setType("application/octet-stream");
 		            i.putExtra(Intent.EXTRA_SUBJECT, mTitle.getText().toString());
 		            // i.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
-		            i.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(tempFile));
+//		            i.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(tempFile));
 		            startActivity(Intent.createChooser(i,
 		            getText(R.string.select_email_app)));
 					break;
