@@ -1009,9 +1009,9 @@ public class EventInfoFragment extends DialogFragment implements
     private void shareDialog() {
 		// TODO Auto-generated method stub
     	AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-    	builder.setTitle("共享方式");
-    	builder.setItems(new String[] { "信息", "邮件" }, new DialogInterface.OnClickListener() {
-			
+    	builder.setTitle(R.string.share_title);
+    	builder.setItems(new String[] {getString(R.string.share_msg), getString(R.string.share_mail)}, new DialogInterface.OnClickListener() {
+
 			@Override
 			public void onClick(DialogInterface arg0, int arg1) {
 				// TODO Auto-generated method stub
@@ -1068,11 +1068,8 @@ public class EventInfoFragment extends DialogFragment implements
 				}
 			}
 		});
-    	builder.setNegativeButton("取消", null).show();
-    	
-    	
-    	
-    	
+    	builder.setNegativeButton(R.string.share_cancel, null).show();
+
 	}
 
 	@Override
