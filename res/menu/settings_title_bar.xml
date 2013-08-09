@@ -16,8 +16,11 @@
 
 <menu
     xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- zzz -->
+    <!-- 
     <item android:id="@+id/action_add_account"
         android:alphabeticShortcut="a"
         android:title="@string/add_account"
         android:showAsAction="withText|always" />
+    -->
 </menu>

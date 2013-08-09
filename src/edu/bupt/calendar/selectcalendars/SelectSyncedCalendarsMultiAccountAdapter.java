@@ -211,7 +211,11 @@ public class SelectSyncedCalendarsMultiAccountAdapter extends CursorTreeAdapter 
             Log.e(TAG, "SelectCalendarsAdapter: No accounts were returned!");
         }
         // Collect proper description for account types
-        mAuthDescs = AccountManager.get(context).getAuthenticatorTypes();
+        
+        /** zzz */
+        // mAuthDescs = AccountManager.get(context).getAuthenticatorTypes();
+        mAuthDescs = null;
+
         for (int i = 0; i < mAuthDescs.length; i++) {
             mTypeToAuthDescription.put(mAuthDescs[i].type, mAuthDescs[i]);
         }

@@ -787,7 +787,10 @@ public class CalendarController {
      * Performs a manual refresh of calendars in all known accounts.
      */
     public void refreshCalendars() {
-        Account[] accounts = AccountManager.get(mContext).getAccounts();
+        /** zzz */
+        //Account[] accounts = AccountManager.get(mContext).getAccounts();
+        Account[] accounts = null;
+
         Log.d(TAG, "Refreshing " + accounts.length + " accounts");
 
         String authority = Calendars.CONTENT_URI.getAuthority();

@@ -47,7 +47,7 @@
     </uses-sdk>
 
     <application
-        android:name="CalendarApplication"
+        android:name="edu.bupt.calendar.CalendarApplication"
         android:backupAgent="edu.bupt.calendar.CalendarBackupAgent"
         android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher_calendar"
@@ -58,7 +58,7 @@
             android:value="AEdPqrEAAAAIM256oVOGnuSel5QKDpL8je_T65ZI8rFnDinssA" />
 
         <activity
-            android:name="AllInOneActivity"
+            android:name="edu.bupt.calendar.AllInOneActivity"
             android:exported="true"
             android:launchMode="singleTask"
             android:theme="@style/CalendarTheme.WithActionBar"
@@ -82,13 +82,14 @@
         </activity>
 
         <activity-alias
-            android:name="LaunchActivity"
+            android:name="edu.bupt.calendar.LaunchActivity"
             android:exported="true"
             android:targetActivity=".AllInOneActivity" >
         </activity-alias>
 
         <activity
             android:name="EventInfoActivity"
+            android:name="edu.bupt.calendar.EventInfoActivity"
             android:parentActivityName="edu.bupt.calendar.AllInOneActivity"
             android:theme="@style/CalendarTheme.WithActionBar" >
             <intent-filter>
@@ -105,7 +106,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".event.EditEventActivity"
+            android:name="edu.bupt.calendar.event.EditEventActivity"
             android:theme="@style/CalendarTheme.WithActionBar" >
         </activity>
         <activity
@@ -118,7 +119,7 @@
             ></activity>
 
         <activity-alias
-            android:name="EditEventActivity"
+            android:name="edu.bupt.calendar.EditEventActivity"
             android:exported="true"
             android:targetActivity=".event.EditEventActivity" >
             <intent-filter>
@@ -137,23 +138,10 @@
 
                 <data android:mimeType="vnd.android.cursor.dir/event" />
             </intent-filter>
-
-            <!-- zzz -->
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data android:scheme="file" />
-                <data android:mimeType="*/*" />
-                <data android:pathPattern=".*\.ics" />
-            </intent-filter>
-            
         </activity-alias>
 
         <activity
-            android:name="GoogleCalendarUriIntentFilter"
+            android:name="edu.bupt.calendar.GoogleCalendarUriIntentFilter"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/app_label"
             android:theme="@android:style/Theme.NoDisplay" >
@@ -162,7 +150,6 @@
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-
                 <data
                     android:host="www.google.com"
                     android:pathPrefix="/calendar/event"
@@ -182,15 +169,15 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".selectcalendars.SelectVisibleCalendarsActivity"
+            android:name="edu.bupt.calendar.selectcalendars.SelectVisibleCalendarsActivity"
             android:label="@string/select_visible_calendars_title"
             android:theme="@android:style/Theme.Holo.Light" />
         <activity
-            android:name=".selectcalendars.SelectSyncedCalendarsMultiAccountActivity"
+            android:name="edu.bupt.calendar.selectcalendars.SelectSyncedCalendarsMultiAccountActivity"
             android:label="@string/select_synced_calendars_title"
             android:theme="@android:style/Theme.Holo.Light" />
         <activity
-            android:name="CalendarSettingsActivity"
+            android:name="edu.bupt.calendar.CalendarSettingsActivity"
             android:label="@string/preferences_title"
             android:theme="@android:style/Theme.Holo.Light" />
 
@@ -201,7 +188,7 @@
             android:value="edu.bupt.calendar.SearchActivity" />
 
         <activity
-            android:name="SearchActivity"
+            android:name="edu.bupt.calendar.SearchActivity"
             android:exported="true"
             android:label="@string/search_title"
             android:launchMode="singleTop"
@@ -217,23 +204,23 @@
         </activity>
 
         <provider
-            android:name=".CalendarRecentSuggestionsProvider"
+            android:name="edu.bupt.calendar.CalendarRecentSuggestionsProvider"
             android:authorities="edu.bupt.calendar.CalendarRecentSuggestionsProvider" />
 
         <!-- Declarations for alerts/reminders -->
         <activity
-            android:name=".alerts.AlertActivity"
+            android:name="edu.bupt.calendar.alerts.AlertActivity"
             android:excludeFromRecents="true"
             android:launchMode="singleInstance"
             android:theme="@android:style/Theme.Holo.Dialog" />
         <activity
-            android:name=".alerts.QuickResponseActivity"
+            android:name="edu.bupt.calendar.alerts.QuickResponseActivity"
             android:excludeFromRecents="true"
             android:label="@string/quick_response_dialog_title"
             android:launchMode="singleInstance"
             android:theme="@android:style/Theme.Holo.Dialog" />
 
-        <receiver android:name=".alerts.AlertReceiver" >
+        <receiver android:name="edu.bupt.calendar.alerts.AlertReceiver" >
             <intent-filter>
                 <action android:name="android.intent.action.EVENT_REMINDER" />
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
@@ -252,13 +239,13 @@
             </intent-filter>
         </receiver>
 
-        <service android:name=".alerts.AlertService" />
-        <service android:name=".alerts.DismissAlarmsService" />
-        <service android:name=".alerts.SnoozeAlarmsService" />
+        <service android:name="edu.bupt.calendar.alerts.AlertService" />
+        <service android:name="edu.bupt.calendar.alerts.DismissAlarmsService" />
+        <service android:name="edu.bupt.calendar.alerts.SnoozeAlarmsService" />
 
         <!-- Declarations for the widget -->
         <receiver
-            android:name=".widget.CalendarAppWidgetProvider"
+            android:name="edu.bupt.calendar.widget.CalendarAppWidgetProvider"
             android:label="@string/gadget_title" >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -269,7 +256,7 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/appwidget_info" />
         </receiver>
-        <receiver android:name=".widget.CalendarAppWidgetService$CalendarFactory" >
+        <receiver android:name="edu.bupt.calendar.widget.CalendarAppWidgetService$CalendarFactory" >
             <intent-filter>
                 <action android:name="android.intent.action.TIMEZONE_CHANGED" />
                 <action android:name="android.intent.action.DATE_CHANGED" />
@@ -292,11 +279,30 @@
         </receiver>
 
         <service
-            android:name=".widget.CalendarAppWidgetService"
+            android:name="edu.bupt.calendar.widget.CalendarAppWidgetService"
             android:exported="false"
             android:permission="android.permission.BIND_REMOTEVIEWS" >
         </service>
-        <service android:name=".AsyncQueryServiceHelper" />
+        <service android:name="edu.bupt.calendar.AsyncQueryServiceHelper" />
+
+        <!-- zzz -->
+        <activity
+            android:name="edu.bupt.calendar.importevent.ImportEventActivity"
+            android:label="@string/title_activity_import_event" >
+
+            <!-- zzz -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="file" />
+                <data android:mimeType="text/calendar" />
+                <!-- <data android:mimeType="*/*" /> -->
+                <!-- <data android:pathPattern=".*\.ics" /> -->
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
