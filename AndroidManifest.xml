@@ -40,6 +40,7 @@
 
     <!-- zzz -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_CALENDAR" />
 
     <!-- zzz -->
     <uses-sdk android:minSdkVersion="16" >
@@ -87,6 +88,7 @@
         </activity-alias>
 
         <activity
+            android:name="EventInfoActivity"
             android:name="edu.bupt.calendar.EventInfoActivity"
             android:parentActivityName="edu.bupt.calendar.AllInOneActivity"
             android:theme="@style/CalendarTheme.WithActionBar" >
@@ -111,6 +113,10 @@
             android:name="edu.bupt.calendar.festival.FestivalListActivity"
             android:theme="@style/CalendarTheme.WithActionBar" >
         </activity>
+        <activity 
+            android:name="edu.bupt.calendar.agenda.AgendaMultiDelete"
+            android:theme="@style/CalendarTheme.WithActionBar"
+            ></activity>
 
         <activity-alias
             android:name="edu.bupt.calendar.EditEventActivity"
@@ -144,7 +150,6 @@
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-
                 <data
                     android:host="www.google.com"
                     android:pathPrefix="/calendar/event"
