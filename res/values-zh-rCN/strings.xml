@@ -244,7 +244,7 @@
     <string name="preferences_show_lunar_title">显示农历</string>
     <string name="share_label">"分享"</string>
     <string name="select_email_app">选择邮件应用</string>
-    <string name="menu_import">导入日程</string>
+    <string name="menu_multidelete">多条删除日程</string>
     <string name="share_title">共享方式</string>
     <string name="share_msg">信息</string>
     <string name="share_mail">邮件</string>

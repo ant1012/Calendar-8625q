@@ -21,6 +21,7 @@ import static android.provider.CalendarContract.EXTRA_EVENT_END_TIME;
 import static android.provider.CalendarContract.EXTRA_EVENT_ALL_DAY;
 import static android.provider.CalendarContract.Attendees.ATTENDEE_STATUS;
 
+import edu.bupt.calendar.agenda.AgendaMultiDelete;
 import edu.bupt.calendar.event.EditEventActivity;
 import edu.bupt.calendar.selectcalendars.SelectVisibleCalendarsActivity;
 
@@ -135,7 +136,7 @@ public class CalendarController {
         final long LAUNCH_SELECT_VISIBLE_CALENDARS = 1L << 11;
 
         /** zzz */
-        final long LAUNCH_IMPORT = 1L << 12;
+        final long LAUNCH_MULTIDELETE = 1L << 12;
     }
 
     /**
@@ -589,9 +590,9 @@ public class CalendarController {
                 return;
             }
             
-            /** zzz */
-            else if (event.eventType == EventType.LAUNCH_IMPORT) {
-                launchImport();
+            /** ccczzz */
+            else if (event.eventType == EventType.LAUNCH_MULTIDELETE) {
+            	launchMultiDelete();
                 return;
             }
         }
@@ -771,9 +772,15 @@ public class CalendarController {
         mContext.startActivity(intent);
     }
 
-    /** zzz */
-    private void launchImport() {
-        Log.d("sendEvent", "EventType.LAUNCH_IMPORT");
+    /** ccczzz */
+    private void launchMultiDelete() {
+    	
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setClass(mContext, AgendaMultiDelete.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        mContext.startActivity(intent);
+    	
+        Log.d("sendEvent", "EventType.LAUNCH_MULTIDELETE");
     }
 
     /**

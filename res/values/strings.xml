@@ -809,7 +809,7 @@
     <string name="preferences_show_lunar_title">Show lunar calendar</string>
     <string name="share_label">"Share"</string>
     <string name="select_email_app">Select email application</string>
-    <string name="menu_import">Import calendar</string>
+    <string name="menu_multedelete">Multidelete calendar</string>
     <string name="share_title">Share via</string>
     <string name="share_msg">Message</string>
     <string name="share_mail">Mail</string>
