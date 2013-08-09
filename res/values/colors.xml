@@ -169,7 +169,10 @@
     <color name="month_weekend">#66aaee</color>  <!-- 蓝 -->
     <color name="month_weekend_other">#775dabf4</color>	
     <color name="month_festival">#ff99cc00</color>	<!-- 果绿 -->
-    <color name="month_festival_other">#8899cc00</color>	
+    <color name="month_festival_other">#8899cc00</color>
+
+    <color name="import_event_bg">#ffffffff</color>
+    <color name="import_event_title_bg">#0099ff</color>
     <!-- #f50d3c -->
    
 </resources>

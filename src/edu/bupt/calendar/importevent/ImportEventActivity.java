@@ -5,21 +5,49 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import com.android.calendarcommon.ICalendar;
+import com.android.calendarcommon.ICalendar.FormatException;
+
 import edu.bupt.calendar.R;
-import edu.bupt.calendar.R.layout;
-import edu.bupt.calendar.R.menu;
+import edu.bupt.calendar.Utils;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
 import android.view.Menu;
+import android.view.View;
+import android.widget.TextView;
 
 public class ImportEventActivity extends Activity {
+    private View view;
+    private TextView textviewTitle;
+    private TextView textViewDatetime;
+    private TextView textViewRepeat;
+    private TextView textViewWhere;
+    private TextView textViewDisc;
+    private ICalendar.Component parent;
+    private ICalendar.Component child;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_import_event);
+
+        textviewTitle = (TextView) findViewById(R.id.title);
+        textViewDatetime = (TextView) findViewById(R.id.when_datetime);
+        textViewWhere = (TextView) findViewById(R.id.where);
+        textViewDisc = (TextView) findViewById(R.id.disc);
+
+        parent = getEventFromString(getStringFromFile());
+        // for (ICalendar.Component child : parent.getComponents()) {
+        // }
+
+        // just test first event
+        child = parent.getComponents().get(0);
+        textviewTitle.setText(child.getFirstProperty("SUMMARY").getValue());
+        textViewDatetime.setText(child.getFirstProperty("DTSTART").getValue());
+        textViewWhere.setText(child.getFirstProperty("LOCATION").getValue());
+        textViewDisc.setText(child.getFirstProperty("DISCRIPTION").getValue());
     }
 
     /** zzz */
@@ -60,6 +88,20 @@ public class ImportEventActivity extends Activity {
             }
         }
         return null;
+    }
+
+    private String getSummary(ICalendar.Component c) {
+        return null;
+    }
+
+    private ICalendar.Component getEventFromString(String s) {
+        ICalendar.Component c = null;
+        try {
+            c = ICalendar.parseCalendar(s);
+        } catch (FormatException e) {
+            e.printStackTrace();
+        }
+        return c;
     }
 
     @Override
