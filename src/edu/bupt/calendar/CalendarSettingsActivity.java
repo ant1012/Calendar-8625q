@@ -42,8 +42,10 @@ public class CalendarSettingsActivity extends PreferenceActivity {
     @Override
     public void onBuildHeaders(List<Header> target) {
         loadHeadersFromResource(R.xml.calendar_settings_headers, target);
+        /** zzz */
+        //Account[] accounts = AccountManager.get(CalendarSettingsActivity.this).getAccounts();
+        Account[] accounts = null;
 
-        Account[] accounts = AccountManager.get(this).getAccounts();
         if (accounts != null) {
             int length = accounts.length;
             for (int i = 0; i < length; i++) {
@@ -76,13 +78,13 @@ public class CalendarSettingsActivity extends PreferenceActivity {
             case android.R.id.home:
                 finish();
                 return true;
-            case R.id.action_add_account:
-                Intent nextIntent = new Intent(Settings.ACTION_ADD_ACCOUNT);
-                final String[] array = { "edu.bupt.calendar" };
-                nextIntent.putExtra(Settings.EXTRA_AUTHORITIES, array);
-                nextIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(nextIntent);
-                return true;
+            // case R.id.action_add_account:
+            // Intent nextIntent = new Intent(Settings.ACTION_ADD_ACCOUNT);
+            // final String[] array = { "edu.bupt.calendar" };
+            // nextIntent.putExtra(Settings.EXTRA_AUTHORITIES, array);
+            // nextIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            // startActivity(nextIntent);
+            // return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -116,7 +118,10 @@ public class CalendarSettingsActivity extends PreferenceActivity {
     Runnable mCheckAccounts = new Runnable() {
         @Override
         public void run() {
-            Account[] accounts = AccountManager.get(CalendarSettingsActivity.this).getAccounts();
+            /** zzz */
+            //Account[] accounts = AccountManager.get(CalendarSettingsActivity.this).getAccounts();
+            Account[] accounts = null;
+
             if (accounts != null && !accounts.equals(mAccounts)) {
                 invalidateHeaders();
             }

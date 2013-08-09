@@ -215,7 +215,10 @@ public class AllInOneActivity extends Activity implements EventHandler,
                     getResources().getString(R.string.create_an_account_desc));
             options.putBoolean("allowSkip", true);
 
-            AccountManager am = AccountManager.get(AllInOneActivity.this);
+            /** zzz*/
+            //AccountManager am = AccountManager.get(AllInOneActivity.this);
+            AccountManager am = null;
+
             am.addAccount("com.google", CalendarContract.AUTHORITY, null, options,
                     AllInOneActivity.this,
                     new AccountManagerCallback<Bundle>() {
@@ -313,7 +316,7 @@ public class AllInOneActivity extends Activity implements EventHandler,
         }
         // Launch add google account if this is first time and there are no
         // accounts yet
-        if (mCheckForAccounts
+        if (mCheckForAccounts 
                 && !Utils.getSharedPreference(this, GeneralPreferences.KEY_SKIP_SETUP, false)) {
 
             mHandler = new QueryHandler(this.getContentResolver());
