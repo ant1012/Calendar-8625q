@@ -998,106 +998,133 @@ public class EventInfoFragment extends DialogFragment implements
                     onDeleteRunnable);
             break;
 
-        /** zzz */    
+        /** zzz */
         case R.id.info_action_share:
-            /** ccczzz */        
-        	shareDialog();
+            /** ccczzz */
+            shareDialog();
             break;
         default:
             break;
         }
         return super.onOptionsItemSelected(item);
     }
+
     /*** ccczzz */
     private void shareDialog() {
-		// TODO Auto-generated method stub
-    	AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-    	builder.setTitle(R.string.share_title);
-    	builder.setItems(new String[] {getString(R.string.share_msg), getString(R.string.share_mail)}, new DialogInterface.OnClickListener() {
+        // TODO Auto-generated method stub
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        builder.setTitle(R.string.share_title);
+        builder.setItems(new String[] { getString(R.string.share_msg),
+                getString(R.string.share_mail) },
+                new DialogInterface.OnClickListener() {
 
-			@Override
-			public void onClick(DialogInterface arg0, int arg1) {
-				// TODO Auto-generated method stub
-				switch(arg1){
-				case 0:
-					Log.i("selected item", "message");
-					Uri uri = Uri.parse("smsto:");
-					StringBuffer sb = new StringBuffer();
-					sb.append(new ICalendar.Property("开始时间", contentIsEmpty(String
-		                    .valueOf(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(mStartMillis)))) + "\r\n");					
-					sb.append(new ICalendar.Property("结束时间", contentIsEmpty(String
-		                    .valueOf(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(mEndMillis)))) + "\r\n");
-					sb.append(new ICalendar.Property("活动名称", contentIsEmpty(mTitle
-		                    .getText().toString())) + "\r\n");
-					sb.append(new ICalendar.Property("地点", contentIsEmpty(mWhere
-		                    .getText().toString())) + "\r\n");
-					sb.append(new ICalendar.Property("说明",  contentIsEmpty(mDesc
-		                    .getText().toString())) );
-					
-					Intent it = new Intent(Intent.ACTION_SENDTO, uri); 
-					it.putExtra("sms_body", sb.toString());
-					startActivity(it);
-					break;
-					
-				case 1:
-					Log.i("selected item", "mail");
-		        	ICalendar.Component component = new ICalendar.Component(
-		                    ICalendar.Component.VCALENDAR, null);
-		            ICalendar.Component child = new ICalendar.Component(
-		                    ICalendar.Component.VEVENT, component);
-		            child.addProperty(new ICalendar.Property("DTSTART", String
-		                    .valueOf(mStartMillis)));
-		            child.addProperty(new ICalendar.Property("DTEND", String
-		                    .valueOf(mEndMillis)));
-		            child.addProperty(new ICalendar.Property("SUMMARY", mTitle
-		                    .getText().toString()));
-		            child.addProperty(new ICalendar.Property("LOCATION", mWhere
-		                    .getText().toString()));
-		            child.addProperty(new ICalendar.Property("DISCRIPTION", mDesc
-		                    .getText().toString()));
-		            component.addChild(child);
-		            Log.d("info_action_share", component.toString());
+                    @Override
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        // TODO Auto-generated method stub
+                        switch (arg1) {
+                        case 0:
+                            Log.i("selected item", "message");
+                            Uri uri = Uri.parse("smsto:");
+                            StringBuffer sb = new StringBuffer();
+                            sb.append(new ICalendar.Property(
+                                    getString(R.string.accessibility_pick_start_time),
+                                    contentIsEmpty(String
+                                            .valueOf(new SimpleDateFormat(
+                                                    "yyyy-MM-dd HH:mm:ss")
+                                                    .format(mStartMillis))))
+                                    + "\r\n");
+                            sb.append(new ICalendar.Property(
+                                    getString(R.string.accessibility_pick_end_time),
+                                    contentIsEmpty(String
+                                            .valueOf(new SimpleDateFormat(
+                                                    "yyyy-MM-dd HH:mm:ss")
+                                                    .format(mEndMillis))))
+                                    + "\r\n");
+                            sb.append(new ICalendar.Property(
+                                    getString(R.string.hint_what),
+                                    contentIsEmpty(mTitle.getText().toString()))
+                                    + "\r\n");
+                            sb.append(new ICalendar.Property(
+                                    getString(R.string.hint_where),
+                                    contentIsEmpty(mWhere.getText().toString()))
+                                    + "\r\n");
+                            sb.append(new ICalendar.Property(
+                                    getString(R.string.hint_description),
+                                    contentIsEmpty(mDesc.getText().toString())));
 
-		            File tempFile = null;
-		            try {
-		                tempFile = File.createTempFile("calendar-" + mTitle.getText().toString(),
-		                        ".ics", mContext.getExternalCacheDir());
-		                FileOutputStream fos = new FileOutputStream(tempFile);
-		                byte[] bytes = component.toString().getBytes();
-		                fos.write(bytes);
-		                fos.close();
-		            } catch (Exception e) {
-		                e.printStackTrace();
-		            }
+                            Intent it = new Intent(Intent.ACTION_SENDTO, uri);
+                            it.putExtra("sms_body", sb.toString());
+                            startActivity(it);
+                            break;
 
-		            // Intent i = new Intent(Intent.ACTION_SEND_MULTIPLE);
-		            // ArrayList<Uri> uris = new ArrayList<Uri>();
-		            // uris.add(Uri.parse("file://" + tempFile.getAbsolutePath()));
+                        case 1:
+                            Log.i("selected item", "mail");
+                            ICalendar.Component component = new ICalendar.Component(
+                                    ICalendar.Component.VCALENDAR, null);
+                            ICalendar.Component child = new ICalendar.Component(
+                                    ICalendar.Component.VEVENT, component);
+                            child.addProperty(new ICalendar.Property("DTSTART",
+                                    String.valueOf(mStartMillis)));
+                            child.addProperty(new ICalendar.Property("DTEND",
+                                    String.valueOf(mEndMillis)));
+                            child.addProperty(new ICalendar.Property("SUMMARY",
+                                    mTitle.getText().toString()));
+                            child.addProperty(new ICalendar.Property(
+                                    "LOCATION", mWhere.getText().toString()));
+                            child.addProperty(new ICalendar.Property(
+                                    "DISCRIPTION", mDesc.getText().toString()));
+                            component.addChild(child);
+                            Log.d("info_action_share", component.toString());
 
-		            Intent i = new Intent(Intent.ACTION_SEND);
-		            i.setType("application/octet-stream");
-		            i.putExtra(Intent.EXTRA_SUBJECT, mTitle.getText().toString());
-		            // i.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
-//		            i.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(tempFile));
-		            startActivity(Intent.createChooser(i,
-		            getText(R.string.select_email_app)));
-					break;
-				default:
-					break;
-				}
-			}
-			/*** ccczzz */
-			private String contentIsEmpty(String valueOf) {
-				// TODO Auto-generated method stub
-				String content = valueOf.isEmpty() ? "空" : valueOf;
-				return content;
-			}
-		});
-    	builder.setNegativeButton(R.string.share_cancel, null).show();
+                            File tempFile = null;
+                            try {
+                                tempFile = File.createTempFile("calendar-"
+                                        + mTitle.getText().toString(), ".ics",
+                                        mContext.getExternalCacheDir());
+                                FileOutputStream fos = new FileOutputStream(
+                                        tempFile);
+                                byte[] bytes = component.toString().getBytes();
+                                fos.write(bytes);
+                                fos.close();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
 
-	}
+                            // Intent i = new
+                            // Intent(Intent.ACTION_SEND_MULTIPLE);
+                            // ArrayList<Uri> uris = new ArrayList<Uri>();
+                            // uris.add(Uri.parse("file://" +
+                            // tempFile.getAbsolutePath()));
 
-	@Override
+                            Intent i = new Intent(Intent.ACTION_SEND);
+                            i.setType("application/octet-stream");
+                            i.putExtra(Intent.EXTRA_SUBJECT, mTitle.getText()
+                                    .toString());
+                            // i.putParcelableArrayListExtra(Intent.EXTRA_STREAM,
+                            // uris);
+                            // i.putExtra(Intent.EXTRA_STREAM,
+                            // Uri.fromFile(tempFile));
+                            startActivity(Intent.createChooser(i,
+                                    getText(R.string.select_email_app)));
+                            break;
+                        default:
+                            break;
+                        }
+                    }
+
+                    /*** ccczzz */
+                    private String contentIsEmpty(String valueOf) {
+                        // TODO Auto-generated method stub
+                        String content = valueOf.isEmpty() ? getString(R.string.share_empty)
+                                : valueOf;
+                        return content;
+                    }
+                });
+        builder.setNegativeButton(R.string.share_cancel, null).show();
+
+    }
+
+    @Override
     public void onDestroyView() {
 
         if (!mEventDeletionStarted) {
@@ -2395,7 +2422,6 @@ public class EventInfoFragment extends DialogFragment implements
             }
         };
     }
-    
 
     public long getEventId() {
         return mEventId;

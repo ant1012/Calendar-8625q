@@ -249,5 +249,6 @@
     <string name="share_msg">信息</string>
     <string name="share_mail">邮件</string>
     <string name="share_cancel">取消</string>
+    <string name="share_empty">空</string>
     
 </resources>
