@@ -12,5 +12,4 @@
         android:icon="@drawable/ic_menu_done_holo_light"
         android:showAsAction="withText|always"
         android:title="@string/save_label"/>
-
 </menu>
