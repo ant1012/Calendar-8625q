@@ -132,7 +132,7 @@
 
                 <data android:mimeType="vnd.android.cursor.dir/event" />
             </intent-filter>
-            
+
             <!-- zzz -->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
