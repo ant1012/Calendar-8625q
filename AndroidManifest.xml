@@ -88,7 +88,6 @@
         </activity-alias>
 
         <activity
-            android:name="EventInfoActivity"
             android:name="edu.bupt.calendar.EventInfoActivity"
             android:parentActivityName="edu.bupt.calendar.AllInOneActivity"
             android:theme="@style/CalendarTheme.WithActionBar" >
