@@ -4,19 +4,23 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Calendar;
 
 import com.android.calendarcommon.ICalendar;
 import com.android.calendarcommon.ICalendar.FormatException;
 
 import edu.bupt.calendar.CalendarEventModel;
+import edu.bupt.calendar.GeneralPreferences;
 import edu.bupt.calendar.R;
 import edu.bupt.calendar.Utils;
 import edu.bupt.calendar.event.EditEventHelper;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -28,18 +32,19 @@ public class ImportEventActivity extends Activity {
     private View view;
     private TextView textviewTitle;
     private TextView textViewDatetime;
+    private TextView textViewDateendtime;
     private TextView textViewRepeat;
     private TextView textViewWhere;
     private TextView textViewDisc;
     private ICalendar.Component parent;
     private ICalendar.Component child;
     private Context context = this;
-    private EditEventHelper editEventHelper;
     private int event_id = 1;
     private String event_title = null;
     private long event_datetime = 0;
     private String event_where = null;
     private String event_disc = null;
+    private long event_dateendtime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,7 +111,11 @@ public class ImportEventActivity extends Activity {
 
     private void getDetails(ICalendar.Component c) {
         event_title = c.getFirstProperty("SUMMARY").getValue();
-        event_datetime = Long.parseLong(c.getFirstProperty("DTSTART").getValue());
+        event_datetime = Long.parseLong(c.getFirstProperty("DTSTART")
+                .getValue());
+        event_dateendtime = Long.parseLong(c.getFirstProperty("DTEND")
+                .getValue());
+
         event_where = child.getFirstProperty("LOCATION").getValue();
         event_disc = child.getFirstProperty("DISCRIPTION").getValue();
         return;
@@ -125,27 +134,28 @@ public class ImportEventActivity extends Activity {
     private CalendarEventModel buildTestModel() {
         CalendarEventModel model = new CalendarEventModel();
         model.mId = event_id;
-        model.mTitle = "The Question";
-        model.mDescription = "Evaluating Life, the Universe, and Everything";
-        model.mLocation = "Earth Mk2";
-        model.mAllDay = true;
-        model.mHasAlarm = false;
-        model.mCalendarId = 2;
+        model.mTitle = event_title;
+        model.mDescription = event_disc;
+        model.mLocation = event_where;
+        // model.mAllDay = true;
+        // model.mHasAlarm = false;
+        model.mCalendarId = 4;
         model.mStart = event_datetime; // Monday, May 3rd, local Time
-//        model.mDuration = "P3652421990D";
+        // model.mDuration = "P3652421990D";
         // The model uses the local timezone for allday
         model.mTimezone = "UTC";
-//        model.mRrule = "FREQ=DAILY;WKST=SU";
-//        model.mSyncId = "unique per calendar stuff";
+        // model.mRrule = "FREQ=DAILY;WKST=SU";
+        // model.mSyncId = "unique per calendar stuff";
         model.mAvailability = 0;
         model.mAccessLevel = 2; // This is one less than the values written if
                                 // >0
-//        model.mOwnerAccount = "steve@gmail.com";
-//        model.mHasAttendeeData = true;
-//        model.mEventStatus = Events.STATUS_CONFIRMED;
-//        model.mOrganizer = "organizer@gmail.com";
-//        model.mGuestsCanModify = false;
-//        model.mModelUpdatedWithEventCursor = true;
+        model.mOwnerAccount = Utils.getSharedPreference(context,
+                GeneralPreferences.KEY_DEFAULT_CALENDAR, "");
+        // model.mHasAttendeeData = true;
+        // model.mEventStatus = Events.STATUS_CONFIRMED;
+        // model.mOrganizer = "organizer@gmail.com";
+        // model.mGuestsCanModify = false;
+        // model.mModelUpdatedWithEventCursor = true;
         return model;
     }
 
@@ -160,10 +170,35 @@ public class ImportEventActivity extends Activity {
         if (item.getItemId() == R.id.action_done) {
             Log.d(TAG, "action_done");
             // save
-            editEventHelper = new EditEventHelper(context,
-                    new CalendarEventModel(context));
-            editEventHelper.saveEvent(buildTestModel(), null, 0);
+            String calId = "";
+            Cursor userCursor = getContentResolver().query(
+                    Uri.parse("content://com.android.calendar/calendars"),
+                    null, null, null, null);
+            if (userCursor.getCount() > 0) {
+                userCursor.moveToFirst();
+                calId = userCursor.getString(userCursor.getColumnIndex("_id"));
 
+            }
+            ContentValues event = new ContentValues();
+            event.put("title", event_title);
+            event.put("description", event_disc);
+            event.put("eventLocation", event_where);
+            event.put("calendar_id", calId);
+            event.put("dtstart", event_datetime);
+            event.put("dtend", event_dateendtime);
+            event.put("hasAlarm", 1);
+            event.put("eventTimezone", "UTC");
+
+            Uri newEvent = getContentResolver().insert(
+                    Uri.parse("content://com.android.calendar/events"), event);
+            long id = Long.parseLong(newEvent.getLastPathSegment());
+            ContentValues values = new ContentValues();
+            values.put("event_id", id);
+            // reminder
+            values.put("minutes", 10);
+            getContentResolver().insert(Uri.parse("content://com.android.calendar/reminders"), values);
+
+            Log.d(TAG, "import success");
             return true;
         }
         return super.onOptionsItemSelected(item);

@@ -172,7 +172,7 @@
     <color name="month_festival_other">#8899cc00</color>
 
     <color name="import_event_bg">#ffffffff</color>
-    <color name="import_event_title_bg">#0099ff</color>
+    <color name="import_event_title_bg">#032e82</color>
     <!-- #f50d3c -->
    
 </resources>

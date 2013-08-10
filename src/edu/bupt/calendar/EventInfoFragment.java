@@ -116,6 +116,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.regex.Pattern;
 
 public class EventInfoFragment extends DialogFragment implements
@@ -1063,6 +1064,16 @@ public class EventInfoFragment extends DialogFragment implements
                                     ICalendar.Component.VCALENDAR, null);
                             ICalendar.Component child = new ICalendar.Component(
                                     ICalendar.Component.VEVENT, component);
+                            child.addProperty(new ICalendar.Property(
+                                    "VTIMEZONE",
+                                    Utils.getSharedPreference(
+                                            mContext,
+                                            GeneralPreferences.KEY_HOME_TZ_ENABLED,
+                                            false) ? //
+                                    Utils.getSharedPreference(mContext,
+                                            GeneralPreferences.KEY_HOME_TZ,
+                                            TimeZone.getDefault().getID()) : //
+                                            TimeZone.getDefault().getID()));
                             child.addProperty(new ICalendar.Property("DTSTART",
                                     String.valueOf(mStartMillis)));
                             child.addProperty(new ICalendar.Property("DTEND",
