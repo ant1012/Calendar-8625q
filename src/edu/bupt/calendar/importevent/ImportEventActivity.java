@@ -8,17 +8,23 @@ import java.io.IOException;
 import com.android.calendarcommon.ICalendar;
 import com.android.calendarcommon.ICalendar.FormatException;
 
+import edu.bupt.calendar.CalendarEventModel;
 import edu.bupt.calendar.R;
 import edu.bupt.calendar.Utils;
+import edu.bupt.calendar.event.EditEventHelper;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
 public class ImportEventActivity extends Activity {
+    private String TAG = "ImportEventActivity";
     private View view;
     private TextView textviewTitle;
     private TextView textViewDatetime;
@@ -27,6 +33,13 @@ public class ImportEventActivity extends Activity {
     private TextView textViewDisc;
     private ICalendar.Component parent;
     private ICalendar.Component child;
+    private Context context = this;
+    private EditEventHelper editEventHelper;
+    private int event_id = 1;
+    private String event_title = null;
+    private long event_datetime = 0;
+    private String event_where = null;
+    private String event_disc = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,10 +57,11 @@ public class ImportEventActivity extends Activity {
 
         // just test first event
         child = parent.getComponents().get(0);
-        textviewTitle.setText(child.getFirstProperty("SUMMARY").getValue());
-        textViewDatetime.setText(child.getFirstProperty("DTSTART").getValue());
-        textViewWhere.setText(child.getFirstProperty("LOCATION").getValue());
-        textViewDisc.setText(child.getFirstProperty("DISCRIPTION").getValue());
+        getDetails(child);
+        textviewTitle.setText(event_title);
+        textViewDatetime.setText(String.valueOf(event_datetime));
+        textViewWhere.setText(event_where);
+        textViewDisc.setText(event_disc);
     }
 
     /** zzz */
@@ -90,8 +104,12 @@ public class ImportEventActivity extends Activity {
         return null;
     }
 
-    private String getSummary(ICalendar.Component c) {
-        return null;
+    private void getDetails(ICalendar.Component c) {
+        event_title = c.getFirstProperty("SUMMARY").getValue();
+        event_datetime = Long.parseLong(c.getFirstProperty("DTSTART").getValue());
+        event_where = child.getFirstProperty("LOCATION").getValue();
+        event_disc = child.getFirstProperty("DISCRIPTION").getValue();
+        return;
     }
 
     private ICalendar.Component getEventFromString(String s) {
@@ -104,6 +122,33 @@ public class ImportEventActivity extends Activity {
         return c;
     }
 
+    private CalendarEventModel buildTestModel() {
+        CalendarEventModel model = new CalendarEventModel();
+        model.mId = event_id;
+        model.mTitle = "The Question";
+        model.mDescription = "Evaluating Life, the Universe, and Everything";
+        model.mLocation = "Earth Mk2";
+        model.mAllDay = true;
+        model.mHasAlarm = false;
+        model.mCalendarId = 2;
+        model.mStart = event_datetime; // Monday, May 3rd, local Time
+//        model.mDuration = "P3652421990D";
+        // The model uses the local timezone for allday
+        model.mTimezone = "UTC";
+//        model.mRrule = "FREQ=DAILY;WKST=SU";
+//        model.mSyncId = "unique per calendar stuff";
+        model.mAvailability = 0;
+        model.mAccessLevel = 2; // This is one less than the values written if
+                                // >0
+//        model.mOwnerAccount = "steve@gmail.com";
+//        model.mHasAttendeeData = true;
+//        model.mEventStatus = Events.STATUS_CONFIRMED;
+//        model.mOrganizer = "organizer@gmail.com";
+//        model.mGuestsCanModify = false;
+//        model.mModelUpdatedWithEventCursor = true;
+        return model;
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -111,4 +156,16 @@ public class ImportEventActivity extends Activity {
         return true;
     }
 
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_done) {
+            Log.d(TAG, "action_done");
+            // save
+            editEventHelper = new EditEventHelper(context,
+                    new CalendarEventModel(context));
+            editEventHelper.saveEvent(buildTestModel(), null, 0);
+
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }
