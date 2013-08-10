@@ -62,11 +62,11 @@ public class ImportEventActivity extends Activity {
 
         // just test first event
         child = parent.getComponents().get(0);
-        getDetails(child);
-        textviewTitle.setText(event_title);
-        textViewDatetime.setText(String.valueOf(event_datetime));
-        textViewWhere.setText(event_where);
-        textViewDisc.setText(event_disc);
+//        getDetails(child);
+//        textviewTitle.setText(event_title);
+//        textViewDatetime.setText(String.valueOf(event_datetime));
+//        textViewWhere.setText(event_where);
+//        textViewDisc.setText(event_disc);
     }
 
     /** zzz */

@@ -1060,24 +1060,28 @@ public class EventInfoFragment extends DialogFragment implements
 
                         case 1:
                             Log.i("selected item", "mail");
+
                             ICalendar.Component component = new ICalendar.Component(
                                     ICalendar.Component.VCALENDAR, null);
                             ICalendar.Component child = new ICalendar.Component(
                                     ICalendar.Component.VEVENT, component);
-                            child.addProperty(new ICalendar.Property(
-                                    "VTIMEZONE",
-                                    Utils.getSharedPreference(
-                                            mContext,
-                                            GeneralPreferences.KEY_HOME_TZ_ENABLED,
-                                            false) ? //
-                                    Utils.getSharedPreference(mContext,
-                                            GeneralPreferences.KEY_HOME_TZ,
-                                            TimeZone.getDefault().getID()) : //
-                                            TimeZone.getDefault().getID()));
-                            child.addProperty(new ICalendar.Property("DTSTART",
-                                    String.valueOf(mStartMillis)));
-                            child.addProperty(new ICalendar.Property("DTEND",
-                                    String.valueOf(mEndMillis)));
+
+                            String tzid = //
+                            Utils.getSharedPreference(mContext,
+                                    GeneralPreferences.KEY_HOME_TZ_ENABLED,
+                                    false) ? //
+                            Utils.getSharedPreference(
+                                    //
+                                    mContext, GeneralPreferences.KEY_HOME_TZ,
+                                    TimeZone.getDefault().getID()) : //
+                                    TimeZone.getDefault().getID();
+
+                            child.addProperty(new ICalendar.Property("DTSTART"
+                                    + ";TZID=" + tzid, new SimpleDateFormat(
+                                    "yyyyMMdd'T'HHmmss").format(mStartMillis)));
+                            child.addProperty(new ICalendar.Property("DTEND"
+                                    + ";TZID=" + tzid, new SimpleDateFormat(
+                                    "yyyyMMdd'T'HHmmss").format(mEndMillis)));
                             child.addProperty(new ICalendar.Property("SUMMARY",
                                     mTitle.getText().toString()));
                             child.addProperty(new ICalendar.Property(
