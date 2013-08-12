@@ -1076,12 +1076,20 @@ public class EventInfoFragment extends DialogFragment implements
                                     TimeZone.getDefault().getID()) : //
                                     TimeZone.getDefault().getID();
 
-                            child.addProperty(new ICalendar.Property("DTSTART"
-                                    + ";TZID=" + tzid, new SimpleDateFormat(
-                                    "yyyyMMdd'T'HHmmss").format(mStartMillis)));
-                            child.addProperty(new ICalendar.Property("DTEND"
-                                    + ";TZID=" + tzid, new SimpleDateFormat(
-                                    "yyyyMMdd'T'HHmmss").format(mEndMillis)));
+                            ICalendar.Property dtstart_prop = new ICalendar.Property(
+                                    "DTSTART",//
+                                    new SimpleDateFormat("yyyyMMdd'T'HHmmss")
+                                            .format(mStartMillis));
+                            dtstart_prop.addParameter(new ICalendar.Parameter("TZID", tzid));
+                            child.addProperty(dtstart_prop);
+
+                            ICalendar.Property dtend_prop = new ICalendar.Property(
+                                    "DTEND",//
+                                    new SimpleDateFormat("yyyyMMdd'T'HHmmss")
+                                            .format(mEndMillis));
+                            dtend_prop.addParameter(new ICalendar.Parameter("TZID", tzid));
+                            child.addProperty(dtend_prop);
+
                             child.addProperty(new ICalendar.Property("SUMMARY",
                                     mTitle.getText().toString()));
                             child.addProperty(new ICalendar.Property(

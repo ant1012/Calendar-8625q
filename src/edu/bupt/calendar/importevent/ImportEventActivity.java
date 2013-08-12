@@ -39,6 +39,7 @@ public class ImportEventActivity extends Activity {
     private ICalendar.Component parent;
     private ICalendar.Component child;
     private Context context = this;
+    private CalendarEventModel model;
     private int event_id = 1;
     private String event_title = null;
     private long event_datetime = 0;
@@ -111,6 +112,10 @@ public class ImportEventActivity extends Activity {
 
     private void getDetails(ICalendar.Component c) {
         event_title = c.getFirstProperty("SUMMARY").getValue();
+
+        ICalendar.Property dtstart_prop = c.getFirstProperty("DTSTART");
+        
+
         event_datetime = Long.parseLong(c.getFirstProperty("DTSTART")
                 .getValue());
         event_dateendtime = Long.parseLong(c.getFirstProperty("DTEND")
@@ -132,14 +137,14 @@ public class ImportEventActivity extends Activity {
     }
 
     private CalendarEventModel buildTestModel() {
-        CalendarEventModel model = new CalendarEventModel();
+        model = new CalendarEventModel();
         model.mId = event_id;
         model.mTitle = event_title;
         model.mDescription = event_disc;
         model.mLocation = event_where;
         // model.mAllDay = true;
         // model.mHasAlarm = false;
-        model.mCalendarId = 4;
+        model.mCalendarId = 0;
         model.mStart = event_datetime; // Monday, May 3rd, local Time
         // model.mDuration = "P3652421990D";
         // The model uses the local timezone for allday
