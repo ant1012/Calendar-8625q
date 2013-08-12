@@ -35,8 +35,8 @@
     <color name="calendar_date_range_color">#80000000</color>	<!-- 不知道什么作用 -->
 
 
-    <color name="week_saturday">#6fa5a5</color>	<!-- 周视图下周六title颜色,原来#80333333 -->
-    <color name="week_sunday">#6fa5a5</color>	<!-- 周视图下周末title颜色,原来#80333333 -->
+    <color name="week_saturday">#80333333</color>	<!-- 周视图下周六title颜色 -->
+    <color name="week_sunday">#80333333</color>	<!-- 周视图下周末title颜色 -->
     <color name="calendar_future_bg_color">#ffffffff</color>	<!-- 日视图下未来背景颜色,之前的背景颜色适合用#bae6f6 -->
     <color name="calendar_hour_label">#FFFFFFFF</color>	<!-- 日视图下小时title颜色,原来#ff666666 -->
     <color name="calendar_ampm_label">#ff999999</color>	<!-- 不知道什么作用 -->
@@ -44,7 +44,7 @@
 
     <color name="calendar_date_banner_background">#FFEEEEEE</color>		<!-- 不知道什么作用 -->
 
-    <color name="calendar_date_banner_text_color">#ffffffff</color>	<!-- 周视图下工作日title颜色,原来#ff666666 -->
+    <color name="calendar_date_banner_text_color">#ff666666</color>	<!-- 周视图下工作日title颜色 -->
 
     <color name="calendar_grid_area_selected">#e633b5e5</color>	<!-- 日视图、周视图下选中后背景颜色(很清新的蓝) -->
 
@@ -171,8 +171,8 @@
     <color name="month_festival">#ff99cc00</color>	<!-- 果绿 -->
     <color name="month_festival_other">#8899cc00</color>
 
-    <color name="import_event_bg">#ffffff</color>
-    <color name="import_event_title_bg">#00007f</color>
+    <color name="import_event_bg">#00007f</color>
+    <color name="import_event_title_bg">#0099ff</color>
     <!-- #f50d3c -->
    
 </resources>
