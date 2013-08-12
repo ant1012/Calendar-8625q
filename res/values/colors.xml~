@@ -187,11 +187,19 @@
     <color name="new_event_hint_text_color">#FFFFFFFF</color>
 
     <!-- Text color of a clicked event in the day/week view -->
+<<<<<<< HEAD
+    <color name="day_event_clicked_background_color">#8033B5E5</color>	
+    <!-- background color for for clicked days in month view-->
+    <color name="day_clicked_background_color">#66aaee</color>	<!-- 选定瞬间(跳转前)被选日背景色,原来#FF33B5E5 -->
+    <!-- background color for the past -->
+    <color name="day_past_background_color"> #FFDDDDDD</color>	<!-- 过去的日子的日视图背景色 -->
+=======
     <color name="day_event_clicked_background_color">#8033B5E5</color>	<!-- 日视图周视图下选择日程后背景 -->
     <!-- background color for for clicked days in month view-->
     <color name="day_clicked_background_color">#66aaee</color>	<!-- 选定瞬间(跳转前)被选日背景色,原来#FF33B5E5 -->
     <!-- background color for the past -->
     <color name="day_past_background_color">#daf3f3</color>	<!-- 过去的日子的日视图背景色,原来#FFDDDDDD -->
+>>>>>>> e3663dad749193de61ca187643c575ea99714aeb
 
     <!-- Event info colors -->
     <color name="event_info_headline_color">#FFFFFFFF</color>
@@ -209,7 +217,11 @@
     <color name="alert_event_other">#FF999999</color>
     <color name="alert_past_event">#8F999999</color>
 
+<<<<<<< HEAD
+    <color name="appwidget_row_in_progress">#6633b5e5</color>
+=======
     <color name="appwidget_row_in_progress">#6633b5e5</color><!-- #f50d3c -->
+>>>>>>> e3663dad749193de61ca187643c575ea99714aeb
 
     <color name="appwidget_date">#ffEEEEEE</color>
     <color name="appwidget_week">@android:color/white</color>
@@ -233,7 +245,13 @@
     <color name="month_festival">#ff99cc00</color>	<!-- 果绿 -->
     <color name="month_festival_other">#8899cc00</color>
 
+<<<<<<< HEAD
+    <color name="import_event_bg">#ffffffff</color>
+    <color name="import_event_title_bg">#032e82</color>
+=======
     <color name="import_event_bg">#ffffff</color>
     <color name="import_event_title_bg">#00007f</color>
+>>>>>>> e3663dad749193de61ca187643c575ea99714aeb
+    <!-- #f50d3c -->
    
 </resources>

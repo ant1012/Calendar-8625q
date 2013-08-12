@@ -1,0 +1,155 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/import_event_bg"
+    tools:context=".ImportEventActivity" >
+
+    <ScrollView
+        android:id="@+id/import_event_scroll_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:animateLayoutChanges="true"
+        android:fadingEdge="none"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <!--
+                  Container for the event's headline
+                  Name, Date, Time & Location
+            -->
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/import_event_title_bg"
+                android:orientation="vertical" >
+
+                <LinearLayout
+                    android:id="@+id/import_event_headline"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:paddingBottom="16dip"
+                    android:paddingLeft="16dip"
+                    android:paddingRight="16dip"
+                    android:paddingTop="8dip" >
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal" >
+
+                        <!-- WHAT -->
+
+                        <TextView
+                            android:id="@+id/title"
+                            style="?android:attr/textAppearanceLarge"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight=".8"
+                            android:autoLink="all"
+                            android:text="@string/what_label"
+                            android:textColor="@color/event_info_headline_color"
+                            android:textColorLink="@color/event_info_headline_color"
+                            android:textSize="24sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <!-- WHEN -->
+
+                    <TextView
+                        android:id="@+id/when_datetime"
+                        style="?android:attr/textAppearanceLarge"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dip"
+                        android:text="@string/when_label"
+                        android:textColor="@color/event_info_headline_color"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/when_repeat"
+                        style="?android:attr/textAppearanceLarge"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="-3dip"
+                        android:textColor="@color/event_info_headline_color"
+                        android:textSize="14sp" />
+
+                    <!-- WHERE -->
+
+                    <TextView
+                        android:id="@+id/where"
+                        style="?android:attr/textAppearanceLarge"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dip"
+                        android:ellipsize="end"
+                        android:singleLine="false"
+                        android:text="@string/where_label"
+                        android:textColor="@color/event_info_headline_color"
+                        android:textColorLink="@color/event_info_headline_link_color"
+                        android:textSize="14sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/disc"
+                style="?android:attr/textAppearanceSmall"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:autoLink="all"
+                android:ellipsize="end"
+                android:paddingBottom="16dip"
+                android:paddingLeft="16dip"
+                android:paddingRight="16dip"
+                android:paddingTop="8dip"
+                android:textColor="@color/event_info_description_color"
+                android:textSize="@dimen/event_info_text_size" />
+
+            <!-- GUEST LIST -->
+
+            <edu.bupt.calendar.event.AttendeesView
+                android:id="@+id/long_attendee_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:textColor="@color/event_info_body_color"
+                android:visibility="gone" />
+
+            <!-- REMINDERS -->
+<!--
+            <TextView
+                style="?android:attr/listSeparatorTextViewStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginBottom="0dip"
+                android:layout_marginLeft="8dip"
+                android:layout_marginRight="8dip"
+                android:layout_marginTop="4dip"
+                android:gravity="center_vertical"
+                android:paddingLeft="8dip"
+                android:paddingRight="8dip"
+                android:text="@string/event_info_reminders_label"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/event_info_label_color" />
+ -->
+            <LinearLayout
+                android:id="@+id/reminder_items_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dip"
+                android:layout_marginLeft="-8dip"
+                android:layout_marginRight="8dip"
+                android:orientation="vertical" />
+        </LinearLayout>
+    </ScrollView>
+
+</RelativeLayout>
