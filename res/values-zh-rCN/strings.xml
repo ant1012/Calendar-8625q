@@ -64,13 +64,9 @@
     <string name="goto_today" msgid="9162136434410891230">"今天"</string>
     <string name="menu_preferences" msgid="9120238479503233925">"设置"</string>
     <string name="menu_select_visible_calendars" msgid="735670432781741817">"要显示的日历"</string>
-<<<<<<< HEAD
-    <string name="menu_select_festival" msgid="735670432781741818">"节日列表"</string>
-=======
     
     <string name="menu_select_festival" msgid="735670432781741818">"节日列表"</string>
     
->>>>>>> e3663dad749193de61ca187643c575ea99714aeb
     <string name="search" msgid="550656004486017426">"搜索"</string>
     <string name="hide_controls" msgid="830320505938520882">"隐藏控件"</string>
     <string name="show_controls" msgid="715520586028062621">"显示控件"</string>
@@ -183,15 +179,9 @@
     <string name="preferences_default_reminder_title" msgid="5188861433342733905">"默认提醒时间"</string>
     <string name="preferences_default_reminder_dialog" msgid="2490348857239323412">"默认提醒时间"</string>
     <string name="preferences_default_reminder_default" msgid="2903884416749959435">"10"</string>
-<<<<<<< HEAD
-    <string name="preferences_use_home_tz_title" msgid="5597546849968598210">"使用自定义时区"</string> <!-- 使用家所在时区 -->
-    <string name="preferences_use_home_tz_descrip" msgid="4835375381297413746">"旅行时按家所在时区显示日历和活动时间"</string>
-    <string name="preferences_home_tz_title" msgid="6680000444088818578">"当前时区"</string> <!-- 家所在时区 -->
-=======
     <string name="preferences_use_home_tz_title" msgid="5597546849968598210">"使用自定义时区"</string>	<!-- 使用家所在时区 -->
     <string name="preferences_use_home_tz_descrip" msgid="4835375381297413746">"旅行时按家所在时区显示日历和活动时间"</string>
     <string name="preferences_home_tz_title" msgid="6680000444088818578">"当前时区"</string>	<!-- 家所在时区 -->
->>>>>>> e3663dad749193de61ca187643c575ea99714aeb
     <string name="preferences_show_week_num_title" msgid="5280734329664503461">"显示周数"</string>
     <string name="preferences_about_title" msgid="2810624892412097879">"关于"</string>
     <string name="preferences_build_version" msgid="8242471883413502068">"版本号"</string>
@@ -261,10 +251,5 @@
     <string name="share_cancel">取消</string>
     <string name="share_empty">空</string>
     <string name="title_activity_import_event">导入日历项</string>
-<<<<<<< HEAD
     <string name="weekly_rrule">每周</string>
-
-=======
-    
->>>>>>> e3663dad749193de61ca187643c575ea99714aeb
 </resources>

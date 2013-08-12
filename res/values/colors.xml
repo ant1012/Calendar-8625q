@@ -19,59 +19,24 @@
 -->
 <resources>
 
-<<<<<<< HEAD
-    <color name="pressed">#330066ff</color><!-- 不知道什么作用 -->
-
-    <color name="selection">@android:color/holo_blue_light</color>
-=======
     <color name="pressed">#330066ff</color>	<!-- 不知道什么作用 -->
 
     <color name="selection">@android:color/holo_blue_light</color>	<!-- 不知道什么作用 -->
->>>>>>> e3663dad749193de61ca187643c575ea99714aeb
 
     <color name="today_highlight_color">#1BC854</color>	<!-- 选定今日时加亮边框,原来的#0033b5e5 -->
 
     <!-- The app wide background color -->
     <color name="background_color">#fafafa</color>	<!-- 最外面刚进去的背景 -->
-<<<<<<< HEAD
-    <color name="event_background">#ffc3d9ff</color>
-    <color name="panel_text_foreground">#ffffffff</color>
-    <color name="calendar_event_text_color">#ffFFFFFF</color>
-
-    <color name="calendar_owner_text_color">#777777</color>	<!-- #f50d3c -->
-    <color name="calendar_date_range_color">#80000000</color>
-=======
     <color name="event_background">#ffc3d9ff</color>	<!-- 不知道什么作用 -->
     <color name="panel_text_foreground">#ffffffff</color>	<!-- 不知道什么作用 -->
     <color name="calendar_event_text_color">#ffFFFFFF</color>	<!-- 周视图下日程文字颜色 -->
 
     <color name="calendar_owner_text_color">#777777</color>		<!-- 不知道什么作用 -->
     <color name="calendar_date_range_color">#80000000</color>	<!-- 不知道什么作用 -->
->>>>>>> e3663dad749193de61ca187643c575ea99714aeb
 
 
     <color name="week_saturday">#80333333</color>	<!-- 周视图下周六title颜色 -->
     <color name="week_sunday">#80333333</color>	<!-- 周视图下周末title颜色 -->
-<<<<<<< HEAD
-    <color name="calendar_future_bg_color">#ffffffff</color>	
-    <color name="calendar_hour_label">#ff666666</color>
-    <color name="calendar_ampm_label">#ff999999</color>
-    <color name="calendar_hour_background">#ffEEEEEE</color>
-
-    <color name="calendar_date_banner_background">#FFEEEEEE</color>	
-
-    <color name="calendar_date_banner_text_color">#ff666666</color>
-
-    <color name="calendar_grid_area_selected">#e633b5e5</color>
-
-
-    <color name="calendar_grid_line_inner_horizontal_color">#FFCCCCCC</color>
-    <color name="calendar_grid_line_inner_vertical_color">#FFCCCCCC</color>
-    <color name="calendar_grid_line_highlight_color">#ff707070</color>
-
-    <color name="mini_month_bg_color">#FFFFFFFF</color>
-    <color name="mini_month_today_outline_color">#FF000000</color>
-=======
     <color name="calendar_future_bg_color">#ffffffff</color>	<!-- 日视图下未来背景颜色,之前的背景颜色适合用#bae6f6 -->
     <color name="calendar_hour_label">#FFFFFFFF</color>	<!-- 日视图下小时title颜色,原来#ff666666 -->
     <color name="calendar_ampm_label">#FFFFFFFF</color>	<!-- 日视图下上下午title颜色,原来#ff999999 -->
@@ -90,50 +55,23 @@
 
     <color name="mini_month_bg_color">#FFFFFFFF</color>		<!-- 不知道什么作用 -->
     <color name="mini_month_today_outline_color">#FF000000</color>		<!-- 不知道什么作用 -->
->>>>>>> e3663dad749193de61ca187643c575ea99714aeb
 
  	<color name="month_day_number">#FF666666</color>  <!-- 月视图下当月日期颜色 -->
 	<color name="month_mini_day_number">#FF000000</color>   <!-- 010 不知道作用-->
     <color name="month_day_number_other">#FFCCCCCC</color>   <!-- 除选定月份外非双休日颜色-->
     <color name="month_week_num_color">#FF999999</color>	<!-- 010 不知道作用-->
-<<<<<<< HEAD
-    <color name="month_day_names_color">#FF999999</color>	<!-- 工作日title -->
-    <color name="month_today_number">#FF333333</color>	<!-- 月视图下当日日期颜色  -->
-    <color name="month_event_color">#FF333333</color>	
-    <color name="month_event_extra_color">#FF666666</color>
-    <color name="month_event_other_color">#FF666666</color>
-    <color name="month_event_extra_other_color">#4C999999</color>
-=======
     <color name="month_day_names_color">#FF999999</color>	<!-- 月视图下工作日title颜色 -->
     <color name="month_today_number">#FF333333</color>	<!-- 月视图下当日日期颜色  -->
     <color name="month_event_color">#FF333333</color>	<!-- 010 不知道作用-->
     <color name="month_event_extra_color">#FF666666</color>	<!-- 010 不知道作用-->
     <color name="month_event_other_color">#FF666666</color>	<!-- 010 不知道作用-->
     <color name="month_event_extra_other_color">#4C999999</color>	<!-- 010 不知道作用-->
->>>>>>> e3663dad749193de61ca187643c575ea99714aeb
     <color name="month_saturday">#66aaee</color>	<!-- 双休日title,原来#80333333 -->
     <color name="month_sunday">#66aaee</color>	<!-- 双休日title,原来#80333333 -->
     <color name="month_grid_lines">#ffCCCCCC</color>	<!-- 月视图下所有分割线 -->
     <color name="month_other_month_day_number">#ff939497</color>	<!-- 010 不知道作用-->
 
 
-
-<<<<<<< HEAD
-    <color name="month_other_bgcolor">#f6fbf6</color>  <!-- 月视图下其他月背景,原来#FFEEEEEE -->
-    <color name="month_selected_week_bgcolor">#FFDDDDDD</color>  <!-- 毛线? -->
-    <color name="month_today_bgcolor">#f8eedd</color>	 <!-- 月视图下当日背景色,原来#FFFFFFFF -->
-    <color name="month_bgcolor">#f9f6f0</color>  <!-- 月视图下当月背景色,原来#FFE5E5E5  -->
-
-
-
-    <color name="month_dna_conflict_time_color">#FF333333</color>
-
-    <color name="event_center">#ff6bd697</color>
-    <color name="edit_event_separator">#FFDDDDDD</color>
-
-    <color name="calendar_visible">#ff000000</color>
-    <color name="calendar_hidden">#ff808080</color>
-=======
     <color name="month_other_bgcolor">#44cae4d7</color>  <!-- 月视图下偶数月背景,原来#FFEEEEEE,现在浅绿 #f6fbf6 -->
     <color name="month_selected_week_bgcolor">#FFDDDDDD</color>  <!-- 010 不知道作用-->
     <color name="month_today_bgcolor">#f8eedd</color>	 <!-- 月视图下当日背景色,原来#FFFFFFFF -->
@@ -148,7 +86,6 @@
 
     <color name="calendar_visible">#ff000000</color>	<!-- 010 不知道作用-->
     <color name="calendar_hidden">#ff808080</color>	<!-- 010 不知道作用-->
->>>>>>> e3663dad749193de61ca187643c575ea99714aeb
     <color name="calendar_secondary_visible">#ff323232</color>
     <color name="calendar_secondary_hidden">#ff808080</color>
 
