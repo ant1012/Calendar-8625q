@@ -171,8 +171,8 @@
     <color name="month_festival">#ff99cc00</color>	<!-- 果绿 -->
     <color name="month_festival_other">#8899cc00</color>
 
-    <color name="import_event_bg">#00007f</color>
-    <color name="import_event_title_bg">#0099ff</color>
+    <color name="import_event_bg">#ffffff</color>
+    <color name="import_event_title_bg">#00007f</color>
     <!-- #f50d3c -->
    
 </resources>
