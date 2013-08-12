@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import com.android.calendarcommon.ICalendar;
@@ -26,6 +28,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class ImportEventActivity extends Activity {
     private String TAG = "ImportEventActivity";
@@ -39,11 +42,13 @@ public class ImportEventActivity extends Activity {
     private ICalendar.Component parent;
     private ICalendar.Component child;
     private Context context = this;
+    private CalendarEventModel model;
     private int event_id = 1;
     private String event_title = null;
     private long event_datetime = 0;
     private String event_where = null;
     private String event_disc = null;
+    private String event_tz = null;
     private long event_dateendtime;
 
     @Override
@@ -62,11 +67,11 @@ public class ImportEventActivity extends Activity {
 
         // just test first event
         child = parent.getComponents().get(0);
-//        getDetails(child);
-//        textviewTitle.setText(event_title);
-//        textViewDatetime.setText(String.valueOf(event_datetime));
-//        textViewWhere.setText(event_where);
-//        textViewDisc.setText(event_disc);
+        getDetails(child);
+        textviewTitle.setText(event_title);
+        textViewDatetime.setText(String.valueOf(event_datetime));
+        textViewWhere.setText(event_where);
+        textViewDisc.setText(event_disc);
     }
 
     /** zzz */
@@ -97,6 +102,7 @@ public class ImportEventActivity extends Activity {
                     // Log.i(TAG, child.toString());
                     //
                     // }
+                    Log.i(TAG, vcal);
                     return vcal;
 
                 } catch (FileNotFoundException e) {
@@ -111,10 +117,20 @@ public class ImportEventActivity extends Activity {
 
     private void getDetails(ICalendar.Component c) {
         event_title = c.getFirstProperty("SUMMARY").getValue();
-        event_datetime = Long.parseLong(c.getFirstProperty("DTSTART")
-                .getValue());
-        event_dateendtime = Long.parseLong(c.getFirstProperty("DTEND")
-                .getValue());
+
+        ICalendar.Property dtstart_prop = c.getFirstProperty("DTSTART");
+        ICalendar.Property dtend_prop = c.getFirstProperty("DTEND");
+        event_tz = dtstart_prop.getFirstParameter("TZID").value;
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
+                "yyyyMMdd'T'HHmmss");
+        try {
+            event_datetime = simpleDateFormat.parse(dtstart_prop.getValue())
+                    .getTime();
+            event_dateendtime = simpleDateFormat.parse(dtend_prop.getValue())
+                    .getTime();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
         event_where = child.getFirstProperty("LOCATION").getValue();
         event_disc = child.getFirstProperty("DISCRIPTION").getValue();
@@ -131,33 +147,33 @@ public class ImportEventActivity extends Activity {
         return c;
     }
 
-    private CalendarEventModel buildTestModel() {
-        CalendarEventModel model = new CalendarEventModel();
-        model.mId = event_id;
-        model.mTitle = event_title;
-        model.mDescription = event_disc;
-        model.mLocation = event_where;
-        // model.mAllDay = true;
-        // model.mHasAlarm = false;
-        model.mCalendarId = 4;
-        model.mStart = event_datetime; // Monday, May 3rd, local Time
-        // model.mDuration = "P3652421990D";
-        // The model uses the local timezone for allday
-        model.mTimezone = "UTC";
-        // model.mRrule = "FREQ=DAILY;WKST=SU";
-        // model.mSyncId = "unique per calendar stuff";
-        model.mAvailability = 0;
-        model.mAccessLevel = 2; // This is one less than the values written if
-                                // >0
-        model.mOwnerAccount = Utils.getSharedPreference(context,
-                GeneralPreferences.KEY_DEFAULT_CALENDAR, "");
-        // model.mHasAttendeeData = true;
-        // model.mEventStatus = Events.STATUS_CONFIRMED;
-        // model.mOrganizer = "organizer@gmail.com";
-        // model.mGuestsCanModify = false;
-        // model.mModelUpdatedWithEventCursor = true;
-        return model;
-    }
+    // private CalendarEventModel buildTestModel() {
+    // model = new CalendarEventModel();
+    // model.mId = event_id;
+    // model.mTitle = event_title;
+    // model.mDescription = event_disc;
+    // model.mLocation = event_where;
+    // // model.mAllDay = true;
+    // // model.mHasAlarm = false;
+    // model.mCalendarId = 0;
+    // model.mStart = event_datetime; // Monday, May 3rd, local Time
+    // // model.mDuration = "P3652421990D";
+    // // The model uses the local timezone for allday
+    // model.mTimezone = "UTC";
+    // // model.mRrule = "FREQ=DAILY;WKST=SU";
+    // // model.mSyncId = "unique per calendar stuff";
+    // model.mAvailability = 0;
+    // model.mAccessLevel = 2; // This is one less than the values written if
+    // // >0
+    // model.mOwnerAccount = Utils.getSharedPreference(context,
+    // GeneralPreferences.KEY_DEFAULT_CALENDAR, "");
+    // // model.mHasAttendeeData = true;
+    // // model.mEventStatus = Events.STATUS_CONFIRMED;
+    // // model.mOrganizer = "organizer@gmail.com";
+    // // model.mGuestsCanModify = false;
+    // // model.mModelUpdatedWithEventCursor = true;
+    // return model;
+    // }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -187,7 +203,7 @@ public class ImportEventActivity extends Activity {
             event.put("dtstart", event_datetime);
             event.put("dtend", event_dateendtime);
             event.put("hasAlarm", 1);
-            event.put("eventTimezone", "UTC");
+            event.put("eventTimezone", event_tz);
 
             Uri newEvent = getContentResolver().insert(
                     Uri.parse("content://com.android.calendar/events"), event);
@@ -196,9 +212,12 @@ public class ImportEventActivity extends Activity {
             values.put("event_id", id);
             // reminder
             values.put("minutes", 10);
-            getContentResolver().insert(Uri.parse("content://com.android.calendar/reminders"), values);
+            getContentResolver().insert(
+                    Uri.parse("content://com.android.calendar/reminders"),
+                    values);
 
             Log.d(TAG, "import success");
+            Toast.makeText(this, R.string.title_activity_import_event, Toast.LENGTH_SHORT).show();
             return true;
         }
         return super.onOptionsItemSelected(item);
