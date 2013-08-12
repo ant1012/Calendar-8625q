@@ -73,10 +73,10 @@
 
 
 
-    <color name="month_other_bgcolor">#f6fbf6</color>  <!-- 月视图下其他月背景,原来#FFEEEEEE -->
+    <color name="month_other_bgcolor">#66cae4d7</color>  <!-- 月视图下偶数月背景,原来#FFEEEEEE,现在浅绿 #f6fbf6 -->
     <color name="month_selected_week_bgcolor">#FFDDDDDD</color>  <!-- 010 不知道作用-->
     <color name="month_today_bgcolor">#f8eedd</color>	 <!-- 月视图下当日背景色,原来#FFFFFFFF -->
-    <color name="month_bgcolor">#f9f6f0</color>  <!-- 月视图下当月背景色,原来#FFE5E5E5  -->
+    <color name="month_bgcolor">#66f9f6f0</color>  <!-- 月视图下当月背景色,原来#FFE5E5E5  -->
 
 
 
