@@ -73,14 +73,14 @@
 
 
 
-    <color name="month_other_bgcolor">#66cae4d7</color>  <!-- 月视图下偶数月背景,原来#FFEEEEEE,现在浅绿 #f6fbf6 -->
+    <color name="month_other_bgcolor">#44cae4d7</color>  <!-- 月视图下偶数月背景,原来#FFEEEEEE,现在浅绿 #f6fbf6 -->
     <color name="month_selected_week_bgcolor">#FFDDDDDD</color>  <!-- 010 不知道作用-->
     <color name="month_today_bgcolor">#f8eedd</color>	 <!-- 月视图下当日背景色,原来#FFFFFFFF -->
     <color name="month_bgcolor">#66f9f6f0</color>  <!-- 月视图下当月背景色,原来#FFE5E5E5  -->
 
 
 
-    <color name="month_dna_conflict_time_color">#FF333333</color>	<!-- 日程冲突OR重叠时改变颜色 -->
+    <color name="month_dna_conflict_time_color">#ffcc66</color>	<!-- 日程冲突OR重叠时改变颜色#FF333333 -->
 
     <color name="event_center">#ff6bd697</color>	<!-- 010 不知道作用-->
     <color name="edit_event_separator">#FFDDDDDD</color>	<!-- 010 不知道作用-->
