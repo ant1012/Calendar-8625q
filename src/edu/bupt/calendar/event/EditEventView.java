@@ -899,7 +899,11 @@ public class EditEventView implements View.OnClickListener, DialogInterface.OnCa
         mIsMultipane = activity.getResources().getBoolean(R.bool.tablet_config);
         mStartTime = new Time(mTimezone);
         mEndTime = new Time(mTimezone);
-        mEmailValidator = new Rfc822Validator(null);
+
+        //mEmailValidator = new Rfc822Validator(null);
+        /** zzz */
+        mEmailValidator = new AttendeePhoneValidator(null);
+
         initMultiAutoCompleteTextView((RecipientEditTextView) mAttendeesList);
 
         // Display loading screen
