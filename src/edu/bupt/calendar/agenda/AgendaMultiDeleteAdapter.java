@@ -2,6 +2,7 @@ package edu.bupt.calendar.agenda;
 
 import java.util.ArrayList;  
 import java.util.HashMap;  
+import java.util.Map;
 
 import edu.bupt.calendar.R;
   
@@ -11,11 +12,12 @@ import android.view.View;
 import android.view.ViewGroup;  
 import android.widget.BaseAdapter;  
 import android.widget.CheckBox;  
+import android.widget.ImageView;
 import android.widget.TextView;  
   
 public class AgendaMultiDeleteAdapter extends BaseAdapter {  
     // 填充数据的list  
-    private ArrayList<String> list;  
+    private ArrayList<Map<String,String>> list;  
     // 用来控制CheckBox的选中状况  
     private static HashMap<Integer, Boolean> isSelected;  
     // 上下文  
@@ -24,7 +26,7 @@ public class AgendaMultiDeleteAdapter extends BaseAdapter {
     private LayoutInflater inflater = null;  
   
     // 构造器  
-    public AgendaMultiDeleteAdapter(ArrayList<String> list, Context context) {  
+    public AgendaMultiDeleteAdapter(ArrayList<Map<String, String>> list, Context context) {  
         this.context = context;  
         this.list = list;  
         inflater = LayoutInflater.from(context);  
@@ -63,7 +65,11 @@ public class AgendaMultiDeleteAdapter extends BaseAdapter {
             holder = new ViewHolder();  
             // 导入布局并赋值给convertview  
             convertView = inflater.inflate(R.layout.agendamultideleteadapter, null);  
+
+            holder.iv = (ImageView) convertView.findViewById(R.id.bluebt);
             holder.tv = (TextView) convertView.findViewById(R.id.item_tv);  
+            holder.tt = (TextView) convertView.findViewById(R.id.item_tt); 
+            holder.yy = (TextView) convertView.findViewById(R.id.item_yy); 
             holder.cb = (CheckBox) convertView.findViewById(R.id.item_cb);  
             // 为view设置标签  
             convertView.setTag(holder);  
@@ -72,7 +78,11 @@ public class AgendaMultiDeleteAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();  
         }  
         // 设置list中TextView的显示  
-        holder.tv.setText(list.get(position));  
+        
+        holder.iv.setImageDrawable(context.getResources().getDrawable(R.drawable.bluebt));
+        holder.tv.setText(list.get(position).get("title"));  
+        holder.tt.setText(list.get(position).get("time"));
+        holder.yy.setText(list.get(position).get("year"));  
         // 根据isSelected来设置checkbox的选中状况  
         holder.cb.setChecked(getIsSelected().get(position));  
         return convertView;  
@@ -87,7 +97,10 @@ public class AgendaMultiDeleteAdapter extends BaseAdapter {
     }  
   
     public static class ViewHolder {  
+    	ImageView iv;
         TextView tv;  
+        TextView tt;
+        TextView yy;
         CheckBox cb;  
     }  
 }  

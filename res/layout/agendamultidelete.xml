@@ -4,7 +4,7 @@
     android:layout_height="fill_parent"
     android:orientation="horizontal" >
 
-    <TextView
+    <!-- <TextView
         android:id="@+id/tv"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -39,23 +39,23 @@
             android:layout_weight="0.24"
             android:text="取消选择" />
 
-    </LinearLayout>
+    </LinearLayout> -->
 
     <ListView
         android:id="@+id/lv"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/line"
-        android:layout_marginBottom="50dp" />
-
-
+        android:layout_marginBottom="50dp" 
+    	android:divider="#a9a9a9"
+    	android:dividerHeight="1dp"/>
 
     <Button
         android:id="@+id/bt_delete"
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:text="删除" />
+        android:layout_centerHorizontal="true"
+        android:text="删 除" />
 
 </RelativeLayout>

@@ -72,7 +72,6 @@
     <color name="month_other_month_day_number">#ff939497</color>	<!-- 010 不知道作用-->
 
 
-
     <color name="month_other_bgcolor">#44cae4d7</color>  <!-- 月视图下偶数月背景,原来#FFEEEEEE,现在浅绿 #f6fbf6 -->
     <color name="month_selected_week_bgcolor">#FFDDDDDD</color>  <!-- 010 不知道作用-->
     <color name="month_today_bgcolor">#f8eedd</color>	 <!-- 月视图下当日背景色,原来#FFFFFFFF -->
@@ -171,8 +170,7 @@
     <color name="month_festival">#ff99cc00</color>	<!-- 果绿 -->
     <color name="month_festival_other">#8899cc00</color>
 
-    <color name="import_event_bg">#00007f</color>
-    <color name="import_event_title_bg">#0099ff</color>
-    <!-- #f50d3c -->
+    <color name="import_event_bg">#ffffff</color>
+    <color name="import_event_title_bg">#00007f</color>
    
 </resources>
