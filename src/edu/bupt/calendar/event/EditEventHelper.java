@@ -23,6 +23,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.provider.CalendarContract;
 import android.provider.CalendarContract.Attendees;
 import android.provider.CalendarContract.Calendars;
 import android.provider.CalendarContract.Events;
@@ -34,12 +35,14 @@ import android.text.util.Rfc822Token;
 import android.text.util.Rfc822Tokenizer;
 import android.util.Log;
 import android.view.View;
-
 import edu.bupt.calendar.AsyncQueryService;
 import edu.bupt.calendar.CalendarEventModel;
 import edu.bupt.calendar.CalendarEventModel.Attendee;
 import edu.bupt.calendar.CalendarEventModel.ReminderEntry;
 import edu.bupt.calendar.Utils;
+import edu.bupt.calendar.attendee.AttendeePhone;
+import edu.bupt.calendar.attendee.DBManager;
+
 import com.android.calendarcommon.DateException;
 import com.android.calendarcommon.EventRecurrence;
 import com.android.calendarcommon.RecurrenceProcessor;
@@ -56,7 +59,7 @@ import java.util.TimeZone;
 public class EditEventHelper {
     private static final String TAG = "EditEventHelper";
 
-    private static final boolean DEBUG = false;
+    private static final boolean DEBUG = true;
 
     public static final String[] EVENT_PROJECTION = new String[] {
             Events._ID, // 0
@@ -148,6 +151,10 @@ public class EditEventHelper {
         Attendees.ATTENDEE_STATUS_DECLINED,
     };
 
+    /** zzz */
+    private Context mContext;
+    private DBManager mgr;
+
     /**
      * This is the symbolic name for the key used to pass in the boolean for
      * creating all-day events that is part of the extra data of the intent.
@@ -216,6 +223,7 @@ public class EditEventHelper {
 
     public EditEventHelper(Context context, CalendarEventModel model) {
         mService = new AsyncQueryService(context);
+        mContext = context;
     }
 
     /**
@@ -404,6 +412,7 @@ public class EditEventHelper {
             // Organizer is not an attendee
 
             String ownerEmail = model.mOwnerAccount;
+            
             if (model.mAttendeesList.size() != 0 && Utils.isValidEmail(ownerEmail)) {
                 // Add organizer as attendee since we got some attendees
 
@@ -501,26 +510,64 @@ public class EditEventHelper {
 
                 if (newAttendees.size() > 0) {
                     // Insert the new attendees
-                    for (Attendee attendee : newAttendees.values()) {
-                        values.clear();
-                        values.put(Attendees.ATTENDEE_NAME, attendee.mName);
-                        values.put(Attendees.ATTENDEE_EMAIL, attendee.mEmail);
-                        values.put(Attendees.ATTENDEE_RELATIONSHIP,
-                                Attendees.RELATIONSHIP_ATTENDEE);
-                        values.put(Attendees.ATTENDEE_TYPE, Attendees.TYPE_REQUIRED);
-                        values.put(Attendees.ATTENDEE_STATUS, Attendees.ATTENDEE_STATUS_NONE);
+                    /** zzz */
+                    mgr = new DBManager(mContext);
 
+                    for (Attendee attendee : newAttendees.values()) {
+                        Log.i(TAG, "new attendee");
+//                        Log.i(TAG, "eventIdIndex - " + eventIdIndex);
+//                        Log.i(TAG, "eventId - " + eventId);
+//                        Log.i(TAG, "model.mId - " + model.mId);
+                        // get eventId for new event
                         if (newEvent) {
-                            b = ContentProviderOperation.newInsert(Attendees.CONTENT_URI)
-                                    .withValues(values);
-                            b.withValueBackReference(Attendees.EVENT_ID, eventIdIndex);
+                            Cursor cur = mContext.getContentResolver().query(
+                                    Events.CONTENT_URI, null, null, null, null);
+                            cur.moveToLast();
+                            long calID = cur
+                                    .getLong(cur
+                                            .getColumnIndexOrThrow(CalendarContract.Events._ID));
+                            Log.i(TAG, "calID - " + calID);
+                            Log.i(TAG, "eventId - " + (calID + 1));
+                            ArrayList<AttendeePhone> attendeePhones = new ArrayList<AttendeePhone>();
+                            AttendeePhone attendeePhone = new AttendeePhone(
+                                    calID + 1, attendee.mName, attendee.mEmail);
+                            attendeePhones.add(attendeePhone);
+                            mgr.add(attendeePhones);
                         } else {
-                            values.put(Attendees.EVENT_ID, eventId);
-                            b = ContentProviderOperation.newInsert(Attendees.CONTENT_URI)
-                                    .withValues(values);
+                            Log.i(TAG, "eventId - " + eventId);
+                            ArrayList<AttendeePhone> attendeePhones = new ArrayList<AttendeePhone>();
+                            AttendeePhone attendeePhone = new AttendeePhone(
+                                    eventId, attendee.mName, attendee.mEmail);
+                            attendeePhones.add(attendeePhone);
+                            mgr.add(attendeePhones);
                         }
-                        ops.add(b.build());
+//                        ArrayList<AttendeePhone> attendeePhones = new ArrayList<AttendeePhone>();
+//                        AttendeePhone attendeePhone = new AttendeePhone(eventIdIndex, 
+//                                attendee.mName, attendee.mEmail);
+//                        attendeePhones.add(attendeePhone);
+//                        mgr.add(attendeePhones);
+
+//                        values.clear();
+//                        values.put(Attendees.ATTENDEE_NAME, attendee.mName);
+//                        values.put(Attendees.ATTENDEE_EMAIL, );
+//                        values.put(Attendees.ATTENDEE_RELATIONSHIP,
+//                                Attendees.RELATIONSHIP_ATTENDEE);
+//                        values.put(Attendees.ATTENDEE_TYPE, Attendees.TYPE_REQUIRED);
+//                        values.put(Attendees.ATTENDEE_STATUS, Attendees.ATTENDEE_STATUS_NONE);
+//
+//                        if (newEvent) {
+//                            b = ContentProviderOperation.newInsert(Attendees.CONTENT_URI)
+//                                    .withValues(values);
+//                            b.withValueBackReference(Attendees.EVENT_ID, eventIdIndex);
+//                        } else {
+//                            values.put(Attendees.EVENT_ID, eventId);
+//                            b = ContentProviderOperation.newInsert(Attendees.CONTENT_URI)
+//                                    .withValues(values);
+//                        }
+//                        ops.add(b.build());
                     }
+
+                    mgr.closeDB();
                 }
             }
         }
