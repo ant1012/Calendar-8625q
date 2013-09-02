@@ -520,17 +520,25 @@ public class EditEventHelper {
 //                        Log.i(TAG, "model.mId - " + model.mId);
                         // get eventId for new event
                         if (newEvent) {
-                            Cursor cur = mContext.getContentResolver().query(
-                                    Events.CONTENT_URI, null, null, null, null);
-                            cur.moveToLast();
-                            long calID = cur
-                                    .getLong(cur
-                                            .getColumnIndexOrThrow(CalendarContract.Events._ID));
-                            Log.i(TAG, "calID - " + calID);
-                            Log.i(TAG, "eventId - " + (calID + 1));
+//                            Cursor cur = mContext.getContentResolver().query(
+//                                    Events.CONTENT_URI, null, null, null, null);
+//                            cur.moveToLast();
+//                            long calID = cur
+//                                    .getLong(cur
+//                                            .getColumnIndexOrThrow(CalendarContract.Events._ID));
+                            Cursor cursor = mContext
+                                    .getContentResolver()
+                                    .query(Events.CONTENT_URI,
+                                            new String[] { "MAX(_id) as max_id" },
+                                            null, null, "_id");
+                            cursor.moveToFirst();
+                            long max_val = cursor.getLong(cursor.getColumnIndex("max_id"));     
+                            cursor.close();
+                            Log.i(TAG, "max_val - " + max_val);
+                            Log.i(TAG, "eventId - " + (max_val + 1));
                             ArrayList<AttendeePhone> attendeePhones = new ArrayList<AttendeePhone>();
                             AttendeePhone attendeePhone = new AttendeePhone(
-                                    calID + 1, attendee.mName, attendee.mEmail);
+                                    max_val + 1, attendee.mName, attendee.mEmail);
                             attendeePhones.add(attendeePhone);
                             mgr.add(attendeePhones);
                         } else {
