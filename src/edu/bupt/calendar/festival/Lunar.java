@@ -21,11 +21,11 @@ public final class Lunar {
     private static int monCyl;
     private static int dayCyl;
     private static int yearCyl;
-    private static int year;
+    private static int year; //农历
     private static int month;
     private static int day;
     /** zzz */
-    private static int syear;
+    private static int syear; //公历
     private static int smonth;
     private static int sday;
     private static boolean isSetShowLunar = true;
@@ -135,14 +135,14 @@ public final class Lunar {
                 .getSharedPreferences(context);
         setShowLunch(prefs.getBoolean(GeneralPreferences.KEY_SHOW_LUNAR, false));
 
-        if (!isSetShowLunar) {
-            return;
-        }
+        // if (!isSetShowLunar) {
+        // return;
+        // }
         syear = year;
         smonth = month;
         sday = day;
 
-        Date sDObj = new Date(syear - 1900, smonth -1, sday);
+        Date sDObj = new Date(syear - 1900, smonth - 1, sday);
         Lunar1(sDObj);
     }
 
@@ -203,7 +203,7 @@ public final class Lunar {
 
         return disp;
     }
-    
+
     // public static boolean isWeekend() {
     //
     // }
@@ -219,9 +219,9 @@ public final class Lunar {
     public static String getFestival() {
         String sf = Festival.showSFtv(smonth, sday);
         String lf = Festival.showLFtv(month, day, monthDays(year, month));
-        
+
         if (sf != "") {
-            if (lf != ""){
+            if (lf != "") {
                 return sf + "/" + lf;
             } else {
                 return sf;
