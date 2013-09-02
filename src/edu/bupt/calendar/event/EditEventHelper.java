@@ -535,12 +535,63 @@ public class EditEventHelper {
                             long max_val = cursor.getLong(cursor.getColumnIndex("max_id"));     
                             cursor.close();
                             Log.i(TAG, "max_val - " + max_val);
+                            if (max_val == 0) {
+                                Log.i(TAG, "max_val == 0");
+                                Log.d(TAG, "save fake data");
+                                // save
+                                String calId = "";
+                                Cursor userCursor = mContext.getContentResolver().query(
+                                        Uri.parse("content://com.android.calendar/calendars"),
+                                        null, null, null, null);
+                                if (userCursor.getCount() > 0) {
+                                    userCursor.moveToFirst();
+                                    calId = userCursor.getString(userCursor.getColumnIndex("_id"));
+                                    Log.i(TAG, "calId - " + calId);
+                                }
+                                ContentValues event = new ContentValues();
+                                event.put("title", "fake title");
+                                event.put("description", "fake title");
+                                event.put("eventLocation", "fake title");
+                                event.put("calendar_id", calId);
+                                event.put("dtstart", 0);
+                                event.put("dtend", 0);
+                                event.put("hasAlarm", 0);
+                                event.put("eventTimezone", "fake eventTimezone");
+
+                                Uri newEvent1 = mContext
+                                        .getContentResolver()
+                                        .insert(Uri
+                                                .parse("content://com.android.calendar/events"),
+                                                event);
+
+                                Log.d(TAG, "save fake data");
+
+                                cursor = mContext.getContentResolver().query(
+                                        Events.CONTENT_URI,
+                                        new String[] { "MAX(_id) as max_id" },
+                                        null, null, "_id");
+                                cursor.moveToFirst();
+                                max_val = cursor.getLong(cursor
+                                        .getColumnIndex("max_id"));
+                                cursor.close();
+
+                                Log.d(TAG, "del fake data");
+                                Uri deleteUri = null;
+                                deleteUri = ContentUris.withAppendedId(
+                                        Events.CONTENT_URI, max_val);
+                                mContext.getContentResolver().delete(deleteUri,
+                                        null, null);
+
+                                Log.i(TAG, "max_val - " + max_val);
+                            }
                             Log.i(TAG, "eventId - " + (max_val + 1));
                             ArrayList<AttendeePhone> attendeePhones = new ArrayList<AttendeePhone>();
                             AttendeePhone attendeePhone = new AttendeePhone(
-                                    max_val + 1, attendee.mName, attendee.mEmail);
+                                    max_val + 1, attendee.mName,
+                                    attendee.mEmail);
                             attendeePhones.add(attendeePhone);
                             mgr.add(attendeePhones);
+                            
                         } else {
                             Log.i(TAG, "eventId - " + eventId);
                             ArrayList<AttendeePhone> attendeePhones = new ArrayList<AttendeePhone>();
