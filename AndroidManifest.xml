@@ -19,7 +19,7 @@
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="edu.bupt.calendar"
-    android:sharedUserLabel="@string/app_label" >
+    android:sharedUserLabel="@string/app_label" android:versionCode="0.2">
 
     <!--
        NOTE: and original-package cannot be used, since the Eclair
