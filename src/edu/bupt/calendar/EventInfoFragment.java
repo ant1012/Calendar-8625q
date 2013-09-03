@@ -99,6 +99,8 @@ import edu.bupt.calendar.CalendarController.EventInfo;
 import edu.bupt.calendar.CalendarController.EventType;
 import edu.bupt.calendar.CalendarEventModel.Attendee;
 import edu.bupt.calendar.CalendarEventModel.ReminderEntry;
+import edu.bupt.calendar.attendee.AttendeePhone;
+import edu.bupt.calendar.attendee.DBManager;
 import edu.bupt.calendar.event.AttendeesView;
 import edu.bupt.calendar.event.EditEventActivity;
 import edu.bupt.calendar.event.EditEventHelper;
@@ -392,6 +394,9 @@ public class EventInfoFragment extends DialogFragment implements
     private Activity mActivity;
     private Context mContext;
 
+    /** zzz */
+    private DBManager mgr;
+
     private class QueryHandler extends AsyncQueryService {
         public QueryHandler(Context context) {
             super(context);
@@ -437,10 +442,26 @@ public class EventInfoFragment extends DialogFragment implements
 
                     // start attendees query
                     uri = Attendees.CONTENT_URI;
+                    /** zzz */
+                    Log.d(TAG, "startQuery");
                     startQuery(TOKEN_QUERY_ATTENDEES, null, uri,
                             ATTENDEES_PROJECTION, ATTENDEES_WHERE, args,
                             ATTENDEES_SORT_ORDER);
+
+                    mgr = new DBManager(mContext);
+                    List<AttendeePhone> attendeePhones = mgr.query(args[0]);
+                    for(AttendeePhone attendeePhone : attendeePhones) {
+                        Log.i(TAG, attendeePhone.event_id + "/" + attendeePhone.phoneNumber);
+                        Attendee attendee = new Attendee(attendeePhone.name, attendeePhone.phoneNumber);
+                        mNoResponseAttendees.add(new Attendee(attendeePhone.name, attendeePhone.phoneNumber,
+                                Attendees.ATTENDEE_STATUS_NONE, null,
+                                null));
+                    }
+                    updateAttendees(mView);
+
                 } else {
+                    /** zzz */
+                    Log.d(TAG, "sendAccessibilityEventIfQueryDone");
                     sendAccessibilityEventIfQueryDone(TOKEN_QUERY_ATTENDEES);
                 }
                 if (mHasAlarm) {
@@ -454,9 +475,9 @@ public class EventInfoFragment extends DialogFragment implements
                 }
                 break;
             case TOKEN_QUERY_ATTENDEES:
-                mAttendeesCursor = Utils.matrixCursorFromCursor(cursor);
-                initAttendeesCursor(mView);
-                updateResponse(mView);
+//                mAttendeesCursor = Utils.matrixCursorFromCursor(cursor);
+//                initAttendeesCursor(mView);
+//                updateResponse(mView);
                 break;
             case TOKEN_QUERY_REMINDERS:
                 mRemindersCursor = Utils.matrixCursorFromCursor(cursor);
@@ -879,10 +900,14 @@ public class EventInfoFragment extends DialogFragment implements
                         if (!TextUtils.isEmpty(name)) {
                             mEventOrganizerDisplayName = name;
                             if (!mIsOrganizer) {
+                                
+                                /** zzz */
+                                // setVisibilityCommon(view,
+                                // R.id.organizer_container, View.VISIBLE);
                                 setVisibilityCommon(view,
-                                        R.id.organizer_container, View.VISIBLE);
-                                setTextCommon(view, R.id.organizer,
-                                        mEventOrganizerDisplayName);
+                                        R.id.organizer_container, View.GONE);
+                                // setTextCommon(view, R.id.organizer,
+                                // mEventOrganizerDisplayName);
                             }
                         }
                     }
@@ -1895,9 +1920,13 @@ public class EventInfoFragment extends DialogFragment implements
             }
 
             if (!mIsOrganizer && !TextUtils.isEmpty(mEventOrganizerDisplayName)) {
-                setTextCommon(view, R.id.organizer, mEventOrganizerDisplayName);
-                setVisibilityCommon(view, R.id.organizer_container,
-                        View.VISIBLE);
+                
+                /** zzz */
+                // setTextCommon(view, R.id.organizer,
+                // mEventOrganizerDisplayName);
+                // setVisibilityCommon(view, R.id.organizer_container,
+                // View.VISIBLE);
+                setVisibilityCommon(view, R.id.organizer_container, View.GONE);
             } else {
                 setVisibilityCommon(view, R.id.organizer_container, View.GONE);
             }
@@ -2039,8 +2068,12 @@ public class EventInfoFragment extends DialogFragment implements
             setVisibilityCommon(mView, R.id.email_attendees_container,
                     View.GONE);
         } else {
+
+            /** zzz */
+            // setVisibilityCommon(mView, R.id.email_attendees_container,
+            // View.VISIBLE);
             setVisibilityCommon(mView, R.id.email_attendees_container,
-                    View.VISIBLE);
+                    View.GONE);
         }
     }
 
@@ -2124,29 +2157,34 @@ public class EventInfoFragment extends DialogFragment implements
 
         // TODO Switch to EditEventHelper.canRespond when this class uses
         // CalendarEventModel.
-        if (!mCanModifyCalendar
-                || (mHasAttendeeData && mIsOrganizer && mNumOfAttendees <= 1)
-                || (mIsOrganizer && !mOwnerCanRespond)) {
-            setVisibilityCommon(view, R.id.response_container, View.GONE);
-            return;
-        }
 
-        setVisibilityCommon(view, R.id.response_container, View.VISIBLE);
+        /** zzz */
+        setVisibilityCommon(view, R.id.response_container, View.GONE);
+        return;
 
-        int response;
-        if (mUserSetResponse != Attendees.ATTENDEE_STATUS_NONE) {
-            response = mUserSetResponse;
-        } else if (mAttendeeResponseFromIntent != Attendees.ATTENDEE_STATUS_NONE) {
-            response = mAttendeeResponseFromIntent;
-        } else {
-            response = mOriginalAttendeeResponse;
-        }
-
-        int buttonToCheck = findButtonIdForResponse(response);
-        RadioGroup radioGroup = (RadioGroup) view
-                .findViewById(R.id.response_value);
-        radioGroup.check(buttonToCheck); // -1 clear all radio buttons
-        radioGroup.setOnCheckedChangeListener(this);
+//        if (!mCanModifyCalendar
+//                || (mHasAttendeeData && mIsOrganizer && mNumOfAttendees <= 1)
+//                || (mIsOrganizer && !mOwnerCanRespond)) {
+//            setVisibilityCommon(view, R.id.response_container, View.GONE);
+//            return;
+//        }
+//
+//        setVisibilityCommon(view, R.id.response_container, View.VISIBLE);
+//
+//        int response;
+//        if (mUserSetResponse != Attendees.ATTENDEE_STATUS_NONE) {
+//            response = mUserSetResponse;
+//        } else if (mAttendeeResponseFromIntent != Attendees.ATTENDEE_STATUS_NONE) {
+//            response = mAttendeeResponseFromIntent;
+//        } else {
+//            response = mOriginalAttendeeResponse;
+//        }
+//
+//        int buttonToCheck = findButtonIdForResponse(response);
+//        RadioGroup radioGroup = (RadioGroup) view
+//                .findViewById(R.id.response_value);
+//        radioGroup.check(buttonToCheck); // -1 clear all radio buttons
+//        radioGroup.setOnCheckedChangeListener(this);
     }
 
     private void setTextCommon(View view, int id, CharSequence text) {
