@@ -49,7 +49,6 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
 import android.widget.Toast;
-
 import edu.bupt.calendar.AsyncQueryService;
 import edu.bupt.calendar.CalendarController;
 import edu.bupt.calendar.CalendarController.EventHandler;
@@ -58,6 +57,8 @@ import edu.bupt.calendar.CalendarController.EventType;
 import edu.bupt.calendar.CalendarEventModel;
 import edu.bupt.calendar.CalendarEventModel.Attendee;
 import edu.bupt.calendar.CalendarEventModel.ReminderEntry;
+import edu.bupt.calendar.attendee.AttendeePhone;
+import edu.bupt.calendar.attendee.DBManager;
 import edu.bupt.calendar.DeleteEventHelper;
 import edu.bupt.calendar.R;
 import edu.bupt.calendar.Utils;
@@ -65,6 +66,7 @@ import edu.bupt.calendar.Utils;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 public class EditEventFragment extends Fragment implements EventHandler {
     private static final String TAG = "EditEventActivity";
@@ -120,6 +122,9 @@ public class EditEventFragment extends Fragment implements EventHandler {
     private final Intent mIntent;
 
     private boolean mUseCustomActionBar;
+
+    /** zzz */
+    private DBManager mgr;
 
     private final View.OnClickListener mActionBarListener = new View.OnClickListener() {
         @Override
@@ -183,10 +188,25 @@ public class EditEventFragment extends Fragment implements EventHandler {
                         String[] whereArgs = {
                             Long.toString(eventId)
                         };
-                        mHandler.startQuery(TOKEN_ATTENDEES, null, attUri,
-                                EditEventHelper.ATTENDEES_PROJECTION,
-                                EditEventHelper.ATTENDEES_WHERE /* selection */,
-                                whereArgs /* selection args */, null /* sort order */);
+
+                        /** zzz*/
+                        Log.d(TAG, "startQuery TOKEN_ATTENDEES");
+                        Log.i(TAG, "eventId - " + eventId);
+                        mgr = new DBManager(mContext);
+                        List<AttendeePhone> attendeePhones = mgr.query(whereArgs[0]);
+                        for(AttendeePhone attendeePhone : attendeePhones) {
+                            Log.i(TAG, attendeePhone.event_id + "/" + attendeePhone.phoneNumber);
+                            Attendee attendee = new Attendee(attendeePhone.name, attendeePhone.phoneNumber);
+                            mModel.addAttendee(attendee);
+                            mOriginalModel.addAttendee(attendee);
+                        }
+
+                        setModelIfDone(TOKEN_ATTENDEES);
+
+//                        mHandler.startQuery(TOKEN_ATTENDEES, null, attUri,
+//                                EditEventHelper.ATTENDEES_PROJECTION,
+//                                EditEventHelper.ATTENDEES_WHERE /* selection */,
+//                                whereArgs /* selection args */, null /* sort order */);
                     } else {
                         setModelIfDone(TOKEN_ATTENDEES);
                     }

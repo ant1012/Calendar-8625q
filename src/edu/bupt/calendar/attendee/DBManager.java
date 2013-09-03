@@ -67,12 +67,42 @@ public class DBManager {
     }
 
     /**
+     * query for event id
+     * 
+     * @return List<Person>
+     */
+    public List<AttendeePhone> query(String s) {
+        ArrayList<AttendeePhone> attendeePhones = new ArrayList<AttendeePhone>();
+        Cursor c = queryTheCursor(s);
+        while (c.moveToNext()) {
+            AttendeePhone attendeePhone = new AttendeePhone();
+            attendeePhone._id = c.getInt(c.getColumnIndex("_id"));
+            attendeePhone.event_id = c.getInt(c.getColumnIndex("event_id"));
+            attendeePhone.name = c.getString(c.getColumnIndex("name"));
+            attendeePhone.phoneNumber = c.getString(c.getColumnIndex("phoneNumber"));
+            attendeePhones.add(attendeePhone);
+        }
+        c.close();
+        return attendeePhones;
+    }
+
+    /**
      * query all AttendeePhones, return cursor
      * 
      * @return Cursor
      */
-    public Cursor queryTheCursor() {
+    private Cursor queryTheCursor() {
         Cursor c = db.rawQuery("SELECT * FROM AttendeePhone", null);
+        return c;
+    }
+
+    /**
+     * query all AttendeePhones, return cursor
+     * 
+     * @return Cursor
+     */
+    private Cursor queryTheCursor(String s) {
+        Cursor c = db.rawQuery("SELECT * FROM AttendeePhone WHERE event_id=" + s, null);
         return c;
     }
 
