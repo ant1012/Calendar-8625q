@@ -682,19 +682,21 @@ public class EditEventFragment extends Fragment implements EventHandler {
                     && mModel.normalizeReminders()
                     && mHelper.saveEvent(mModel, mOriginalModel, mModification)) {
                 int stringResource;
-                if (!mModel.mAttendeesList.isEmpty()) {
-                    if (mModel.mUri != null) {
-                        stringResource = R.string.saving_event_with_guest;
-                    } else {
-                        stringResource = R.string.creating_event_with_guest;
-                    }
-                } else {
+
+                /** zzz */
+//                if (!mModel.mAttendeesList.isEmpty()) {
+//                    if (mModel.mUri != null) {
+//                        stringResource = R.string.saving_event_with_guest;
+//                    } else {
+//                        stringResource = R.string.creating_event_with_guest;
+//                    }
+//                } else {
                     if (mModel.mUri != null) {
                         stringResource = R.string.saving_event;
                     } else {
                         stringResource = R.string.creating_event;
                     }
-                }
+//                }
                 Toast.makeText(mContext, stringResource, Toast.LENGTH_SHORT).show();
             } else if ((mCode & Utils.DONE_SAVE) != 0 && mModel != null && isEmptyNewEvent()) {
                 Toast.makeText(mContext, R.string.empty_event, Toast.LENGTH_SHORT).show();

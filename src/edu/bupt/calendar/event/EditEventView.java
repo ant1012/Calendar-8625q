@@ -35,6 +35,7 @@ import android.provider.CalendarContract.Attendees;
 import android.provider.CalendarContract.Calendars;
 import android.provider.CalendarContract.Events;
 import android.provider.CalendarContract.Reminders;
+import android.provider.ContactsContract;
 import android.provider.Settings;
 import android.text.InputFilter;
 import android.text.TextUtils;
@@ -45,6 +46,7 @@ import android.text.util.Rfc822Tokenizer;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityManager;
@@ -56,6 +58,7 @@ import android.widget.CalendarView;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.MultiAutoCompleteTextView;
 import android.widget.RadioButton;
@@ -65,7 +68,6 @@ import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
-
 import edu.bupt.calendar.CalendarEventModel;
 import edu.bupt.calendar.CalendarEventModel.Attendee;
 import edu.bupt.calendar.CalendarEventModel.ReminderEntry;
@@ -78,6 +80,7 @@ import edu.bupt.calendar.TimezoneAdapter;
 import edu.bupt.calendar.TimezoneAdapter.TimezoneRow;
 import edu.bupt.calendar.Utils;
 import edu.bupt.calendar.event.EditEventHelper.EditDoneRunnable;
+
 import com.android.calendarcommon.EventRecurrence;
 import com.android.common.Rfc822InputFilter;
 import com.android.common.Rfc822Validator;
@@ -129,6 +132,10 @@ public class EditEventView implements View.OnClickListener, DialogInterface.OnCa
     TextView mTimezoneLabel;
     LinearLayout mRemindersContainer;
     MultiAutoCompleteTextView mAttendeesList;
+
+    /** zzz */
+    ImageButton mChooseAttendee;
+
     View mCalendarSelectorGroup;
     View mCalendarSelectorWrapper;
     View mCalendarStaticGroup;
@@ -665,14 +672,14 @@ public class EditEventView implements View.OnClickListener, DialogInterface.OnCa
     // on the "remove reminder" button.
     @Override
     public void onClick(View view) {
-
         // This must be a click on one of the "remove reminder" buttons
         LinearLayout reminderItem = (LinearLayout) view.getParent();
         LinearLayout parent = (LinearLayout) reminderItem.getParent();
         parent.removeView(reminderItem);
         mReminderItems.remove(reminderItem);
         updateRemindersVisibility(mReminderItems.size());
-        EventViewUtils.updateAddReminderButton(mView, mReminderItems, mModel.mCalendarMaxReminders);
+        EventViewUtils.updateAddReminderButton(mView, mReminderItems,
+                mModel.mCalendarMaxReminders);
     }
 
     // This is called if the user cancels the "No calendars" dialog.
@@ -861,6 +868,9 @@ public class EditEventView implements View.OnClickListener, DialogInterface.OnCa
         mStartHomeGroup = view.findViewById(R.id.from_row_home_tz);
         mEndHomeGroup = view.findViewById(R.id.to_row_home_tz);
         mAttendeesList = (MultiAutoCompleteTextView) view.findViewById(R.id.attendees);
+
+        /** zzz */
+        mChooseAttendee = (ImageButton) view.findViewById(R.id.choose_attendees);
 
         mTitleTextView.setTag(mTitleTextView.getBackground());
         mLocationTextView.setTag(mLocationTextView.getBackground());
@@ -1147,6 +1157,9 @@ public class EditEventView implements View.OnClickListener, DialogInterface.OnCa
         mAccessLevelSpinner.setSelection(model.mAccessLevel);
 
         View responseLabel = mView.findViewById(R.id.response_label);
+
+        /** zzz */
+        canRespond = false;
         if (canRespond) {
             int buttonToCheck = EventInfoFragment
                     .findButtonIdForResponse(model.mSelfAttendeeStatus);
@@ -1180,6 +1193,17 @@ public class EditEventView implements View.OnClickListener, DialogInterface.OnCa
             View calendarGroup = mView.findViewById(R.id.calendar_group);
             calendarGroup.setVisibility(View.GONE);
         }
+
+        /** zzz */
+        mChooseAttendee.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "onClick");
+                Intent intent = new Intent(Intent.ACTION_PICK,
+                        ContactsContract.Contacts.CONTENT_URI);
+                mActivity.startActivityForResult(intent, 1);
+            }
+        });
 
         populateWhen();
         populateRepeats();
