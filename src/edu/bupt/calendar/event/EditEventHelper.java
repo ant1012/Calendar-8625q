@@ -490,21 +490,28 @@ public class EditEventHelper {
                     // delete removed attendees if necessary
                     if (removedAttendees.size() > 0) {
                         b = ContentProviderOperation.newDelete(Attendees.CONTENT_URI);
-
                         String[] args = new String[removedAttendees.size() + 1];
                         args[0] = Long.toString(eventId);
-                        int i = 1;
-                        StringBuilder deleteWhere = new StringBuilder(ATTENDEES_DELETE_PREFIX);
+
+                        /** zzz */
+                        Log.d(TAG, "newDelete");
+                        mgr = new DBManager(mContext);
                         for (String removedAttendee : removedAttendees) {
-                            if (i > 1) {
-                                deleteWhere.append(",");
-                            }
-                            deleteWhere.append("?");
-                            args[i++] = removedAttendee;
+                            Log.i(TAG, "removedAttendee - " + removedAttendee);
+                            mgr.deleteAttendee(args[0], removedAttendee);
                         }
-                        deleteWhere.append(")");
-                        b.withSelection(deleteWhere.toString(), args);
-                        ops.add(b.build());
+//                        int i = 1;
+//                        StringBuilder deleteWhere = new StringBuilder(ATTENDEES_DELETE_PREFIX);
+//                        for (String removedAttendee : removedAttendees) {
+//                            if (i > 1) {
+//                                deleteWhere.append(",");
+//                            }
+//                            deleteWhere.append("?");
+//                            args[i++] = removedAttendee;
+//                        }
+//                        deleteWhere.append(")");
+//                        b.withSelection(deleteWhere.toString(), args);
+//                        ops.add(b.build());
                     }
                 }
 

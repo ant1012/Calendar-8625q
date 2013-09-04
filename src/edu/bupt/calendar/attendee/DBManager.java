@@ -20,7 +20,6 @@ public class DBManager {
     /**
      * add attendeePhone
      * 
-     * @param attendeePhones
      */
     public void add(List<AttendeePhone> attendeePhones) {
         db.beginTransaction();
@@ -37,19 +36,8 @@ public class DBManager {
     }
 
     /**
-     * delete
-     * 
-     * @param attendeePhone
-     */
-    public void deleteOldPerson(AttendeePhone attendeePhone) {
-        db.delete("AttendeePhone", "phoneNumber = ?",
-                new String[] { String.valueOf(attendeePhone.phoneNumber) });
-    }
-
-    /**
      * query all AttendeePhones, return list
      * 
-     * @return List<Person>
      */
     public List<AttendeePhone> query() {
         ArrayList<AttendeePhone> attendeePhones = new ArrayList<AttendeePhone>();
@@ -59,7 +47,8 @@ public class DBManager {
             attendeePhone._id = c.getInt(c.getColumnIndex("_id"));
             attendeePhone.event_id = c.getInt(c.getColumnIndex("event_id"));
             attendeePhone.name = c.getString(c.getColumnIndex("name"));
-            attendeePhone.phoneNumber = c.getString(c.getColumnIndex("phoneNumber"));
+            attendeePhone.phoneNumber = c.getString(c
+                    .getColumnIndex("phoneNumber"));
             attendeePhones.add(attendeePhone);
         }
         c.close();
@@ -69,7 +58,6 @@ public class DBManager {
     /**
      * query for event id
      * 
-     * @return List<Person>
      */
     public List<AttendeePhone> query(String s) {
         ArrayList<AttendeePhone> attendeePhones = new ArrayList<AttendeePhone>();
@@ -79,7 +67,8 @@ public class DBManager {
             attendeePhone._id = c.getInt(c.getColumnIndex("_id"));
             attendeePhone.event_id = c.getInt(c.getColumnIndex("event_id"));
             attendeePhone.name = c.getString(c.getColumnIndex("name"));
-            attendeePhone.phoneNumber = c.getString(c.getColumnIndex("phoneNumber"));
+            attendeePhone.phoneNumber = c.getString(c
+                    .getColumnIndex("phoneNumber"));
             attendeePhones.add(attendeePhone);
         }
         c.close();
@@ -89,7 +78,6 @@ public class DBManager {
     /**
      * query all AttendeePhones, return cursor
      * 
-     * @return Cursor
      */
     private Cursor queryTheCursor() {
         Cursor c = db.rawQuery("SELECT * FROM AttendeePhone", null);
@@ -99,11 +87,20 @@ public class DBManager {
     /**
      * query all AttendeePhones, return cursor
      * 
-     * @return Cursor
      */
     private Cursor queryTheCursor(String s) {
-        Cursor c = db.rawQuery("SELECT * FROM AttendeePhone WHERE event_id=" + s, null);
+        Cursor c = db.rawQuery("SELECT * FROM AttendeePhone WHERE event_id="
+                + s, null);
         return c;
+    }
+
+    /**
+     * delete one attendee
+     * 
+     */
+    public void deleteAttendee(String event_id, String attendee) {
+        db.execSQL("delete from AttendeePhone where event_id=" + event_id
+                + " and phoneNumber=" + attendee);
     }
 
     /**
