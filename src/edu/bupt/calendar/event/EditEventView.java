@@ -826,6 +826,9 @@ public class EditEventView implements View.OnClickListener, DialogInterface.OnCa
 
     public EditEventView(Activity activity, View view, EditDoneRunnable done) {
 
+        /** zzz */
+        Log.d(TAG, "EditEventView construct");
+
         mActivity = activity;
         mView = view;
         mDone = done;
@@ -1213,6 +1216,11 @@ public class EditEventView implements View.OnClickListener, DialogInterface.OnCa
         mScrollView.setVisibility(View.VISIBLE);
         mLoadingMessage.setVisibility(View.GONE);
         sendAccessibilityEvent();
+    }
+
+    public void onContactsChoosed(String num, String name) {
+        Log.d(TAG, "onContactsChoosed, num - " + num);
+        mAttendeesList.append(num);
     }
 
     private void sendAccessibilityEvent() {
