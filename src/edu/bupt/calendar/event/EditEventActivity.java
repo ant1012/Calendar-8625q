@@ -154,6 +154,9 @@ public class EditEventActivity extends AbstractCalendarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /** zzz */
+    // back from choosing a attendee phone number from system cantact app, and
+    // then send it to EditEventFragment
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (resultCode) {
