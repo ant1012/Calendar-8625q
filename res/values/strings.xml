@@ -818,5 +818,6 @@
     <string name="title_activity_import_event">Import Calendar Event</string>
     <string name="weekly_rrule">Weekly</string>
     <string name="choose_attendee">choose</string>
+    <string name="file_not_exist">File does not exist!</string>
 
 </resources>

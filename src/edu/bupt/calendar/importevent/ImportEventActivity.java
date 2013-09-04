@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 import com.android.calendarcommon.ICalendar;
 import com.android.calendarcommon.ICalendar.FormatException;
@@ -61,15 +62,18 @@ public class ImportEventActivity extends Activity {
         textViewWhere = (TextView) findViewById(R.id.where);
         textViewDisc = (TextView) findViewById(R.id.disc);
 
-        parent = getEventFromString(getStringFromFile());
-        // for (ICalendar.Component child : parent.getComponents()) {
-        // }
-
-        // just test first event
-        child = parent.getComponents().get(0);
-        getDetails(child);
+        String s = getStringFromFile();
+        if (s != null) {
+            parent = getEventFromString(s);
+            // just test first event
+            child = parent.getComponents().get(0);
+            getDetails(child);
+        }
         textviewTitle.setText(event_title);
-        textViewDatetime.setText(String.valueOf(event_datetime));
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
+                "yyyy'/'MM'/'dd'-'HH':'mm");
+        
+        textViewDatetime.setText(simpleDateFormat.format(new Date(event_datetime)));
         textViewWhere.setText(event_where);
         textViewDisc.setText(event_disc);
     }
@@ -82,6 +86,7 @@ public class ImportEventActivity extends Activity {
             Uri uri = Uri.parse(data.toString());
             String filename = uri.getPath();
             File file = new File(filename);
+            Log.i(TAG, "filename - " + filename);
             if (file.exists()) {
                 FileInputStream fin;
                 try {
@@ -110,6 +115,10 @@ public class ImportEventActivity extends Activity {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+            } else {
+                Log.d(TAG, "file_not_exist");
+                Toast.makeText(this, R.string.file_not_exist,
+                        Toast.LENGTH_SHORT).show();
             }
         }
         return null;
@@ -217,7 +226,9 @@ public class ImportEventActivity extends Activity {
                     values);
 
             Log.d(TAG, "import success");
-            Toast.makeText(this, R.string.title_activity_import_event, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.title_activity_import_event,
+                    Toast.LENGTH_SHORT).show();
+            this.finish();
             return true;
         }
         return super.onOptionsItemSelected(item);

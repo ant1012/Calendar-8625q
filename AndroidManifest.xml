@@ -296,10 +296,10 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:scheme="file" />
-                <data android:mimeType="text/calendar" />
-                <!-- <data android:mimeType="*/*" /> -->
-                <!-- <data android:pathPattern=".*\.ics" /> -->
+                <!-- <data android:scheme="file" /> -->
+                <!-- <data android:mimeType="text/calendar" /> -->
+                <data android:mimeType="*/*" />
+                <data android:pathPattern=".*\.ics" />
             </intent-filter>
         </activity>
     </application>
