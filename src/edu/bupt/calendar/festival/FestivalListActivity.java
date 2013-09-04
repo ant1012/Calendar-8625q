@@ -18,6 +18,7 @@ import edu.bupt.calendar.CalendarController.ViewType;
 import edu.bupt.calendar.R.id;
 import edu.bupt.calendar.R.layout;
 import edu.bupt.calendar.agenda.AgendaListView;
+import edu.bupt.calendar.agenda.AgendaMultiDeleteAdapter;
 import edu.bupt.calendar.event.EditEventActivity;
 import android.app.ActionBar;
 import android.app.Activity;
@@ -28,6 +29,7 @@ import android.os.Bundle;
 import android.text.format.Time;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -35,6 +37,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -48,11 +51,17 @@ public class FestivalListActivity extends Activity {
     int counter = 62;
     Time currentTime2;
     public TextView mFooterView;
+	ActionBar actionBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        actionBar = getActionBar();
+		actionBar.show();
+		actionBar.setDisplayShowHomeEnabled(true);
+		actionBar.setDisplayShowTitleEnabled(true);
+		actionBar.setTitle("节日列表");
+		actionBar.setDisplayHomeAsUpEnabled(true);
         data = getData();
         lv = new ListView(this);
         final MyAdapter adapter = new MyAdapter(this, lv);
@@ -127,11 +136,15 @@ public class FestivalListActivity extends Activity {
         lv.setAdapter(adapter);
         setContentView(lv);
 
-        ActionBar actionBar = getActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-
     }
-
+    public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			this.finish();
+			break;
+		}
+		return super.onOptionsItemSelected(item);
+	}
     private List<Map<String, Object>> getData() {
         List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
         Map<String, Object> map;
@@ -181,6 +194,7 @@ public class FestivalListActivity extends Activity {
 
         public TextView title;
         public TextView info;
+        public ImageView iv;
 
     }
 
@@ -231,7 +245,7 @@ public class FestivalListActivity extends Activity {
                 // 根据自定义的Item布局加载布局
                 convertView = mInflater.inflate(R.layout.test_layout_items,
                         null);
-
+                holder.iv = (ImageView) convertView.findViewById(R.id.bluebt);
                 holder.title = (TextView) convertView.findViewById(R.id.tv);
                 holder.info = (TextView) convertView.findViewById(R.id.info);
                 // 将设置好的布局保存到缓存中，并将其设置在Tag里，以便后面方便取出Tag
@@ -240,6 +254,7 @@ public class FestivalListActivity extends Activity {
                 holder = (ViewHolder) convertView.getTag();
             }
 
+            holder.iv.setImageDrawable(FestivalListActivity.this.getResources().getDrawable(R.drawable.bluebt));
             holder.title.setText((String) data.get(position).get("title"));
             Time time = (Time) data.get(position).get("info");
 
@@ -271,7 +286,7 @@ public class FestivalListActivity extends Activity {
         endTime.set(startTime.monthDay + 1, startTime.month, startTime.year);
         endTime.normalize(true);
         sendEditEvent(startTime, endTime);
-        Toast.makeText(getApplicationContext(), name, 8000).show();
+//        Toast.makeText(getApplicationContext(), name, 8000).show();
 
     }
 
