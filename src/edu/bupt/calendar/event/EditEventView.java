@@ -986,6 +986,10 @@ public class EditEventView implements View.OnClickListener, DialogInterface.OnCa
         mReminderMethodValues = loadIntegerArray(r, R.array.reminder_methods_values);
         mReminderMethodLabels = loadStringArray(r, R.array.reminder_methods_labels);
 
+        /** zzz */
+        // here msg reminder methods should be allowed
+        Log.i(TAG, "mModel.mCalendarAllowedReminders - " + mModel.mCalendarAllowedReminders);
+
         // Remove any reminder methods that aren't allowed for this calendar.  If this is
         // a new event, mCalendarAllowedReminders may not be set the first time we're called.
         if (mModel.mCalendarAllowedReminders != null) {
@@ -1220,7 +1224,9 @@ public class EditEventView implements View.OnClickListener, DialogInterface.OnCa
 
     public void onContactsChoosed(String num, String name) {
         Log.d(TAG, "onContactsChoosed, num - " + num);
-        mAttendeesList.append(num);
+        if (num != null) {
+            mAttendeesList.append(num);
+        }
     }
 
     private void sendAccessibilityEvent() {
