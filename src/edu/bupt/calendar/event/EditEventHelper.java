@@ -500,6 +500,7 @@ public class EditEventHelper {
                             Log.i(TAG, "removedAttendee - " + removedAttendee);
                             mgr.deleteAttendee(args[0], removedAttendee);
                         }
+                        mgr.closeDB();
 //                        int i = 1;
 //                        StringBuilder deleteWhere = new StringBuilder(ATTENDEES_DELETE_PREFIX);
 //                        for (String removedAttendee : removedAttendees) {
@@ -598,7 +599,7 @@ public class EditEventHelper {
                                     attendee.mEmail);
                             attendeePhones.add(attendeePhone);
                             mgr.add(attendeePhones);
-                            
+
                         } else {
                             Log.i(TAG, "eventId - " + eventId);
                             ArrayList<AttendeePhone> attendeePhones = new ArrayList<AttendeePhone>();

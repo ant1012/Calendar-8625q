@@ -457,6 +457,7 @@ public class EventInfoFragment extends DialogFragment implements
                                 Attendees.ATTENDEE_STATUS_NONE, null,
                                 null));
                     }
+                    mgr.closeDB();
                     updateAttendees(mView);
 
                 } else {
