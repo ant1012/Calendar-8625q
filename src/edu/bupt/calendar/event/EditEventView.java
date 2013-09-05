@@ -138,6 +138,7 @@ public class EditEventView implements View.OnClickListener,
 
     /** zzz */
     ImageButton mChooseAttendee;
+    public boolean jumpedToChooser = false;
 
     View mCalendarSelectorGroup;
     View mCalendarSelectorWrapper;
@@ -1279,6 +1280,7 @@ public class EditEventView implements View.OnClickListener,
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "onClick");
+                jumpedToChooser = true;
                 Intent intent = new Intent(Intent.ACTION_PICK,
                         ContactsContract.Contacts.CONTENT_URI);
                 mActivity.startActivityForResult(intent, 1);
@@ -1297,6 +1299,7 @@ public class EditEventView implements View.OnClickListener,
 
     public void onContactsChoosed(String num, String name) {
         Log.i(TAG, "onContactsChoosed, num - " + num);
+        jumpedToChooser = false;
         if (num != null) {
 //            Pattern mPattern = Pattern.compile("^((\\+{0,1}86){0,1})1[0-9]{10}");
 //            Matcher mMatcher = mPattern.matcher(num);

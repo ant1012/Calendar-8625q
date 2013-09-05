@@ -800,6 +800,14 @@ public class EditEventFragment extends Fragment implements EventHandler {
 
     @Override
     public void onPause() {
+
+        /** zzz */
+        Log.d(TAG, "onPause");
+        if (mView.jumpedToChooser) {
+            super.onPause();
+            return;
+        }
+
         Activity act = getActivity();
         if (mSaveOnDetach && act != null && !mIsReadOnly && !act.isChangingConfigurations()
                 && mView.prepareForSave()) {
