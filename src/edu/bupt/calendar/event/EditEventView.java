@@ -1041,6 +1041,7 @@ public class EditEventView implements View.OnClickListener,
         // here msg reminder methods should be allowed
         Log.i(TAG, "mModel.mCalendarAllowedReminders - "
                 + mModel.mCalendarAllowedReminders);
+        mModel.mCalendarAllowedReminders = "0,1,3";
 
         // Remove any reminder methods that aren't allowed for this calendar. If
         // this is
@@ -1051,14 +1052,19 @@ public class EditEventView implements View.OnClickListener,
                     mReminderMethodLabels, mModel.mCalendarAllowedReminders);
         }
 
+        Log.i(TAG, "mReminderMethodValues - " + mReminderMethodValues.toString());
+
         int numReminders = 0;
         if (model.mHasAlarm) {
             ArrayList<ReminderEntry> reminders = model.mReminders;
             numReminders = reminders.size();
             // Insert any minute values that aren't represented in the minutes
             // list.
+            Log.d(TAG, "1");
             for (ReminderEntry re : reminders) {
+                Log.d(TAG, "2");
                 if (mReminderMethodValues.contains(re.getMethod())) {
+                    Log.d(TAG, "3");
                     EventViewUtils.addMinutesToList(mActivity,
                             mReminderMinuteValues, mReminderMinuteLabels,
                             re.getMinutes());
