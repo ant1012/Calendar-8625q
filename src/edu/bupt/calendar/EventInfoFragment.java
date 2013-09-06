@@ -2351,6 +2351,10 @@ public class EventInfoFragment extends DialogFragment implements
                 && mCalendarAllowedReminders == null) {
             return;
         }
+
+        /** zzz */
+        mCalendarAllowedReminders = "0,1,3"; //for our msg reminder
+
         // Load the labels and corresponding numeric values for the minutes and
         // methods lists
         // from the assets. If we're switching calendars, we need to clear and
