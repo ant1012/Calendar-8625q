@@ -109,7 +109,8 @@ public class AgendaMultiDelete extends Activity {
 					new AlertDialog.Builder(AgendaMultiDelete.this)
 					.setTitle("多条删除日程")
 					.setMessage("确定要删除这" + checkNum +"条日程么？")
-					.setNegativeButton("确定",
+                    .setIconAttribute(android.R.attr.alertDialogIcon)
+					.setPositiveButton(android.R.string.ok,
 							new DialogInterface.OnClickListener() {
 								@Override
 								public void onClick(DialogInterface dialog,
@@ -145,7 +146,7 @@ public class AgendaMultiDelete extends Activity {
 									dataChanged();
 
 								}
-							}).setPositiveButton("取消", null).show();
+							}).setNegativeButton(android.R.string.cancel, null).show();
 				} 
 
 
