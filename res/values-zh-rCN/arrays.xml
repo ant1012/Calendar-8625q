@@ -17,9 +17,10 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
   <string-array name="reminder_methods_labels">
+      <!-- zzz -->
     <item msgid="5172236776878811487">"通知"</item>
     <item msgid="1751151680520784746">"电子邮件"</item>
-    <item msgid="2658001219380695677">"短信"</item>
+    <item msgid="2658001219380695677">"通知并发送短信"</item>
     <item msgid="7926918288165444873">"闹钟"</item>
   </string-array>
   <string-array name="reminder_minutes_labels">

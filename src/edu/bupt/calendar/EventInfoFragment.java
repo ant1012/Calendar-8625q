@@ -2131,11 +2131,26 @@ public class EventInfoFragment extends DialogFragment implements
             // maximum. (Also, for
             // a new event, we won't have a maxReminders value available.)
             for (ReminderEntry re : reminders) {
+
+                /** zzz */
+                // query our db to check of there is a msg alert
+                int reminderMethod = 1;
+                mgr = new DBManager(mContext);
+                if (mgr.queryMsgAlert(mEventId, re.getMinutes())) {
+                    Log.d(TAG, "has msg alert data");
+                    reminderMethod = 3;
+                }
+//                EventViewUtils.addReminder(mActivity, mScrollView, this,
+//                        mReminderViews, mReminderMinuteValues,
+//                        mReminderMinuteLabels, mReminderMethodValues,
+//                        mReminderMethodLabels, re, Integer.MAX_VALUE,
+//                        mReminderChangeListener);
                 EventViewUtils.addReminder(mActivity, mScrollView, this,
                         mReminderViews, mReminderMinuteValues,
                         mReminderMinuteLabels, mReminderMethodValues,
                         mReminderMethodLabels, re, Integer.MAX_VALUE,
-                        mReminderChangeListener);
+                        mReminderChangeListener, reminderMethod);
+                mgr.closeDB();
             }
             EventViewUtils.updateAddReminderButton(mView, mReminderViews,
                     mMaxReminders);

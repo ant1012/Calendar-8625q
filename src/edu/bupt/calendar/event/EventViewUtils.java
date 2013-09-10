@@ -276,6 +276,63 @@ public class EventViewUtils {
         return true;
     }
 
+    /** zzz */
+    public static boolean addReminder(Activity activity, View view, View.OnClickListener listener,
+            ArrayList<LinearLayout> items, ArrayList<Integer> minuteValues,
+            ArrayList<String> minuteLabels, ArrayList<Integer> methodValues,
+            ArrayList<String> methodLabels, ReminderEntry newReminder, int maxReminders,
+            OnItemSelectedListener onItemSelected, int reminderMethod) {
+
+        if (items.size() >= maxReminders) {
+            return false;
+        }
+
+        LayoutInflater inflater = activity.getLayoutInflater();
+        LinearLayout parent = (LinearLayout) view.findViewById(R.id.reminder_items_container);
+        LinearLayout reminderItem = (LinearLayout) inflater.inflate(R.layout.edit_reminder_item,
+                null);
+        parent.addView(reminderItem);
+
+        ImageButton reminderRemoveButton;
+        reminderRemoveButton = (ImageButton) reminderItem.findViewById(R.id.reminder_remove);
+        reminderRemoveButton.setOnClickListener(listener);
+
+        /*
+         * The spinner has the default set of labels from the string resource file, but we
+         * want to drop in our custom set of labels because it may have additional entries.
+         */
+        Spinner spinner = (Spinner) reminderItem.findViewById(R.id.reminder_minutes_value);
+        setReminderSpinnerLabels(activity, spinner, minuteLabels);
+
+        int index = findMinutesInReminderList(minuteValues, newReminder.getMinutes());
+        spinner.setSelection(index);
+
+        if (onItemSelected != null) {
+            spinner.setTag(index);
+            spinner.setOnItemSelectedListener(onItemSelected);
+        }
+
+        /*
+         * Configure the alert-method spinner.  Methods not supported by the current Calendar
+         * will not be shown.
+         */
+        spinner = (Spinner) reminderItem.findViewById(R.id.reminder_method_value);
+        setReminderSpinnerLabels(activity, spinner, methodLabels);
+
+        index = findMethodInReminderList(methodValues, reminderMethod);
+        spinner.setSelection(index);
+
+        if (onItemSelected != null) {
+            spinner.setTag(index);
+            spinner.setOnItemSelectedListener(onItemSelected);
+        }
+
+        items.add(reminderItem);
+
+        return true;
+    }
+
+
     /**
      * Enables/disables the 'add reminder' button depending on the current number of
      * reminders.

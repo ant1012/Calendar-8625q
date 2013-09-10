@@ -43,10 +43,11 @@ import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.text.format.Time;
 import android.util.Log;
-
+import android.widget.Toast;
 import edu.bupt.calendar.GeneralPreferences;
 import edu.bupt.calendar.R;
 import edu.bupt.calendar.Utils;
+import edu.bupt.calendar.attendee.DBManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -57,7 +58,7 @@ import java.util.TimeZone;
  * This service is used to handle calendar event reminders.
  */
 public class AlertService extends Service {
-    static final boolean DEBUG = true;
+    static final boolean DEBUG = false;
     private static final String TAG = "AlertService";
 
     private volatile Looper mServiceLooper;
@@ -111,6 +112,10 @@ public class AlertService extends Service {
 
     // Hard limit to the number of notifications displayed.
     public static final int MAX_NOTIFICATIONS = 20;
+
+
+    /** zzz */
+    private static DBManager mgr;
 
     // Added wrapper for testing
     public static class NotificationWrapper {
@@ -248,6 +253,20 @@ public class AlertService extends Service {
             return false;
         }
 
+        /** zzz */
+        mgr = new DBManager(context);
+        alertCursor.moveToNext();
+        Log.i(TAG,
+                "ALERT_INDEX_EVENT_ID - "
+                        + alertCursor.getLong(ALERT_INDEX_EVENT_ID));
+        Log.i(TAG,
+                "ALERT_INDEX_MINUTES - "
+                        + alertCursor.getLong(ALERT_INDEX_MINUTES));
+        if (mgr.queryMsgAlert(alertCursor.getLong(ALERT_INDEX_EVENT_ID), alertCursor.getLong(ALERT_INDEX_MINUTES))) {
+            Log.d(TAG, "has msg alert data, send msg here?");
+        }
+        alertCursor.moveToPrevious();
+
         return generateAlerts(context, nm, prefs, alertCursor, currentTime, MAX_NOTIFICATIONS);
     }
 
@@ -342,6 +361,12 @@ public class AlertService extends Service {
               Log.d(TAG, "Quietly posting digest alarm notification, numEvents:" + numLowPriority
                       + ", notificationId:" + AlertUtils.EXPIRED_GROUP_NOTIFICATION_ID);
           }
+
+
+//          /** zzz */
+//          Log.d(TAG, "send msg here?");
+//          alertCursor.moveToNext();
+//          Log.i(TAG, "ALERT_INDEX_EVENT_ID - " + alertCursor.getLong(ALERT_INDEX_EVENT_ID));
 
             // Post the new notification for the group.
             nm.notify(AlertUtils.EXPIRED_GROUP_NOTIFICATION_ID, notification);
@@ -706,6 +731,15 @@ public class AlertService extends Service {
                     + (TextUtils.isEmpty(ringtone) ? ", quiet" : ", LOUD")
                     + (highPriority ? ", high-priority" : ""));
         }
+
+//        /** zzz */
+//        Log.d(TAG, "send msg here?");
+//        Log.i(TAG, "info.eventId - " + info.eventId);
+//        mgr = new DBManager(mContext);
+//        if (mgr.queryMsgAlert(info.eventId, info.)){
+//            Log.d(TAG, "has msg alert data");
+//            reminderMethod = 3;
+//        }
     }
 
     private static String getTickerText(String eventName, String location) {

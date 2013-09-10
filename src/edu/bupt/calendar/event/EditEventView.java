@@ -79,6 +79,7 @@ import edu.bupt.calendar.RecipientAdapter;
 import edu.bupt.calendar.TimezoneAdapter;
 import edu.bupt.calendar.TimezoneAdapter.TimezoneRow;
 import edu.bupt.calendar.Utils;
+import edu.bupt.calendar.attendee.DBManager;
 import edu.bupt.calendar.event.EditEventHelper.EditDoneRunnable;
 
 import com.android.calendarcommon.EventRecurrence;
@@ -139,6 +140,7 @@ public class EditEventView implements View.OnClickListener,
     /** zzz */
     ImageButton mChooseAttendee;
     public boolean jumpedToChooser = false;
+    private DBManager mgr;
 
     View mCalendarSelectorGroup;
     View mCalendarSelectorWrapper;
@@ -1074,18 +1076,38 @@ public class EditEventView implements View.OnClickListener,
             // maximum. (Also, for
             // a new event, we won't have a maxReminders value available.)
             mUnsupportedReminders.clear();
+
+            /** zzz */
+            mgr = new DBManager(mActivity);
             for (ReminderEntry re : reminders) {
-                if (mReminderMethodValues.contains(re.getMethod())
-                        || re.getMethod() == Reminders.METHOD_DEFAULT) {
-                    EventViewUtils.addReminder(mActivity, mScrollView, this,
-                            mReminderItems, mReminderMinuteValues,
-                            mReminderMinuteLabels, mReminderMethodValues,
-                            mReminderMethodLabels, re, Integer.MAX_VALUE, null);
-                } else {
-                    // TODO figure out a way to display unsupported reminders
-                    mUnsupportedReminders.add(re);
+//                if (mReminderMethodValues.contains(re.getMethod())
+//                        || re.getMethod() == Reminders.METHOD_DEFAULT) {
+//                    EventViewUtils.addReminder(mActivity, mScrollView, this,
+//                            mReminderItems, mReminderMinuteValues,
+//                            mReminderMinuteLabels, mReminderMethodValues,
+//                            mReminderMethodLabels, re, Integer.MAX_VALUE, null);
+//                } else {
+//                    // TODO figure out a way to display unsupported reminders
+//                    mUnsupportedReminders.add(re);
+//                }
+
+
+                /** zzz */
+                // query our db to check of there is a msg alert
+                int reminderMethod = 1;
+                Log.i(TAG, "model.mId - " + model.mId);
+                Log.i(TAG, "re.getMinutes() - " + re.getMinutes());
+                if (mgr.queryMsgAlert(model.mId, re.getMinutes())){
+                    Log.d(TAG, "has msg alert data");
+                    reminderMethod = 3;
                 }
+                EventViewUtils.addReminder(mActivity, mScrollView, this,
+                        mReminderItems, mReminderMinuteValues,
+                        mReminderMinuteLabels, mReminderMethodValues,
+                        mReminderMethodLabels, re, Integer.MAX_VALUE,
+                        null, reminderMethod);
             }
+            mgr.closeDB();
         }
 
         updateRemindersVisibility(numReminders);
