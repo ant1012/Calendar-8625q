@@ -41,6 +41,8 @@
     <!-- zzz -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_CALENDAR" />
+    <uses-permission android:name="android.permission.SEND_SMS"/>
+
 
     <!-- zzz -->
     <uses-sdk android:minSdkVersion="16" >
