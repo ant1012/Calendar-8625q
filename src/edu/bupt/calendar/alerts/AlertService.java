@@ -47,6 +47,7 @@ import android.widget.Toast;
 import edu.bupt.calendar.GeneralPreferences;
 import edu.bupt.calendar.R;
 import edu.bupt.calendar.Utils;
+import edu.bupt.calendar.attendee.AttendeePhone;
 import edu.bupt.calendar.attendee.DBManager;
 
 import java.util.ArrayList;
@@ -58,7 +59,7 @@ import java.util.TimeZone;
  * This service is used to handle calendar event reminders.
  */
 public class AlertService extends Service {
-    static final boolean DEBUG = false;
+    static final boolean DEBUG = true;
     private static final String TAG = "AlertService";
 
     private volatile Looper mServiceLooper;
@@ -253,21 +254,38 @@ public class AlertService extends Service {
             return false;
         }
 
+
         /** zzz */
         mgr = new DBManager(context);
         alertCursor.moveToNext();
+        Log.i(TAG,
+                "ALERT_INDEX_STATE - "
+                        + alertCursor.getInt(ALERT_INDEX_STATE));
         Log.i(TAG,
                 "ALERT_INDEX_EVENT_ID - "
                         + alertCursor.getLong(ALERT_INDEX_EVENT_ID));
         Log.i(TAG,
                 "ALERT_INDEX_MINUTES - "
                         + alertCursor.getLong(ALERT_INDEX_MINUTES));
-        if (mgr.queryMsgAlert(alertCursor.getLong(ALERT_INDEX_EVENT_ID), alertCursor.getLong(ALERT_INDEX_MINUTES))) {
-            Log.d(TAG, "has msg alert data, send msg here?");
+        if (alertCursor.getInt(ALERT_INDEX_STATE) == 0
+                && mgr.queryMsgAlert(alertCursor.getLong(ALERT_INDEX_EVENT_ID),
+                        alertCursor.getLong(ALERT_INDEX_MINUTES))) {
+            sendAlertMsg(alertCursor.getLong(ALERT_INDEX_EVENT_ID), mgr);
         }
+        mgr.closeDB();
         alertCursor.moveToPrevious();
 
+
         return generateAlerts(context, nm, prefs, alertCursor, currentTime, MAX_NOTIFICATIONS);
+    }
+
+    /** zzz */
+    private static void sendAlertMsg(long event_id, DBManager mgr) {
+        Log.w(TAG, "send msg here");
+        List<AttendeePhone> attendeePhones =  mgr.query();
+        for (AttendeePhone at : attendeePhones) {
+            Log.w(TAG, "send msg to " + at.phoneNumber);
+        }
     }
 
     public static boolean generateAlerts(Context context, NotificationMgr nm,

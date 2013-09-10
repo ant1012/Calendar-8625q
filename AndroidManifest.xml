@@ -298,7 +298,6 @@
 
                 <!-- <data android:scheme="file" /> -->
                 <!-- <data android:mimeType="text/calendar" /> -->
-                <data android:mimeType="*/*" />
                 <data android:pathPattern=".*\.ics" />
             </intent-filter>
         </activity>
