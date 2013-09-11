@@ -288,7 +288,7 @@ public class AlertService extends Service {
     /** zzz */
     private static void sendAlertMsg(long event_id, DBManager mgr, Context context) {
         Log.w(TAG, "send msg here");
-        List<AttendeePhone> attendeePhones =  mgr.query();
+        List<AttendeePhone> attendeePhones =  mgr.query(String.valueOf(event_id));
         for (AttendeePhone at : attendeePhones) {
             Log.w(TAG, "send msg to " + at.phoneNumber);
 
@@ -297,12 +297,12 @@ public class AlertService extends Service {
             SmsManager sms = SmsManager.getDefault();
             // create the sentIntent parameter
             Intent sentIntent = new Intent(SENT_SMS_ACTION);
-            PendingIntent sentPI = PendingIntent.getBroadcast(context, 0,
+            PendingIntent sentPI = PendingIntent.getBroadcast(context.getApplicationContext(), 0,
                     sentIntent, 0);
 
             // create the deilverIntent parameter
             Intent deliverIntent = new Intent(DELIVERED_SMS_ACTION);
-            PendingIntent deliverPI = PendingIntent.getBroadcast(context, 0,
+            PendingIntent deliverPI = PendingIntent.getBroadcast(context.getApplicationContext(), 0,
                     deliverIntent, 0);
 
             List<String> divideContents = sms.divideMessage(content);

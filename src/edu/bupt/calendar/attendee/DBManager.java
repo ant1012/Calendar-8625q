@@ -133,7 +133,6 @@ public class DBManager {
      * 
      */
     public boolean queryMsgAlert(long event_id, long alert_time) {
-        ArrayList<AttendeePhone> attendeePhones = new ArrayList<AttendeePhone>();
         Cursor c = queryTheCursorMsgalert(String.valueOf(event_id));
         while (c.moveToNext()) {
             if (c.getInt(c.getColumnIndex("alert_time")) == alert_time) {
@@ -144,6 +143,8 @@ public class DBManager {
         c.close();
         return false;
     }
+
+
 
     /**
      * delete one msg alert
