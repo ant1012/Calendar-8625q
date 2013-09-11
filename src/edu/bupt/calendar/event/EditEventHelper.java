@@ -42,6 +42,7 @@ import edu.bupt.calendar.CalendarEventModel.ReminderEntry;
 import edu.bupt.calendar.Utils;
 import edu.bupt.calendar.attendee.AttendeePhone;
 import edu.bupt.calendar.attendee.DBManager;
+import edu.bupt.calendar.attendee.MsgAlert;
 
 import com.android.calendarcommon.DateException;
 import com.android.calendarcommon.EventRecurrence;
@@ -152,8 +153,8 @@ public class EditEventHelper {
     };
 
     /** zzz */
-    private Context mContext;
-    private DBManager mgr;
+    private static Context mContext;
+    private static DBManager mgr;
 
     /**
      * This is the symbolic name for the key used to pass in the boolean for
@@ -490,21 +491,29 @@ public class EditEventHelper {
                     // delete removed attendees if necessary
                     if (removedAttendees.size() > 0) {
                         b = ContentProviderOperation.newDelete(Attendees.CONTENT_URI);
-
                         String[] args = new String[removedAttendees.size() + 1];
                         args[0] = Long.toString(eventId);
-                        int i = 1;
-                        StringBuilder deleteWhere = new StringBuilder(ATTENDEES_DELETE_PREFIX);
+
+                        /** zzz */
+                        Log.d(TAG, "newDelete");
+                        mgr = new DBManager(mContext);
                         for (String removedAttendee : removedAttendees) {
-                            if (i > 1) {
-                                deleteWhere.append(",");
-                            }
-                            deleteWhere.append("?");
-                            args[i++] = removedAttendee;
+                            Log.i(TAG, "removedAttendee - " + removedAttendee);
+                            mgr.deleteAttendee(args[0], removedAttendee);
                         }
-                        deleteWhere.append(")");
-                        b.withSelection(deleteWhere.toString(), args);
-                        ops.add(b.build());
+                        mgr.closeDB();
+//                        int i = 1;
+//                        StringBuilder deleteWhere = new StringBuilder(ATTENDEES_DELETE_PREFIX);
+//                        for (String removedAttendee : removedAttendees) {
+//                            if (i > 1) {
+//                                deleteWhere.append(",");
+//                            }
+//                            deleteWhere.append("?");
+//                            args[i++] = removedAttendee;
+//                        }
+//                        deleteWhere.append(")");
+//                        b.withSelection(deleteWhere.toString(), args);
+//                        ops.add(b.build());
                     }
                 }
 
@@ -591,7 +600,7 @@ public class EditEventHelper {
                                     attendee.mEmail);
                             attendeePhones.add(attendeePhone);
                             mgr.add(attendeePhones);
-                            
+
                         } else {
                             Log.i(TAG, "eventId - " + eventId);
                             ArrayList<AttendeePhone> attendeePhones = new ArrayList<AttendeePhone>();
@@ -903,6 +912,8 @@ public class EditEventHelper {
                 .newDelete(Reminders.CONTENT_URI);
         b.withSelection(where, args);
         ops.add(b.build());
+        mgr = new DBManager(mContext);
+        mgr.deleteMsgAlert(eventId);
 
         ContentValues values = new ContentValues();
         int len = reminders.size();
@@ -911,13 +922,28 @@ public class EditEventHelper {
         for (int i = 0; i < len; i++) {
             ReminderEntry re = reminders.get(i);
 
-            values.clear();
-            values.put(Reminders.MINUTES, re.getMinutes());
-            values.put(Reminders.METHOD, re.getMethod());
-            values.put(Reminders.EVENT_ID, eventId);
-            b = ContentProviderOperation.newInsert(Reminders.CONTENT_URI).withValues(values);
-            ops.add(b.build());
+            /** zzz */
+            if (re.getMethod() == 3) {
+                Log.i("zzz", "re.getMethod() - " + re.getMethod());
+                values.clear();
+                values.put(Reminders.MINUTES, re.getMinutes());
+                values.put(Reminders.METHOD, 1); // set as alert
+                values.put(Reminders.EVENT_ID, eventId);
+                b = ContentProviderOperation.newInsert(Reminders.CONTENT_URI)
+                        .withValues(values);
+                ops.add(b.build());
+                mgr.add(new MsgAlert(eventId, re.getMinutes())); //add alert to our own db
+            } else {
+                values.clear();
+                values.put(Reminders.MINUTES, re.getMinutes());
+                values.put(Reminders.METHOD, re.getMethod());
+                values.put(Reminders.EVENT_ID, eventId);
+                b = ContentProviderOperation.newInsert(Reminders.CONTENT_URI)
+                        .withValues(values);
+                ops.add(b.build());
+            }
         }
+        mgr.closeDB();
         return true;
     }
 

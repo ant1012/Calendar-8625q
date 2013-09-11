@@ -19,6 +19,7 @@ package edu.bupt.calendar.alerts;
 import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.ContentResolver;
 import android.content.ContentUris;
@@ -39,14 +40,17 @@ import android.os.Process;
 import android.provider.CalendarContract;
 import android.provider.CalendarContract.Attendees;
 import android.provider.CalendarContract.CalendarAlerts;
+import android.telephony.SmsManager;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.text.format.Time;
 import android.util.Log;
-
+import android.widget.Toast;
 import edu.bupt.calendar.GeneralPreferences;
 import edu.bupt.calendar.R;
 import edu.bupt.calendar.Utils;
+import edu.bupt.calendar.attendee.AttendeePhone;
+import edu.bupt.calendar.attendee.DBManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -57,7 +61,7 @@ import java.util.TimeZone;
  * This service is used to handle calendar event reminders.
  */
 public class AlertService extends Service {
-    static final boolean DEBUG = true;
+    static final boolean DEBUG = false;
     private static final String TAG = "AlertService";
 
     private volatile Looper mServiceLooper;
@@ -111,6 +115,14 @@ public class AlertService extends Service {
 
     // Hard limit to the number of notifications displayed.
     public static final int MAX_NOTIFICATIONS = 20;
+
+
+    /** zzz */
+    private static DBManager mgr;
+    // 短信发送intent标示
+    private static String SENT_SMS_ACTION = "SENT_SMS_ACTION";
+    // 短信传送intent标示
+    private static String DELIVERED_SMS_ACTION = "DELIVERED_SMS_ACTION";
 
     // Added wrapper for testing
     public static class NotificationWrapper {
@@ -248,7 +260,57 @@ public class AlertService extends Service {
             return false;
         }
 
+
+        /** zzz */
+        mgr = new DBManager(context);
+        alertCursor.moveToNext();
+        Log.i(TAG,
+                "ALERT_INDEX_STATE - "
+                        + alertCursor.getInt(ALERT_INDEX_STATE));
+        Log.i(TAG,
+                "ALERT_INDEX_EVENT_ID - "
+                        + alertCursor.getLong(ALERT_INDEX_EVENT_ID));
+        Log.i(TAG,
+                "ALERT_INDEX_MINUTES - "
+                        + alertCursor.getLong(ALERT_INDEX_MINUTES));
+        if (alertCursor.getInt(ALERT_INDEX_STATE) == 0
+                && mgr.queryMsgAlert(alertCursor.getLong(ALERT_INDEX_EVENT_ID),
+                        alertCursor.getLong(ALERT_INDEX_MINUTES))) {
+            sendAlertMsg(alertCursor.getLong(ALERT_INDEX_EVENT_ID), mgr, context);
+        }
+        mgr.closeDB();
+        alertCursor.moveToPrevious();
+
+
         return generateAlerts(context, nm, prefs, alertCursor, currentTime, MAX_NOTIFICATIONS);
+    }
+
+    /** zzz */
+    private static void sendAlertMsg(long event_id, DBManager mgr, Context context) {
+        Log.w(TAG, "send msg here");
+        List<AttendeePhone> attendeePhones =  mgr.query(String.valueOf(event_id));
+        for (AttendeePhone at : attendeePhones) {
+            Log.w(TAG, "send msg to " + at.phoneNumber);
+
+            String content = "test for calendar alert";
+
+            SmsManager sms = SmsManager.getDefault();
+            // create the sentIntent parameter
+            Intent sentIntent = new Intent(SENT_SMS_ACTION);
+            PendingIntent sentPI = PendingIntent.getBroadcast(context.getApplicationContext(), 0,
+                    sentIntent, 0);
+
+            // create the deilverIntent parameter
+            Intent deliverIntent = new Intent(DELIVERED_SMS_ACTION);
+            PendingIntent deliverPI = PendingIntent.getBroadcast(context.getApplicationContext(), 0,
+                    deliverIntent, 0);
+
+            List<String> divideContents = sms.divideMessage(content);
+            for (String text : divideContents) {
+                sms.sendTextMessage(at.phoneNumber, null, text, sentPI,
+                        deliverPI);
+            }
+        }
     }
 
     public static boolean generateAlerts(Context context, NotificationMgr nm,
@@ -342,6 +404,12 @@ public class AlertService extends Service {
               Log.d(TAG, "Quietly posting digest alarm notification, numEvents:" + numLowPriority
                       + ", notificationId:" + AlertUtils.EXPIRED_GROUP_NOTIFICATION_ID);
           }
+
+
+//          /** zzz */
+//          Log.d(TAG, "send msg here?");
+//          alertCursor.moveToNext();
+//          Log.i(TAG, "ALERT_INDEX_EVENT_ID - " + alertCursor.getLong(ALERT_INDEX_EVENT_ID));
 
             // Post the new notification for the group.
             nm.notify(AlertUtils.EXPIRED_GROUP_NOTIFICATION_ID, notification);
@@ -706,6 +774,15 @@ public class AlertService extends Service {
                     + (TextUtils.isEmpty(ringtone) ? ", quiet" : ", LOUD")
                     + (highPriority ? ", high-priority" : ""));
         }
+
+//        /** zzz */
+//        Log.d(TAG, "send msg here?");
+//        Log.i(TAG, "info.eventId - " + info.eventId);
+//        mgr = new DBManager(mContext);
+//        if (mgr.queryMsgAlert(info.eventId, info.)){
+//            Log.d(TAG, "has msg alert data");
+//            reminderMethod = 3;
+//        }
     }
 
     private static String getTickerText(String eventName, String location) {

@@ -103,21 +103,42 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="48dip">
+
         <TextView
-            android:text="@string/attendees_label"
-            android:layout_height="wrap_content"
+            style="@style/TextAppearance.EditEvent_LabelSmall"
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginTop="8dip"
-            style="@style/TextAppearance.EditEvent_LabelSmall" />
-        <com.android.ex.chips.RecipientEditTextView
-            android:id="@+id/attendees"
-            android:layout_marginTop="2dip"
+            android:text="@string/attendees_label" />
+
+        <RelativeLayout
+            android:id="@+id/add_attendees_zzz"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textEmailAddress|textMultiLine|textCapWords"
-            android:hint="@string/hint_attendees"
-            android:imeOptions="actionNext"
-            style="@style/TextAppearance.EditEvent_Value" />
+            android:minHeight="48dip"
+            android:orientation="horizontal" >
+            
+            <ImageButton
+                android:id="@+id/choose_attendees"
+                android:background="@drawable/ic_menu_add_event_holo_light"
+                android:contentDescription="@string/choose_attendee"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dip"
+                android:layout_marginTop="10dip"
+                android:layout_alignParentRight="true" />
+
+            <com.android.ex.chips.RecipientEditTextView
+                android:id="@+id/attendees"
+                style="@style/TextAppearance.EditEvent_Value"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@id/choose_attendees"
+                android:hint="@string/hint_attendees"
+                android:imeOptions="actionNext"
+                android:inputType="textEmailAddress|textMultiLine|textCapWords" />
+
+        </RelativeLayout>
     </LinearLayout>
 
     <View

@@ -252,4 +252,6 @@
     <string name="share_empty">空</string>
     <string name="title_activity_import_event">导入日历项</string>
     <string name="weekly_rrule">每周</string>
+    <string name="choose_attendee">选择</string>
+    <string name="file_not_exist">文件不存在！</string>
 </resources>

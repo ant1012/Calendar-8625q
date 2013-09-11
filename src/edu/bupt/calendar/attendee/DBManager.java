@@ -20,7 +20,6 @@ public class DBManager {
     /**
      * add attendeePhone
      * 
-     * @param attendeePhones
      */
     public void add(List<AttendeePhone> attendeePhones) {
         db.beginTransaction();
@@ -37,19 +36,23 @@ public class DBManager {
     }
 
     /**
-     * delete
+     * add MsgAlert
      * 
-     * @param attendeePhone
      */
-    public void deleteOldPerson(AttendeePhone attendeePhone) {
-        db.delete("AttendeePhone", "phoneNumber = ?",
-                new String[] { String.valueOf(attendeePhone.phoneNumber) });
+    public void add(MsgAlert msgAlert) {
+        db.beginTransaction();
+        try {
+            db.execSQL("INSERT INTO MsgAlert VALUES(null, ?, ?)",
+                    new Object[] { msgAlert.event_id, msgAlert.alert_time });
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
     }
 
     /**
      * query all AttendeePhones, return list
      * 
-     * @return List<Person>
      */
     public List<AttendeePhone> query() {
         ArrayList<AttendeePhone> attendeePhones = new ArrayList<AttendeePhone>();
@@ -59,7 +62,8 @@ public class DBManager {
             attendeePhone._id = c.getInt(c.getColumnIndex("_id"));
             attendeePhone.event_id = c.getInt(c.getColumnIndex("event_id"));
             attendeePhone.name = c.getString(c.getColumnIndex("name"));
-            attendeePhone.phoneNumber = c.getString(c.getColumnIndex("phoneNumber"));
+            attendeePhone.phoneNumber = c.getString(c
+                    .getColumnIndex("phoneNumber"));
             attendeePhones.add(attendeePhone);
         }
         c.close();
@@ -69,7 +73,6 @@ public class DBManager {
     /**
      * query for event id
      * 
-     * @return List<Person>
      */
     public List<AttendeePhone> query(String s) {
         ArrayList<AttendeePhone> attendeePhones = new ArrayList<AttendeePhone>();
@@ -79,7 +82,8 @@ public class DBManager {
             attendeePhone._id = c.getInt(c.getColumnIndex("_id"));
             attendeePhone.event_id = c.getInt(c.getColumnIndex("event_id"));
             attendeePhone.name = c.getString(c.getColumnIndex("name"));
-            attendeePhone.phoneNumber = c.getString(c.getColumnIndex("phoneNumber"));
+            attendeePhone.phoneNumber = c.getString(c
+                    .getColumnIndex("phoneNumber"));
             attendeePhones.add(attendeePhone);
         }
         c.close();
@@ -89,7 +93,6 @@ public class DBManager {
     /**
      * query all AttendeePhones, return cursor
      * 
-     * @return Cursor
      */
     private Cursor queryTheCursor() {
         Cursor c = db.rawQuery("SELECT * FROM AttendeePhone", null);
@@ -99,11 +102,56 @@ public class DBManager {
     /**
      * query all AttendeePhones, return cursor
      * 
-     * @return Cursor
      */
     private Cursor queryTheCursor(String s) {
-        Cursor c = db.rawQuery("SELECT * FROM AttendeePhone WHERE event_id=" + s, null);
+        Cursor c = db.rawQuery("SELECT * FROM AttendeePhone WHERE event_id="
+                + s, null);
         return c;
+    }
+
+    /**
+     * delete one attendee
+     * 
+     */
+    public void deleteAttendee(String event_id, String attendee) {
+        db.execSQL("delete from AttendeePhone where event_id=" + event_id
+                + " and phoneNumber=" + attendee);
+    }
+
+    /**
+     * query all AttendeePhones, return cursor
+     * 
+     */
+    private Cursor queryTheCursorMsgalert(String s) {
+        Cursor c = db.rawQuery("SELECT * FROM MsgAlert WHERE event_id="
+                + s, null);
+        return c;
+    }
+
+    /**
+     * query for event id
+     * 
+     */
+    public boolean queryMsgAlert(long event_id, long alert_time) {
+        Cursor c = queryTheCursorMsgalert(String.valueOf(event_id));
+        while (c.moveToNext()) {
+            if (c.getInt(c.getColumnIndex("alert_time")) == alert_time) {
+                c.close();
+                return true;
+            }
+        }
+        c.close();
+        return false;
+    }
+
+
+
+    /**
+     * delete one msg alert
+     * 
+     */
+    public void deleteMsgAlert(long event_id) {
+        db.execSQL("delete from MsgAlert where event_id=" + event_id);
     }
 
     /**

@@ -35,6 +35,7 @@ import android.provider.CalendarContract.Attendees;
 import android.provider.CalendarContract.Calendars;
 import android.provider.CalendarContract.Events;
 import android.provider.CalendarContract.Reminders;
+import android.provider.ContactsContract;
 import android.provider.Settings;
 import android.text.InputFilter;
 import android.text.TextUtils;
@@ -45,6 +46,7 @@ import android.text.util.Rfc822Tokenizer;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityManager;
@@ -56,6 +58,7 @@ import android.widget.CalendarView;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.MultiAutoCompleteTextView;
 import android.widget.RadioButton;
@@ -65,7 +68,6 @@ import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
-
 import edu.bupt.calendar.CalendarEventModel;
 import edu.bupt.calendar.CalendarEventModel.Attendee;
 import edu.bupt.calendar.CalendarEventModel.ReminderEntry;
@@ -77,7 +79,9 @@ import edu.bupt.calendar.RecipientAdapter;
 import edu.bupt.calendar.TimezoneAdapter;
 import edu.bupt.calendar.TimezoneAdapter.TimezoneRow;
 import edu.bupt.calendar.Utils;
+import edu.bupt.calendar.attendee.DBManager;
 import edu.bupt.calendar.event.EditEventHelper.EditDoneRunnable;
+
 import com.android.calendarcommon.EventRecurrence;
 import com.android.common.Rfc822InputFilter;
 import com.android.common.Rfc822Validator;
@@ -93,9 +97,12 @@ import java.util.Formatter;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.TimeZone;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-public class EditEventView implements View.OnClickListener, DialogInterface.OnCancelListener,
-        DialogInterface.OnClickListener, OnItemSelectedListener {
+public class EditEventView implements View.OnClickListener,
+        DialogInterface.OnCancelListener, DialogInterface.OnClickListener,
+        OnItemSelectedListener {
     private static final String TAG = "EditEvent";
     private static final String GOOGLE_SECONDARY_CALENDAR = "calendar.google.com";
     private static final String PERIOD_SPACE = ". ";
@@ -129,6 +136,12 @@ public class EditEventView implements View.OnClickListener, DialogInterface.OnCa
     TextView mTimezoneLabel;
     LinearLayout mRemindersContainer;
     MultiAutoCompleteTextView mAttendeesList;
+
+    /** zzz */
+    ImageButton mChooseAttendee;
+    public boolean jumpedToChooser = false;
+    private DBManager mgr;
+
     View mCalendarSelectorGroup;
     View mCalendarSelectorWrapper;
     View mCalendarStaticGroup;
@@ -160,16 +173,17 @@ public class EditEventView implements View.OnClickListener, DialogInterface.OnCa
     private ArrayList<Integer> mRecurrenceIndexes = new ArrayList<Integer>(0);
 
     /**
-     * Contents of the "minutes" spinner.  This has default values from the XML file, augmented
-     * with any additional values that were already associated with the event.
+     * Contents of the "minutes" spinner. This has default values from the XML
+     * file, augmented with any additional values that were already associated
+     * with the event.
      */
     private ArrayList<Integer> mReminderMinuteValues;
     private ArrayList<String> mReminderMinuteLabels;
 
     /**
-     * Contents of the "methods" spinner.  The "values" list specifies the method constant
-     * (e.g. {@link Reminders#METHOD_ALERT}) associated with the labels.  Any methods that
-     * aren't allowed by the Calendar will be removed.
+     * Contents of the "methods" spinner. The "values" list specifies the method
+     * constant (e.g. {@link Reminders#METHOD_ALERT}) associated with the
+     * labels. Any methods that aren't allowed by the Calendar will be removed.
      */
     private ArrayList<Integer> mReminderMethodValues;
     private ArrayList<String> mReminderMethodLabels;
@@ -194,7 +208,8 @@ public class EditEventView implements View.OnClickListener, DialogInterface.OnCa
 
     private EventRecurrence mEventRecurrence = new EventRecurrence();
 
-    private ArrayList<LinearLayout> mReminderItems = new ArrayList<LinearLayout>(0);
+    private ArrayList<LinearLayout> mReminderItems = new ArrayList<LinearLayout>(
+            0);
     private ArrayList<ReminderEntry> mUnsupportedReminders = new ArrayList<ReminderEntry>();
 
     private static StringBuilder mSB = new StringBuilder(50);
@@ -266,8 +281,9 @@ public class EditEventView implements View.OnClickListener, DialogInterface.OnCa
 
         @Override
         public void onClick(View v) {
-            TimePickerDialog tp = new TimePickerDialog(mActivity, new TimeListener(v), mTime.hour,
-                    mTime.minute, DateFormat.is24HourFormat(mActivity));
+            TimePickerDialog tp = new TimePickerDialog(mActivity,
+                    new TimeListener(v), mTime.hour, mTime.minute,
+                    DateFormat.is24HourFormat(mActivity));
             tp.setCanceledOnTouchOutside(true);
             tp.show();
         }
@@ -282,7 +298,7 @@ public class EditEventView implements View.OnClickListener, DialogInterface.OnCa
 
         @Override
         public void onDateSet(DatePicker view, int year, int month, int monthDay) {
-            Log.d(TAG, "onDateSet: " + year +  " " + month +  " " + monthDay);
+            Log.d(TAG, "onDateSet: " + year + " " + month + " " + monthDay);
             // Cache the member variables locally to avoid inner class overhead.
             Time startTime = mStartTime;
             Time endTime = mEndTime;
@@ -358,7 +374,8 @@ public class EditEventView implements View.OnClickListener, DialogInterface.OnCa
 
     private void populateTimezone(long eventStartTime) {
         if (mTimezoneAdapter == null) {
-            mTimezoneAdapter = new TimezoneAdapter(mActivity, mTimezone, eventStartTime);
+            mTimezoneAdapter = new TimezoneAdapter(mActivity, mTimezone,
+                    eventStartTime);
         } else {
             mTimezoneAdapter.setTime(eventStartTime);
         }
@@ -380,8 +397,8 @@ public class EditEventView implements View.OnClickListener, DialogInterface.OnCa
         AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
         final Context alertDialogContext = builder.getContext();
         builder.setTitle(R.string.timezone_label);
-        builder.setSingleChoiceItems(
-                mTimezoneAdapter, mTimezoneAdapter.getRowById(mTimezone), this);
+        builder.setSingleChoiceItems(mTimezoneAdapter,
+                mTimezoneAdapter.getRowById(mTimezone), this);
         mTimezoneDialog = builder.create();
 
         LayoutInflater layoutInflater = (LayoutInflater) alertDialogContext
@@ -389,11 +406,13 @@ public class EditEventView implements View.OnClickListener, DialogInterface.OnCa
         final TextView timezoneFooterView = (TextView) layoutInflater.inflate(
                 R.layout.timezone_footer, null);
 
-        timezoneFooterView.setText(mActivity.getString(R.string.edit_event_show_all) + " >");
+        timezoneFooterView.setText(mActivity
+                .getString(R.string.edit_event_show_all) + " >");
         timezoneFooterView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mTimezoneDialog.getListView().removeFooterView(timezoneFooterView);
+                mTimezoneDialog.getListView().removeFooterView(
+                        timezoneFooterView);
                 mTimezoneAdapter.showAllTimezones();
                 final int row = mTimezoneAdapter.getRowById(mTimezone);
                 // we need to post the selection changes to have them have
@@ -417,13 +436,20 @@ public class EditEventView implements View.OnClickListener, DialogInterface.OnCa
         Resources r = mActivity.getResources();
 
         String[] days = new String[] {
-                DateUtils.getDayOfWeekString(Calendar.SUNDAY, DateUtils.LENGTH_MEDIUM),
-                DateUtils.getDayOfWeekString(Calendar.MONDAY, DateUtils.LENGTH_MEDIUM),
-                DateUtils.getDayOfWeekString(Calendar.TUESDAY, DateUtils.LENGTH_MEDIUM),
-                DateUtils.getDayOfWeekString(Calendar.WEDNESDAY, DateUtils.LENGTH_MEDIUM),
-                DateUtils.getDayOfWeekString(Calendar.THURSDAY, DateUtils.LENGTH_MEDIUM),
-                DateUtils.getDayOfWeekString(Calendar.FRIDAY, DateUtils.LENGTH_MEDIUM),
-                DateUtils.getDayOfWeekString(Calendar.SATURDAY, DateUtils.LENGTH_MEDIUM), };
+                DateUtils.getDayOfWeekString(Calendar.SUNDAY,
+                        DateUtils.LENGTH_MEDIUM),
+                DateUtils.getDayOfWeekString(Calendar.MONDAY,
+                        DateUtils.LENGTH_MEDIUM),
+                DateUtils.getDayOfWeekString(Calendar.TUESDAY,
+                        DateUtils.LENGTH_MEDIUM),
+                DateUtils.getDayOfWeekString(Calendar.WEDNESDAY,
+                        DateUtils.LENGTH_MEDIUM),
+                DateUtils.getDayOfWeekString(Calendar.THURSDAY,
+                        DateUtils.LENGTH_MEDIUM),
+                DateUtils.getDayOfWeekString(Calendar.FRIDAY,
+                        DateUtils.LENGTH_MEDIUM),
+                DateUtils.getDayOfWeekString(Calendar.SATURDAY,
+                        DateUtils.LENGTH_MEDIUM), };
         String[] ordinals = r.getStringArray(R.array.ordinal_labels);
 
         // Only display "Custom" in the spinner if the device does not support
@@ -454,7 +480,8 @@ public class EditEventView implements View.OnClickListener, DialogInterface.OnCa
         // of the given day.
         int dayNumber = (time.monthDay - 1) / 7;
         format = r.getString(R.string.monthly_on_day_count);
-        repeatArray.add(String.format(format, ordinals[dayNumber], days[time.weekDay]));
+        repeatArray.add(String.format(format, ordinals[dayNumber],
+                days[time.weekDay]));
         recurrenceIndexes.add(EditEventHelper.REPEATS_MONTHLY_ON_DAY_COUNT);
 
         format = r.getString(R.string.monthly_on_day);
@@ -467,7 +494,8 @@ public class EditEventView implements View.OnClickListener, DialogInterface.OnCa
         if (DateFormat.is24HourFormat(mActivity)) {
             flags |= DateUtils.FORMAT_24HOUR;
         }
-        repeatArray.add(String.format(format, DateUtils.formatDateTime(mActivity, when, flags)));
+        repeatArray.add(String.format(format,
+                DateUtils.formatDateTime(mActivity, when, flags)));
         recurrenceIndexes.add(EditEventHelper.REPEATS_YEARLY);
 
         if (isCustomRecurrence) {
@@ -476,36 +504,40 @@ public class EditEventView implements View.OnClickListener, DialogInterface.OnCa
         }
         mRecurrenceIndexes = recurrenceIndexes;
 
-        int position = recurrenceIndexes.indexOf(EditEventHelper.DOES_NOT_REPEAT);
+        int position = recurrenceIndexes
+                .indexOf(EditEventHelper.DOES_NOT_REPEAT);
         if (!TextUtils.isEmpty(mModel.mRrule)) {
             if (isCustomRecurrence) {
-                position = recurrenceIndexes.indexOf(EditEventHelper.REPEATS_CUSTOM);
+                position = recurrenceIndexes
+                        .indexOf(EditEventHelper.REPEATS_CUSTOM);
             } else {
                 switch (mEventRecurrence.freq) {
-                    case EventRecurrence.DAILY:
-                        position = recurrenceIndexes.indexOf(EditEventHelper.REPEATS_DAILY);
-                        break;
-                    case EventRecurrence.WEEKLY:
-                        if (mEventRecurrence.repeatsOnEveryWeekDay()) {
-                            position = recurrenceIndexes.indexOf(
-                                    EditEventHelper.REPEATS_EVERY_WEEKDAY);
-                        } else {
-                            position = recurrenceIndexes.indexOf(
-                                    EditEventHelper.REPEATS_WEEKLY_ON_DAY);
-                        }
-                        break;
-                    case EventRecurrence.MONTHLY:
-                        if (mEventRecurrence.repeatsMonthlyOnDayCount()) {
-                            position = recurrenceIndexes.indexOf(
-                                    EditEventHelper.REPEATS_MONTHLY_ON_DAY_COUNT);
-                        } else {
-                            position = recurrenceIndexes.indexOf(
-                                    EditEventHelper.REPEATS_MONTHLY_ON_DAY);
-                        }
-                        break;
-                    case EventRecurrence.YEARLY:
-                        position = recurrenceIndexes.indexOf(EditEventHelper.REPEATS_YEARLY);
-                        break;
+                case EventRecurrence.DAILY:
+                    position = recurrenceIndexes
+                            .indexOf(EditEventHelper.REPEATS_DAILY);
+                    break;
+                case EventRecurrence.WEEKLY:
+                    if (mEventRecurrence.repeatsOnEveryWeekDay()) {
+                        position = recurrenceIndexes
+                                .indexOf(EditEventHelper.REPEATS_EVERY_WEEKDAY);
+                    } else {
+                        position = recurrenceIndexes
+                                .indexOf(EditEventHelper.REPEATS_WEEKLY_ON_DAY);
+                    }
+                    break;
+                case EventRecurrence.MONTHLY:
+                    if (mEventRecurrence.repeatsMonthlyOnDayCount()) {
+                        position = recurrenceIndexes
+                                .indexOf(EditEventHelper.REPEATS_MONTHLY_ON_DAY_COUNT);
+                    } else {
+                        position = recurrenceIndexes
+                                .indexOf(EditEventHelper.REPEATS_MONTHLY_ON_DAY);
+                    }
+                    break;
+                case EventRecurrence.YEARLY:
+                    position = recurrenceIndexes
+                            .indexOf(EditEventHelper.REPEATS_YEARLY);
+                    break;
                 }
             }
         }
@@ -534,35 +566,36 @@ public class EditEventView implements View.OnClickListener, DialogInterface.OnCa
         }
 
         switch (mEventRecurrence.freq) {
-            case EventRecurrence.DAILY:
+        case EventRecurrence.DAILY:
+            return false;
+        case EventRecurrence.WEEKLY:
+            if (mEventRecurrence.repeatsOnEveryWeekDay() && isWeekdayEvent()) {
                 return false;
-            case EventRecurrence.WEEKLY:
-                if (mEventRecurrence.repeatsOnEveryWeekDay() && isWeekdayEvent()) {
-                    return false;
-                } else if (mEventRecurrence.bydayCount == 1) {
-                    return false;
-                }
-                break;
-            case EventRecurrence.MONTHLY:
-                if (mEventRecurrence.repeatsMonthlyOnDayCount()) {
-                    /* this is a "3rd Tuesday of every month" sort of rule */
-                    return false;
-                } else if (mEventRecurrence.bydayCount == 0
-                        && mEventRecurrence.bymonthdayCount == 1
-                        && mEventRecurrence.bymonthday[0] > 0) {
-                    /* this is a "22nd day of every month" sort of rule */
-                    return false;
-                }
-                break;
-            case EventRecurrence.YEARLY:
+            } else if (mEventRecurrence.bydayCount == 1) {
                 return false;
+            }
+            break;
+        case EventRecurrence.MONTHLY:
+            if (mEventRecurrence.repeatsMonthlyOnDayCount()) {
+                /* this is a "3rd Tuesday of every month" sort of rule */
+                return false;
+            } else if (mEventRecurrence.bydayCount == 0
+                    && mEventRecurrence.bymonthdayCount == 1
+                    && mEventRecurrence.bymonthday[0] > 0) {
+                /* this is a "22nd day of every month" sort of rule */
+                return false;
+            }
+            break;
+        case EventRecurrence.YEARLY:
+            return false;
         }
 
         return true;
     }
 
     private boolean isWeekdayEvent() {
-        if (mStartTime.weekDay != Time.SUNDAY && mStartTime.weekDay != Time.SATURDAY) {
+        if (mStartTime.weekDay != Time.SUNDAY
+                && mStartTime.weekDay != Time.SATURDAY) {
             return true;
         }
         return false;
@@ -576,8 +609,9 @@ public class EditEventView implements View.OnClickListener, DialogInterface.OnCa
         }
 
         public void onClick(View v) {
-            DatePickerDialog dpd = new DatePickerDialog(
-                    mActivity, new DateListener(v), mTime.year, mTime.month, mTime.monthDay);
+            DatePickerDialog dpd = new DatePickerDialog(mActivity,
+                    new DateListener(v), mTime.year, mTime.month,
+                    mTime.monthDay);
             CalendarView cv = dpd.getDatePicker().getCalendarView();
             cv.setShowWeekNumber(Utils.getShowWeekNumber(mActivity));
             int startOfWeek = Utils.getFirstDayOfWeek(mActivity);
@@ -604,12 +638,15 @@ public class EditEventView implements View.OnClickListener, DialogInterface.OnCa
         @Override
         public void bindView(View view, Context context, Cursor cursor) {
             View colorBar = view.findViewById(R.id.color);
-            int colorColumn = cursor.getColumnIndexOrThrow(Calendars.CALENDAR_COLOR);
-            int nameColumn = cursor.getColumnIndexOrThrow(Calendars.CALENDAR_DISPLAY_NAME);
-            int ownerColumn = cursor.getColumnIndexOrThrow(Calendars.OWNER_ACCOUNT);
+            int colorColumn = cursor
+                    .getColumnIndexOrThrow(Calendars.CALENDAR_COLOR);
+            int nameColumn = cursor
+                    .getColumnIndexOrThrow(Calendars.CALENDAR_DISPLAY_NAME);
+            int ownerColumn = cursor
+                    .getColumnIndexOrThrow(Calendars.OWNER_ACCOUNT);
             if (colorBar != null) {
-                colorBar.setBackgroundColor(Utils.getDisplayColorFromColor(cursor
-                        .getInt(colorColumn)));
+                colorBar.setBackgroundColor(Utils
+                        .getDisplayColorFromColor(cursor.getInt(colorColumn)));
             }
 
             TextView name = (TextView) view.findViewById(R.id.calendar_name);
@@ -617,7 +654,8 @@ public class EditEventView implements View.OnClickListener, DialogInterface.OnCa
                 String displayName = cursor.getString(nameColumn);
                 name.setText(displayName);
 
-                TextView accountName = (TextView) view.findViewById(R.id.account_name);
+                TextView accountName = (TextView) view
+                        .findViewById(R.id.account_name);
                 if (accountName != null) {
                     accountName.setText(cursor.getString(ownerColumn));
                     accountName.setVisibility(TextView.VISIBLE);
@@ -628,14 +666,14 @@ public class EditEventView implements View.OnClickListener, DialogInterface.OnCa
 
     /**
      * Does prep steps for saving a calendar event.
-     *
+     * 
      * This triggers a parse of the attendees list and checks if the event is
      * ready to be saved. An event is ready to be saved so long as a model
      * exists and has a calendar it can be associated with, either because it's
      * an existing event or we've finished querying.
-     *
+     * 
      * @return false if there is no model or no calendar had been loaded yet,
-     * true otherwise.
+     *         true otherwise.
      */
     public boolean prepareForSave() {
         if (mModel == null || (mCalendarsCursor == null && mModel.mUri == null)) {
@@ -649,11 +687,12 @@ public class EditEventView implements View.OnClickListener, DialogInterface.OnCa
             return false;
         }
         mModel.mReminders = EventViewUtils.reminderItemsToReminders(
-                    mReminderItems, mReminderMinuteValues, mReminderMethodValues);
+                mReminderItems, mReminderMinuteValues, mReminderMethodValues);
         mModel.mReminders.addAll(mUnsupportedReminders);
         mModel.normalizeReminders();
-        int status = EventInfoFragment.getResponseFromButtonId(
-                mResponseRadioGroup.getCheckedRadioButtonId());
+        int status = EventInfoFragment
+                .getResponseFromButtonId(mResponseRadioGroup
+                        .getCheckedRadioButtonId());
         if (status != Attendees.ATTENDEE_STATUS_NONE) {
             mModel.mSelfAttendeeStatus = status;
         }
@@ -665,14 +704,14 @@ public class EditEventView implements View.OnClickListener, DialogInterface.OnCa
     // on the "remove reminder" button.
     @Override
     public void onClick(View view) {
-
         // This must be a click on one of the "remove reminder" buttons
         LinearLayout reminderItem = (LinearLayout) view.getParent();
         LinearLayout parent = (LinearLayout) reminderItem.getParent();
         parent.removeView(reminderItem);
         mReminderItems.remove(reminderItem);
         updateRemindersVisibility(mReminderItems.size());
-        EventViewUtils.updateAddReminderButton(mView, mReminderItems, mModel.mCalendarMaxReminders);
+        EventViewUtils.updateAddReminderButton(mView, mReminderItems,
+                mModel.mCalendarMaxReminders);
     }
 
     // This is called if the user cancels the "No calendars" dialog.
@@ -697,9 +736,10 @@ public class EditEventView implements View.OnClickListener, DialogInterface.OnCa
             mDone.run();
             if (which == DialogInterface.BUTTON_POSITIVE) {
                 Intent nextIntent = new Intent(Settings.ACTION_ADD_ACCOUNT);
-                final String[] array = {"edu.bupt.calendar"};
+                final String[] array = { "edu.bupt.calendar" };
                 nextIntent.putExtra(Settings.EXTRA_AUTHORITIES, array);
-                nextIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                nextIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+                        | Intent.FLAG_ACTIVITY_NEW_TASK);
                 mActivity.startActivity(nextIntent);
             }
         } else if (dialog == mTimezoneDialog) {
@@ -716,8 +756,8 @@ public class EditEventView implements View.OnClickListener, DialogInterface.OnCa
         if (mModel == null) {
             return false;
         }
-        mModel.mReminders = EventViewUtils.reminderItemsToReminders(mReminderItems,
-                mReminderMinuteValues, mReminderMethodValues);
+        mModel.mReminders = EventViewUtils.reminderItemsToReminders(
+                mReminderItems, mReminderMinuteValues, mReminderMethodValues);
         mModel.mReminders.addAll(mUnsupportedReminders);
         mModel.normalizeReminders();
         mModel.mHasAlarm = mReminderItems.size() > 0;
@@ -732,8 +772,9 @@ public class EditEventView implements View.OnClickListener, DialogInterface.OnCa
             mModel.mDescription = null;
         }
 
-        int status = EventInfoFragment.getResponseFromButtonId(mResponseRadioGroup
-                .getCheckedRadioButtonId());
+        int status = EventInfoFragment
+                .getResponseFromButtonId(mResponseRadioGroup
+                        .getCheckedRadioButtonId());
         if (status != Attendees.ATTENDEE_STATUS_NONE) {
             mModel.mSelfAttendeeStatus = status;
         }
@@ -742,22 +783,26 @@ public class EditEventView implements View.OnClickListener, DialogInterface.OnCa
             mEmailValidator.setRemoveInvalid(true);
             mAttendeesList.performValidation();
             mModel.mAttendeesList.clear();
-            mModel.addAttendees(mAttendeesList.getText().toString(), mEmailValidator);
+            mModel.addAttendees(mAttendeesList.getText().toString(),
+                    mEmailValidator);
             mEmailValidator.setRemoveInvalid(false);
         }
 
         // If this was a new event we need to fill in the Calendar information
         if (mModel.mUri == null) {
             mModel.mCalendarId = mCalendarsSpinner.getSelectedItemId();
-            int calendarCursorPosition = mCalendarsSpinner.getSelectedItemPosition();
+            int calendarCursorPosition = mCalendarsSpinner
+                    .getSelectedItemPosition();
             if (mCalendarsCursor.moveToPosition(calendarCursorPosition)) {
-                String defaultCalendar = mCalendarsCursor.getString(
-                        EditEventHelper.CALENDARS_INDEX_OWNER_ACCOUNT);
-                Utils.setSharedPreference(
-                        mActivity, GeneralPreferences.KEY_DEFAULT_CALENDAR, defaultCalendar);
+                String defaultCalendar = mCalendarsCursor
+                        .getString(EditEventHelper.CALENDARS_INDEX_OWNER_ACCOUNT);
+                Utils.setSharedPreference(mActivity,
+                        GeneralPreferences.KEY_DEFAULT_CALENDAR,
+                        defaultCalendar);
                 mModel.mOwnerAccount = defaultCalendar;
                 mModel.mOrganizer = defaultCalendar;
-                mModel.mCalendarId = mCalendarsCursor.getLong(EditEventHelper.CALENDARS_INDEX_ID);
+                mModel.mCalendarId = mCalendarsCursor
+                        .getLong(EditEventHelper.CALENDARS_INDEX_ID);
             }
         }
 
@@ -775,10 +820,11 @@ public class EditEventView implements View.OnClickListener, DialogInterface.OnCa
             mEndTime.minute = 0;
             mEndTime.second = 0;
             mEndTime.timezone = mTimezone;
-            // When a user see the event duration as "X - Y" (e.g. Oct. 28 - Oct. 29), end time
+            // When a user see the event duration as "X - Y" (e.g. Oct. 28 -
+            // Oct. 29), end time
             // should be Y + 1 (Oct.30).
-            final long normalizedEndTimeMillis =
-                    mEndTime.normalize(true) + DateUtils.DAY_IN_MILLIS;
+            final long normalizedEndTimeMillis = mEndTime.normalize(true)
+                    + DateUtils.DAY_IN_MILLIS;
             if (normalizedEndTimeMillis < mModel.mStart) {
                 // mEnd should be midnight of the next day of mStart.
                 mModel.mEnd = mModel.mStart + DateUtils.DAY_IN_MILLIS;
@@ -807,8 +853,8 @@ public class EditEventView implements View.OnClickListener, DialogInterface.OnCa
             selection = mRecurrenceIndexes.get(position);
         }
 
-        EditEventHelper.updateRecurrenceRule(
-                selection, mModel, Utils.getFirstDayOfWeek(mActivity) + 1);
+        EditEventHelper.updateRecurrenceRule(selection, mModel,
+                Utils.getFirstDayOfWeek(mActivity) + 1);
 
         // Save the timezone so we can display it as a standard option next time
         if (!mModel.mAllDay) {
@@ -818,6 +864,9 @@ public class EditEventView implements View.OnClickListener, DialogInterface.OnCa
     }
 
     public EditEventView(Activity activity, View view, EditDoneRunnable done) {
+
+        /** zzz */
+        Log.d(TAG, "EditEventView construct");
 
         mActivity = activity;
         mView = view;
@@ -836,7 +885,8 @@ public class EditEventView implements View.OnClickListener, DialogInterface.OnCa
         mStartDateButton = (Button) view.findViewById(R.id.start_date);
         mEndDateButton = (Button) view.findViewById(R.id.end_date);
         mWhenView = (TextView) mView.findViewById(R.id.when);
-        mTimezoneTextView = (TextView) mView.findViewById(R.id.timezone_textView);
+        mTimezoneTextView = (TextView) mView
+                .findViewById(R.id.timezone_textView);
         mStartTimeButton = (Button) view.findViewById(R.id.start_time);
         mEndTimeButton = (Button) view.findViewById(R.id.end_time);
         mTimezoneButton = (Button) view.findViewById(R.id.timezone_button);
@@ -849,8 +899,10 @@ public class EditEventView implements View.OnClickListener, DialogInterface.OnCa
         mRepeatsSpinner = (Spinner) view.findViewById(R.id.repeats);
         mAvailabilitySpinner = (Spinner) view.findViewById(R.id.availability);
         mAccessLevelSpinner = (Spinner) view.findViewById(R.id.visibility);
-        mCalendarSelectorGroup = view.findViewById(R.id.calendar_selector_group);
-        mCalendarSelectorWrapper = view.findViewById(R.id.calendar_selector_wrapper);
+        mCalendarSelectorGroup = view
+                .findViewById(R.id.calendar_selector_group);
+        mCalendarSelectorWrapper = view
+                .findViewById(R.id.calendar_selector_wrapper);
         mCalendarStaticGroup = view.findViewById(R.id.calendar_group);
         mRemindersGroup = view.findViewById(R.id.reminders_row);
         mResponseGroup = view.findViewById(R.id.response_row);
@@ -860,7 +912,12 @@ public class EditEventView implements View.OnClickListener, DialogInterface.OnCa
         mDescriptionGroup = view.findViewById(R.id.description_row);
         mStartHomeGroup = view.findViewById(R.id.from_row_home_tz);
         mEndHomeGroup = view.findViewById(R.id.to_row_home_tz);
-        mAttendeesList = (MultiAutoCompleteTextView) view.findViewById(R.id.attendees);
+        mAttendeesList = (MultiAutoCompleteTextView) view
+                .findViewById(R.id.attendees);
+
+        /** zzz */
+        mChooseAttendee = (ImageButton) view
+                .findViewById(R.id.choose_attendees);
 
         mTitleTextView.setTag(mTitleTextView.getBackground());
         mLocationTextView.setTag(mLocationTextView.getBackground());
@@ -892,15 +949,17 @@ public class EditEventView implements View.OnClickListener, DialogInterface.OnCa
         mEditOnlyList.add(mStartHomeGroup);
         mEditOnlyList.add(mEndHomeGroup);
 
-        mResponseRadioGroup = (RadioGroup) view.findViewById(R.id.response_value);
-        mRemindersContainer = (LinearLayout) view.findViewById(R.id.reminder_items_container);
+        mResponseRadioGroup = (RadioGroup) view
+                .findViewById(R.id.response_value);
+        mRemindersContainer = (LinearLayout) view
+                .findViewById(R.id.reminder_items_container);
 
         mTimezone = Utils.getTimeZone(activity, null);
         mIsMultipane = activity.getResources().getBoolean(R.bool.tablet_config);
         mStartTime = new Time(mTimezone);
         mEndTime = new Time(mTimezone);
 
-        //mEmailValidator = new Rfc822Validator(null);
+        // mEmailValidator = new Rfc822Validator(null);
         /** zzz */
         mEmailValidator = new AttendeePhoneValidator(null);
 
@@ -909,7 +968,6 @@ public class EditEventView implements View.OnClickListener, DialogInterface.OnCa
         // Display loading screen
         setModel(null);
     }
-
 
     /**
      * Loads an integer array asset into a list.
@@ -942,8 +1000,8 @@ public class EditEventView implements View.OnClickListener, DialogInterface.OnCa
         mAvailabilityLabels = loadStringArray(r, R.array.availability);
 
         if (mModel.mCalendarAllowedAvailability != null) {
-            EventViewUtils.reduceMethodList(mAvailabilityValues, mAvailabilityLabels,
-                    mModel.mCalendarAllowedAvailability);
+            EventViewUtils.reduceMethodList(mAvailabilityValues,
+                    mAvailabilityLabels, mModel.mCalendarAllowedAvailability);
         }
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(mActivity,
@@ -955,62 +1013,106 @@ public class EditEventView implements View.OnClickListener, DialogInterface.OnCa
     /**
      * Prepares the reminder UI elements.
      * <p>
-     * (Re-)loads the minutes / methods lists from the XML assets, adds/removes items as
-     * needed for the current set of reminders and calendar properties, and then creates UI
-     * elements.
+     * (Re-)loads the minutes / methods lists from the XML assets, adds/removes
+     * items as needed for the current set of reminders and calendar properties,
+     * and then creates UI elements.
      */
     private void prepareReminders() {
         CalendarEventModel model = mModel;
         Resources r = mActivity.getResources();
 
-        // Load the labels and corresponding numeric values for the minutes and methods lists
-        // from the assets.  If we're switching calendars, we need to clear and re-populate the
-        // lists (which may have elements added and removed based on calendar properties).  This
-        // is mostly relevant for "methods", since we shouldn't have any "minutes" values in a
+        // Load the labels and corresponding numeric values for the minutes and
+        // methods lists
+        // from the assets. If we're switching calendars, we need to clear and
+        // re-populate the
+        // lists (which may have elements added and removed based on calendar
+        // properties). This
+        // is mostly relevant for "methods", since we shouldn't have any
+        // "minutes" values in a
         // new event that aren't in the default set.
-        mReminderMinuteValues = loadIntegerArray(r, R.array.reminder_minutes_values);
-        mReminderMinuteLabels = loadStringArray(r, R.array.reminder_minutes_labels);
-        mReminderMethodValues = loadIntegerArray(r, R.array.reminder_methods_values);
-        mReminderMethodLabels = loadStringArray(r, R.array.reminder_methods_labels);
+        mReminderMinuteValues = loadIntegerArray(r,
+                R.array.reminder_minutes_values);
+        mReminderMinuteLabels = loadStringArray(r,
+                R.array.reminder_minutes_labels);
+        mReminderMethodValues = loadIntegerArray(r,
+                R.array.reminder_methods_values);
+        mReminderMethodLabels = loadStringArray(r,
+                R.array.reminder_methods_labels);
 
-        // Remove any reminder methods that aren't allowed for this calendar.  If this is
-        // a new event, mCalendarAllowedReminders may not be set the first time we're called.
+        /** zzz */
+        // here msg reminder methods should be allowed
+        Log.i(TAG, "mModel.mCalendarAllowedReminders - "
+                + mModel.mCalendarAllowedReminders);
+        mModel.mCalendarAllowedReminders = "0,1,3";
+
+        // Remove any reminder methods that aren't allowed for this calendar. If
+        // this is
+        // a new event, mCalendarAllowedReminders may not be set the first time
+        // we're called.
         if (mModel.mCalendarAllowedReminders != null) {
-            EventViewUtils.reduceMethodList(mReminderMethodValues, mReminderMethodLabels,
-                    mModel.mCalendarAllowedReminders);
+            EventViewUtils.reduceMethodList(mReminderMethodValues,
+                    mReminderMethodLabels, mModel.mCalendarAllowedReminders);
         }
+
+        Log.i(TAG, "mReminderMethodValues - " + mReminderMethodValues.toString());
 
         int numReminders = 0;
         if (model.mHasAlarm) {
             ArrayList<ReminderEntry> reminders = model.mReminders;
             numReminders = reminders.size();
-            // Insert any minute values that aren't represented in the minutes list.
+            // Insert any minute values that aren't represented in the minutes
+            // list.
             for (ReminderEntry re : reminders) {
                 if (mReminderMethodValues.contains(re.getMethod())) {
-                    EventViewUtils.addMinutesToList(mActivity, mReminderMinuteValues,
-                            mReminderMinuteLabels, re.getMinutes());
+                    EventViewUtils.addMinutesToList(mActivity,
+                            mReminderMinuteValues, mReminderMinuteLabels,
+                            re.getMinutes());
                 }
             }
 
-            // Create a UI element for each reminder.  We display all of the reminders we get
-            // from the provider, even if the count exceeds the calendar maximum.  (Also, for
+            // Create a UI element for each reminder. We display all of the
+            // reminders we get
+            // from the provider, even if the count exceeds the calendar
+            // maximum. (Also, for
             // a new event, we won't have a maxReminders value available.)
             mUnsupportedReminders.clear();
+
+            /** zzz */
+            mgr = new DBManager(mActivity);
             for (ReminderEntry re : reminders) {
-                if (mReminderMethodValues.contains(re.getMethod())
-                        || re.getMethod() == Reminders.METHOD_DEFAULT) {
-                    EventViewUtils.addReminder(mActivity, mScrollView, this, mReminderItems,
-                            mReminderMinuteValues, mReminderMinuteLabels, mReminderMethodValues,
-                            mReminderMethodLabels, re, Integer.MAX_VALUE, null);
-                } else {
-                    // TODO figure out a way to display unsupported reminders
-                    mUnsupportedReminders.add(re);
+//                if (mReminderMethodValues.contains(re.getMethod())
+//                        || re.getMethod() == Reminders.METHOD_DEFAULT) {
+//                    EventViewUtils.addReminder(mActivity, mScrollView, this,
+//                            mReminderItems, mReminderMinuteValues,
+//                            mReminderMinuteLabels, mReminderMethodValues,
+//                            mReminderMethodLabels, re, Integer.MAX_VALUE, null);
+//                } else {
+//                    // TODO figure out a way to display unsupported reminders
+//                    mUnsupportedReminders.add(re);
+//                }
+
+
+                /** zzz */
+                // query our db to check of there is a msg alert
+                int reminderMethod = 1;
+                Log.i(TAG, "model.mId - " + model.mId);
+                Log.i(TAG, "re.getMinutes() - " + re.getMinutes());
+                if (mgr.queryMsgAlert(model.mId, re.getMinutes())){
+                    Log.d(TAG, "has msg alert data");
+                    reminderMethod = 3;
                 }
+                EventViewUtils.addReminder(mActivity, mScrollView, this,
+                        mReminderItems, mReminderMinuteValues,
+                        mReminderMinuteLabels, mReminderMethodValues,
+                        mReminderMethodLabels, re, Integer.MAX_VALUE,
+                        null, reminderMethod);
             }
+            mgr.closeDB();
         }
 
         updateRemindersVisibility(numReminders);
-        EventViewUtils.updateAddReminderButton(mView, mReminderItems, mModel.mCalendarMaxReminders);
+        EventViewUtils.updateAddReminderButton(mView, mReminderItems,
+                mModel.mCalendarMaxReminders);
     }
 
     /**
@@ -1018,15 +1120,17 @@ public class EditEventView implements View.OnClickListener, DialogInterface.OnCa
      * an edit view to be initialized before the event has been loaded. Passing
      * in null for the model will display a loading screen. A non-null model
      * will fill in the view's fields with the data contained in the model.
-     *
-     * @param model The event model to pull the data from
+     * 
+     * @param model
+     *            The event model to pull the data from
      */
     public void setModel(CalendarEventModel model) {
         mModel = model;
 
         // Need to close the autocomplete adapter to prevent leaking cursors.
-        if (mAddressAdapter != null && mAddressAdapter instanceof EmailAddressAdapter) {
-            ((EmailAddressAdapter)mAddressAdapter).close();
+        if (mAddressAdapter != null
+                && mAddressAdapter instanceof EmailAddressAdapter) {
+            ((EmailAddressAdapter) mAddressAdapter).close();
             mAddressAdapter = null;
         }
 
@@ -1065,15 +1169,18 @@ public class EditEventView implements View.OnClickListener, DialogInterface.OnCa
             mAttendeesGroup.setVisibility(View.GONE);
         }
 
-        mAllDayCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                setAllDayViewsVisibility(isChecked);
-            }
-        });
+        mAllDayCheckBox
+                .setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView,
+                            boolean isChecked) {
+                        setAllDayViewsVisibility(isChecked);
+                    }
+                });
 
         boolean prevAllDay = mAllDayCheckBox.isChecked();
-        mAllDay = false; // default to false. Let setAllDayViewsVisibility update it as needed
+        mAllDay = false; // default to false. Let setAllDayViewsVisibility
+                         // update it as needed
         if (model.mAllDay) {
             mAllDayCheckBox.setChecked(true);
             // put things back in local time for all day events
@@ -1092,9 +1199,11 @@ public class EditEventView implements View.OnClickListener, DialogInterface.OnCa
 
         populateTimezone(mStartTime.normalize(true));
 
-        SharedPreferences prefs = GeneralPreferences.getSharedPreferences(mActivity);
+        SharedPreferences prefs = GeneralPreferences
+                .getSharedPreferences(mActivity);
         String defaultReminderString = prefs.getString(
-                GeneralPreferences.KEY_DEFAULT_REMINDER, GeneralPreferences.NO_REMINDER_STRING);
+                GeneralPreferences.KEY_DEFAULT_REMINDER,
+                GeneralPreferences.NO_REMINDER_STRING);
         mDefaultReminderMinutes = Integer.parseInt(defaultReminderString);
 
         prepareReminders();
@@ -1114,7 +1223,8 @@ public class EditEventView implements View.OnClickListener, DialogInterface.OnCa
                     new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            mAllDayCheckBox.setChecked(!mAllDayCheckBox.isChecked());
+                            mAllDayCheckBox.setChecked(!mAllDayCheckBox
+                                    .isChecked());
                         }
                     });
         }
@@ -1129,7 +1239,8 @@ public class EditEventView implements View.OnClickListener, DialogInterface.OnCa
             mView.findViewById(R.id.organizer).setVisibility(View.GONE);
             mOrganizerGroup.setVisibility(View.GONE);
         } else {
-            ((TextView) mView.findViewById(R.id.organizer)).setText(model.mOrganizerDisplayName);
+            ((TextView) mView.findViewById(R.id.organizer))
+                    .setText(model.mOrganizerDisplayName);
         }
 
         if (model.mLocation != null) {
@@ -1147,10 +1258,14 @@ public class EditEventView implements View.OnClickListener, DialogInterface.OnCa
         mAccessLevelSpinner.setSelection(model.mAccessLevel);
 
         View responseLabel = mView.findViewById(R.id.response_label);
+
+        /** zzz */
+        canRespond = false;
         if (canRespond) {
             int buttonToCheck = EventInfoFragment
                     .findButtonIdForResponse(model.mSelfAttendeeStatus);
-            mResponseRadioGroup.check(buttonToCheck); // -1 clear all radio buttons
+            mResponseRadioGroup.check(buttonToCheck); // -1 clear all radio
+                                                      // buttons
             mResponseRadioGroup.setVisibility(View.VISIBLE);
             responseLabel.setVisibility(View.VISIBLE);
         } else {
@@ -1163,23 +1278,39 @@ public class EditEventView implements View.OnClickListener, DialogInterface.OnCa
         if (model.mUri != null) {
             // This is an existing event so hide the calendar spinner
             // since we can't change the calendar.
-            View calendarGroup = mView.findViewById(R.id.calendar_selector_group);
+            View calendarGroup = mView
+                    .findViewById(R.id.calendar_selector_group);
             calendarGroup.setVisibility(View.GONE);
             TextView tv = (TextView) mView.findViewById(R.id.calendar_textview);
             tv.setText(model.mCalendarDisplayName);
-            tv = (TextView) mView.findViewById(R.id.calendar_textview_secondary);
+            tv = (TextView) mView
+                    .findViewById(R.id.calendar_textview_secondary);
             if (tv != null) {
                 tv.setText(model.mOwnerAccount);
             }
             if (mIsMultipane) {
-                mView.findViewById(R.id.calendar_textview).setBackgroundColor(displayColor);
+                mView.findViewById(R.id.calendar_textview).setBackgroundColor(
+                        displayColor);
             } else {
-                mView.findViewById(R.id.calendar_group).setBackgroundColor(displayColor);
+                mView.findViewById(R.id.calendar_group).setBackgroundColor(
+                        displayColor);
             }
         } else {
             View calendarGroup = mView.findViewById(R.id.calendar_group);
             calendarGroup.setVisibility(View.GONE);
         }
+
+        /** zzz */
+        mChooseAttendee.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "onClick");
+                jumpedToChooser = true;
+                Intent intent = new Intent(Intent.ACTION_PICK,
+                        ContactsContract.Contacts.CONTENT_URI);
+                mActivity.startActivityForResult(intent, 1);
+            }
+        });
 
         populateWhen();
         populateRepeats();
@@ -1191,9 +1322,38 @@ public class EditEventView implements View.OnClickListener, DialogInterface.OnCa
         sendAccessibilityEvent();
     }
 
+    public void onContactsChoosed(String num, String name) {
+        Log.i(TAG, "onContactsChoosed, num - " + num);
+        jumpedToChooser = false;
+        if (num != null) {
+//            Pattern mPattern = Pattern.compile("^((\\+{0,1}86){0,1})1[0-9]{10}");
+//            Matcher mMatcher = mPattern.matcher(num);
+
+            String strip1 = replacePattern(num, "^((\\+{0,1}86){0,1})", ""); //strip +86
+            String strip2 = replacePattern(strip1, "(\\-)", ""); //strip -
+            String strip3 = replacePattern(strip2, "(\\ )", ""); // strip -
+
+            mAttendeesList.append(strip3);
+        }
+    }
+
+    private String replacePattern(String origin, String pattern, String replace) {
+        Log.i(TAG, "origin - " + origin);
+        Pattern p = Pattern.compile(pattern);
+        Matcher m = p.matcher(origin);
+        StringBuffer sb = new StringBuffer();
+        while (m.find()) {
+            m.appendReplacement(sb, replace);
+        }
+
+        m.appendTail(sb);
+        Log.i(TAG, "sb.toString() - " + sb.toString());
+        return sb.toString();
+    }
+
     private void sendAccessibilityEvent() {
-        AccessibilityManager am =
-            (AccessibilityManager) mActivity.getSystemService(Service.ACCESSIBILITY_SERVICE);
+        AccessibilityManager am = (AccessibilityManager) mActivity
+                .getSystemService(Service.ACCESSIBILITY_SERVICE);
         if (!am.isEnabled() || mModel == null) {
             return;
         }
@@ -1201,7 +1361,8 @@ public class EditEventView implements View.OnClickListener, DialogInterface.OnCa
         addFieldsRecursive(b, mView);
         CharSequence msg = b.toString();
 
-        AccessibilityEvent event = AccessibilityEvent.obtain(AccessibilityEvent.TYPE_VIEW_FOCUSED);
+        AccessibilityEvent event = AccessibilityEvent
+                .obtain(AccessibilityEvent.TYPE_VIEW_FOCUSED);
         event.setClassName(getClass().getName());
         event.setPackageName(mActivity.getPackageName());
         event.getText().add(msg);
@@ -1223,7 +1384,8 @@ public class EditEventView implements View.OnClickListener, DialogInterface.OnCa
             RadioGroup rg = (RadioGroup) v;
             int id = rg.getCheckedRadioButtonId();
             if (id != View.NO_ID) {
-                b.append(((RadioButton) (v.findViewById(id))).getText() + PERIOD_SPACE);
+                b.append(((RadioButton) (v.findViewById(id))).getText()
+                        + PERIOD_SPACE);
             }
         } else if (v instanceof Spinner) {
             Spinner s = (Spinner) v;
@@ -1261,18 +1423,19 @@ public class EditEventView implements View.OnClickListener, DialogInterface.OnCa
         long startMillis = mStartTime.normalize(true);
         long endMillis = mEndTime.normalize(true);
         mSB.setLength(0);
-        when = DateUtils
-                .formatDateRange(mActivity, mF, startMillis, endMillis, flags, tz).toString();
+        when = DateUtils.formatDateRange(mActivity, mF, startMillis, endMillis,
+                flags, tz).toString();
         mWhenView.setText(when);
     }
 
     /**
-     * Configures the Calendars spinner.  This is only done for new events, because only new
-     * events allow you to select a calendar while editing an event.
+     * Configures the Calendars spinner. This is only done for new events,
+     * because only new events allow you to select a calendar while editing an
+     * event.
      * <p>
-     * We tuck a reference to a Cursor with calendar database data into the spinner, so that
-     * we can easily extract calendar-specific values when the value changes (the spinner's
-     * onItemSelected callback is configured).
+     * We tuck a reference to a Cursor with calendar database data into the
+     * spinner, so that we can easily extract calendar-specific values when the
+     * value changes (the spinner's onItemSelected callback is configured).
      */
     public void setCalendarsCursor(Cursor cursor, boolean userVisible) {
         // If there are no syncable calendars, then we cannot allow
@@ -1289,10 +1452,12 @@ public class EditEventView implements View.OnClickListener, DialogInterface.OnCa
             // Create an error message for the user that, when clicked,
             // will exit this activity without saving the event.
             AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
-            builder.setTitle(R.string.no_syncable_calendars).setIconAttribute(
-                    android.R.attr.alertDialogIcon).setMessage(R.string.no_calendars_found)
+            builder.setTitle(R.string.no_syncable_calendars)
+                    .setIconAttribute(android.R.attr.alertDialogIcon)
+                    .setMessage(R.string.no_calendars_found)
                     .setPositiveButton(R.string.add_account, this)
-                    .setNegativeButton(android.R.string.no, this).setOnCancelListener(this);
+                    .setNegativeButton(android.R.string.no, this)
+                    .setOnCancelListener(this);
             mNoCalendarsDialog = builder.show();
             return;
         }
@@ -1315,7 +1480,8 @@ public class EditEventView implements View.OnClickListener, DialogInterface.OnCa
                 mDone.setDoneCode(Utils.DONE_EXIT);
                 mDone.run();
             } else if (Log.isLoggable(TAG, Log.DEBUG)) {
-                Log.d(TAG, "SetCalendarsCursor:Save failed and unable to exit view");
+                Log.d(TAG,
+                        "SetCalendarsCursor:Save failed and unable to exit view");
             }
             return;
         }
@@ -1337,7 +1503,8 @@ public class EditEventView implements View.OnClickListener, DialogInterface.OnCa
 
     private void setViewStates(int mode) {
         // Extra canModify check just in case
-        if (mode == Utils.MODIFY_UNINITIALIZED || !EditEventHelper.canModifyEvent(mModel)) {
+        if (mode == Utils.MODIFY_UNINITIALIZED
+                || !EditEventHelper.canModifyEvent(mModel)) {
             setWhenString();
 
             for (View v : mViewOnlyList) {
@@ -1376,8 +1543,8 @@ public class EditEventView implements View.OnClickListener, DialogInterface.OnCa
                 v.setEnabled(true);
                 if (v.getTag() != null) {
                     v.setBackgroundDrawable((Drawable) v.getTag());
-                    v.setPadding(mOriginalPadding[0], mOriginalPadding[1], mOriginalPadding[2],
-                            mOriginalPadding[3]);
+                    v.setPadding(mOriginalPadding[0], mOriginalPadding[1],
+                            mOriginalPadding[2], mOriginalPadding[3]);
                 }
             }
             if (mModel.mUri == null) {
@@ -1387,9 +1554,11 @@ public class EditEventView implements View.OnClickListener, DialogInterface.OnCa
                 mCalendarSelectorGroup.setVisibility(View.GONE);
                 mCalendarStaticGroup.setVisibility(View.VISIBLE);
             }
-            mRepeatsSpinner.setBackgroundDrawable((Drawable) mRepeatsSpinner.getTag());
-            mRepeatsSpinner.setPadding(mOriginalSpinnerPadding[0], mOriginalSpinnerPadding[1],
-                    mOriginalSpinnerPadding[2], mOriginalSpinnerPadding[3]);
+            mRepeatsSpinner.setBackgroundDrawable((Drawable) mRepeatsSpinner
+                    .getTag());
+            mRepeatsSpinner.setPadding(mOriginalSpinnerPadding[0],
+                    mOriginalSpinnerPadding[1], mOriginalSpinnerPadding[2],
+                    mOriginalSpinnerPadding[3]);
             if (mModel.mOriginalSyncId == null) {
                 mRepeatsSpinner.setEnabled(true);
             } else {
@@ -1416,17 +1585,19 @@ public class EditEventView implements View.OnClickListener, DialogInterface.OnCa
             return -1;
         }
 
-        String defaultCalendar = Utils.getSharedPreference(
-                mActivity, GeneralPreferences.KEY_DEFAULT_CALENDAR, (String) null);
+        String defaultCalendar = Utils.getSharedPreference(mActivity,
+                GeneralPreferences.KEY_DEFAULT_CALENDAR, (String) null);
 
         if (defaultCalendar == null) {
             return 0;
         }
-        int calendarsOwnerColumn = calendarsCursor.getColumnIndexOrThrow(Calendars.OWNER_ACCOUNT);
+        int calendarsOwnerColumn = calendarsCursor
+                .getColumnIndexOrThrow(Calendars.OWNER_ACCOUNT);
         int position = 0;
         calendarsCursor.moveToPosition(-1);
         while (calendarsCursor.moveToNext()) {
-            if (defaultCalendar.equals(calendarsCursor.getString(calendarsOwnerColumn))) {
+            if (defaultCalendar.equals(calendarsCursor
+                    .getString(calendarsOwnerColumn))) {
                 return position;
             }
             position++;
@@ -1453,38 +1624,42 @@ public class EditEventView implements View.OnClickListener, DialogInterface.OnCa
     }
 
     /**
-     * Add a new reminder when the user hits the "add reminder" button.  We use the default
-     * reminder time and method.
+     * Add a new reminder when the user hits the "add reminder" button. We use
+     * the default reminder time and method.
      */
     private void addReminder() {
         // TODO: when adding a new reminder, make it different from the
         // last one in the list (if any).
         if (mDefaultReminderMinutes == GeneralPreferences.NO_REMINDER) {
-            EventViewUtils.addReminder(mActivity, mScrollView, this, mReminderItems,
-                    mReminderMinuteValues, mReminderMinuteLabels,
-                    mReminderMethodValues, mReminderMethodLabels,
-                    ReminderEntry.valueOf(GeneralPreferences.REMINDER_DEFAULT_TIME),
+            EventViewUtils.addReminder(mActivity, mScrollView, this,
+                    mReminderItems, mReminderMinuteValues,
+                    mReminderMinuteLabels, mReminderMethodValues,
+                    mReminderMethodLabels, ReminderEntry
+                            .valueOf(GeneralPreferences.REMINDER_DEFAULT_TIME),
                     mModel.mCalendarMaxReminders, null);
         } else {
-            EventViewUtils.addReminder(mActivity, mScrollView, this, mReminderItems,
-                    mReminderMinuteValues, mReminderMinuteLabels,
-                    mReminderMethodValues, mReminderMethodLabels,
+            EventViewUtils.addReminder(mActivity, mScrollView, this,
+                    mReminderItems, mReminderMinuteValues,
+                    mReminderMinuteLabels, mReminderMethodValues,
+                    mReminderMethodLabels,
                     ReminderEntry.valueOf(mDefaultReminderMinutes),
                     mModel.mCalendarMaxReminders, null);
         }
         updateRemindersVisibility(mReminderItems.size());
-        EventViewUtils.updateAddReminderButton(mView, mReminderItems, mModel.mCalendarMaxReminders);
+        EventViewUtils.updateAddReminderButton(mView, mReminderItems,
+                mModel.mCalendarMaxReminders);
     }
 
     // From com.google.android.gm.ComposeActivity
-    private MultiAutoCompleteTextView initMultiAutoCompleteTextView(RecipientEditTextView list) {
+    private MultiAutoCompleteTextView initMultiAutoCompleteTextView(
+            RecipientEditTextView list) {
         if (ChipsUtil.supportsChipsUi()) {
             mAddressAdapter = new RecipientAdapter(mActivity);
             list.setAdapter((BaseRecipientAdapter) mAddressAdapter);
             list.setOnFocusListShrinkRecipients(false);
         } else {
             mAddressAdapter = new EmailAddressAdapter(mActivity);
-            list.setAdapter((EmailAddressAdapter)mAddressAdapter);
+            list.setAdapter((EmailAddressAdapter) mAddressAdapter);
         }
         list.setTokenizer(new Rfc822Tokenizer());
         list.setValidator(mEmailValidator);
@@ -1607,8 +1782,10 @@ public class EditEventView implements View.OnClickListener, DialogInterface.OnCa
     }
 
     @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        // This is only used for the Calendar spinner in new events, and only fires when the
+    public void onItemSelected(AdapterView<?> parent, View view, int position,
+            long id) {
+        // This is only used for the Calendar spinner in new events, and only
+        // fires when the
         // calendar selection changes or on screen rotation
         Cursor c = (Cursor) parent.getItemAtPosition(position);
         if (c == null) {
@@ -1627,7 +1804,8 @@ public class EditEventView implements View.OnClickListener, DialogInterface.OnCa
             mCalendarSelectorGroup.setBackgroundColor(displayColor);
         }
 
-        // Do nothing if the selection didn't change so that reminders will not get lost
+        // Do nothing if the selection didn't change so that reminders will not
+        // get lost
         int idColumn = c.getColumnIndexOrThrow(Calendars._ID);
         long calendarId = c.getLong(idColumn);
         if (calendarId == mModel.mCalendarId) {
@@ -1636,17 +1814,25 @@ public class EditEventView implements View.OnClickListener, DialogInterface.OnCa
         mModel.mCalendarId = calendarId;
         mModel.mCalendarColor = color;
         // Update the max/allowed reminders with the new calendar properties.
-        int maxRemindersColumn = c.getColumnIndexOrThrow(Calendars.MAX_REMINDERS);
+        int maxRemindersColumn = c
+                .getColumnIndexOrThrow(Calendars.MAX_REMINDERS);
         mModel.mCalendarMaxReminders = c.getInt(maxRemindersColumn);
-        int allowedRemindersColumn = c.getColumnIndexOrThrow(Calendars.ALLOWED_REMINDERS);
+        int allowedRemindersColumn = c
+                .getColumnIndexOrThrow(Calendars.ALLOWED_REMINDERS);
         mModel.mCalendarAllowedReminders = c.getString(allowedRemindersColumn);
-        int allowedAttendeeTypesColumn = c.getColumnIndexOrThrow(Calendars.ALLOWED_ATTENDEE_TYPES);
-        mModel.mCalendarAllowedAttendeeTypes = c.getString(allowedAttendeeTypesColumn);
-        int allowedAvailabilityColumn = c.getColumnIndexOrThrow(Calendars.ALLOWED_AVAILABILITY);
-        mModel.mCalendarAllowedAvailability = c.getString(allowedAvailabilityColumn);
+        int allowedAttendeeTypesColumn = c
+                .getColumnIndexOrThrow(Calendars.ALLOWED_ATTENDEE_TYPES);
+        mModel.mCalendarAllowedAttendeeTypes = c
+                .getString(allowedAttendeeTypesColumn);
+        int allowedAvailabilityColumn = c
+                .getColumnIndexOrThrow(Calendars.ALLOWED_AVAILABILITY);
+        mModel.mCalendarAllowedAvailability = c
+                .getString(allowedAvailabilityColumn);
 
-        // Discard the current reminders and replace them with the model's default reminder set.
-        // We could attempt to save & restore the reminders that have been added, but that's
+        // Discard the current reminders and replace them with the model's
+        // default reminder set.
+        // We could attempt to save & restore the reminders that have been
+        // added, but that's
         // probably more trouble than it's worth.
         mModel.mReminders.clear();
         mModel.mReminders.addAll(mModel.mDefaultReminders);
@@ -1654,8 +1840,8 @@ public class EditEventView implements View.OnClickListener, DialogInterface.OnCa
 
         // Update the UI elements.
         mReminderItems.clear();
-        LinearLayout reminderLayout =
-            (LinearLayout) mScrollView.findViewById(R.id.reminder_items_container);
+        LinearLayout reminderLayout = (LinearLayout) mScrollView
+                .findViewById(R.id.reminder_items_container);
         reminderLayout.removeAllViews();
         prepareReminders();
         prepareAvailability();
@@ -1686,22 +1872,23 @@ public class EditEventView implements View.OnClickListener, DialogInterface.OnCa
             StringBuilder time = new StringBuilder();
 
             mSB.setLength(0);
-            time.append(DateUtils
-                    .formatDateRange(mActivity, mF, millisStart, millisStart, flags, tz))
-                    .append(" ").append(tzDisplay);
+            time.append(
+                    DateUtils.formatDateRange(mActivity, mF, millisStart,
+                            millisStart, flags, tz)).append(" ")
+                    .append(tzDisplay);
             mStartTimeHome.setText(time.toString());
 
             flags = DateUtils.FORMAT_ABBREV_ALL | DateUtils.FORMAT_SHOW_DATE
-                    | DateUtils.FORMAT_SHOW_YEAR | DateUtils.FORMAT_SHOW_WEEKDAY;
+                    | DateUtils.FORMAT_SHOW_YEAR
+                    | DateUtils.FORMAT_SHOW_WEEKDAY;
             mSB.setLength(0);
-            mStartDateHome
-                    .setText(DateUtils.formatDateRange(
-                            mActivity, mF, millisStart, millisStart, flags, tz).toString());
+            mStartDateHome.setText(DateUtils.formatDateRange(mActivity, mF,
+                    millisStart, millisStart, flags, tz).toString());
 
             // Make any adjustments needed for the end times
             if (isDSTEnd != isDSTStart) {
-                tzDisplay = TimeZone.getTimeZone(tz).getDisplayName(
-                        isDSTEnd, TimeZone.SHORT, Locale.getDefault());
+                tzDisplay = TimeZone.getTimeZone(tz).getDisplayName(isDSTEnd,
+                        TimeZone.SHORT, Locale.getDefault());
             }
             flags = DateUtils.FORMAT_SHOW_TIME;
             if (is24Format) {
@@ -1711,15 +1898,18 @@ public class EditEventView implements View.OnClickListener, DialogInterface.OnCa
             // Then update the end times
             time.setLength(0);
             mSB.setLength(0);
-            time.append(DateUtils.formatDateRange(
-                    mActivity, mF, millisEnd, millisEnd, flags, tz)).append(" ").append(tzDisplay);
+            time.append(
+                    DateUtils.formatDateRange(mActivity, mF, millisEnd,
+                            millisEnd, flags, tz)).append(" ")
+                    .append(tzDisplay);
             mEndTimeHome.setText(time.toString());
 
             flags = DateUtils.FORMAT_ABBREV_ALL | DateUtils.FORMAT_SHOW_DATE
-                    | DateUtils.FORMAT_SHOW_YEAR | DateUtils.FORMAT_SHOW_WEEKDAY;
+                    | DateUtils.FORMAT_SHOW_YEAR
+                    | DateUtils.FORMAT_SHOW_WEEKDAY;
             mSB.setLength(0);
-            mEndDateHome.setText(DateUtils.formatDateRange(
-                            mActivity, mF, millisEnd, millisEnd, flags, tz).toString());
+            mEndDateHome.setText(DateUtils.formatDateRange(mActivity, mF,
+                    millisEnd, millisEnd, flags, tz).toString());
 
             mStartHomeGroup.setVisibility(View.VISIBLE);
             mEndHomeGroup.setVisibility(View.VISIBLE);

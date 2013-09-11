@@ -19,11 +19,15 @@ public class DBHelper extends SQLiteOpenHelper {
                 + "event_id INTEGER, "//
                 + "name VARCHAR, "//
                 + "phoneNumber VARCHAR)");
+        arg0.execSQL("CREATE TABLE IF NOT EXISTS MsgAlert"//
+                + "(_id INTEGER PRIMARY KEY AUTOINCREMENT, "//
+                + "event_id INTEGER, "//
+                + "alert_time INTEGER)");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("ALTER TABLE AttendeePhone ADD COLUMN other VARCHAR");  
+        db.execSQL("ALTER TABLE AttendeePhone ADD COLUMN other VARCHAR");
     }
 
 }

@@ -19,16 +19,18 @@ package edu.bupt.calendar.event;
 import static android.provider.CalendarContract.EXTRA_EVENT_BEGIN_TIME;
 import static android.provider.CalendarContract.EXTRA_EVENT_END_TIME;
 import static android.provider.CalendarContract.EXTRA_EVENT_ALL_DAY;
-
 import android.app.ActionBar;
+import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Contacts.People.Phones;
+import android.provider.ContactsContract;
 import android.text.format.Time;
 import android.util.Log;
 import android.view.MenuItem;
-
 import edu.bupt.calendar.AbstractCalendarActivity;
 import edu.bupt.calendar.CalendarController;
 import edu.bupt.calendar.CalendarController.EventInfo;
@@ -48,6 +50,9 @@ public class EditEventActivity extends AbstractCalendarActivity {
 
     private EventInfo mEventInfo;
 
+    /** zzz */
+    public static String number;
+
     @Override
     protected void onCreate(Bundle icicle) {
         super.onCreate(icicle);
@@ -55,7 +60,8 @@ public class EditEventActivity extends AbstractCalendarActivity {
 
         mEventInfo = getEventInfoFromIntent(icicle);
 
-        mEditFragment = (EditEventFragment) getFragmentManager().findFragmentById(R.id.main_frame);
+        mEditFragment = (EditEventFragment) getFragmentManager()
+                .findFragmentById(R.id.main_frame);
 
         mIsMultipane = Utils.getConfigBool(this, R.bool.multiple_pane_config);
 
@@ -65,12 +71,14 @@ public class EditEventActivity extends AbstractCalendarActivity {
                     ActionBar.DISPLAY_HOME_AS_UP | ActionBar.DISPLAY_SHOW_HOME
                             | ActionBar.DISPLAY_SHOW_TITLE);
             getActionBar().setTitle(
-                    mEventInfo.id == -1 ? R.string.event_create : R.string.event_edit);
-        }
-        else {
-            getActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM,
-                    ActionBar.DISPLAY_HOME_AS_UP | ActionBar.DISPLAY_SHOW_HOME|
-                    ActionBar.DISPLAY_SHOW_TITLE | ActionBar.DISPLAY_SHOW_CUSTOM);
+                    mEventInfo.id == -1 ? R.string.event_create
+                            : R.string.event_edit);
+        } else {
+            getActionBar().setDisplayOptions(
+                    ActionBar.DISPLAY_SHOW_CUSTOM,
+                    ActionBar.DISPLAY_HOME_AS_UP | ActionBar.DISPLAY_SHOW_HOME
+                            | ActionBar.DISPLAY_SHOW_TITLE
+                            | ActionBar.DISPLAY_SHOW_CUSTOM);
         }
 
         if (mEditFragment == null) {
@@ -81,8 +89,9 @@ public class EditEventActivity extends AbstractCalendarActivity {
 
             mEditFragment = new EditEventFragment(mEventInfo, false, intent);
 
-            mEditFragment.mShowModifyDialogOnLaunch = getIntent().getBooleanExtra(
-                    CalendarController.EVENT_EDIT_ON_LAUNCH, false);
+            mEditFragment.mShowModifyDialogOnLaunch = getIntent()
+                    .getBooleanExtra(CalendarController.EVENT_EDIT_ON_LAUNCH,
+                            false);
 
             FragmentTransaction ft = getFragmentManager().beginTransaction();
             ft.replace(R.id.main_frame, mEditFragment);
@@ -144,4 +153,50 @@ public class EditEventActivity extends AbstractCalendarActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+    /** zzz */
+    // back from choosing a attendee phone number from system cantact app, and
+    // then send it to EditEventFragment
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (resultCode) {
+        case RESULT_OK:
+            if (resultCode == Activity.RESULT_OK) {
+
+                Uri contactData = data.getData();
+                Cursor c = managedQuery(contactData, null, null, null, null);
+                if (c.moveToFirst()) {
+
+                    String id = c
+                            .getString(c
+                                    .getColumnIndexOrThrow(ContactsContract.Contacts._ID));
+
+                    String hasPhone = c
+                            .getString(c
+                                    .getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER));
+
+                    if (hasPhone.equalsIgnoreCase("1")) {
+                        Cursor phones = getContentResolver()
+                                .query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                                        null,
+                                        ContactsContract.CommonDataKinds.Phone.CONTACT_ID
+                                                + " = " + id, null, null);
+                        phones.moveToFirst();
+                        number = phones.getString(phones
+                                .getColumnIndex("data1"));
+                        Log.i(TAG, "number - " + number);
+                    }
+                    String name = c
+                            .getString(c
+                                    .getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+
+                }
+            }
+            break;
+        default:
+            break;
+        }
+        mEditFragment.mView.onContactsChoosed(number, null);
+    }
+
 }

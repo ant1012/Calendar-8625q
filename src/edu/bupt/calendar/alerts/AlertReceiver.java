@@ -109,6 +109,7 @@ public class AlertReceiver extends BroadcastReceiver {
                 context.startActivity(i);
             }
         } else {
+            Log.i(TAG, "onReceive: a=" + intent.getAction() + " " + intent.toString());
             Intent i = new Intent();
             i.setClass(context, AlertService.class);
             i.putExtras(intent);

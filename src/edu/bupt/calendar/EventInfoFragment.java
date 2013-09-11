@@ -457,6 +457,7 @@ public class EventInfoFragment extends DialogFragment implements
                                 Attendees.ATTENDEE_STATUS_NONE, null,
                                 null));
                     }
+                    mgr.closeDB();
                     updateAttendees(mView);
 
                 } else {
@@ -2130,11 +2131,26 @@ public class EventInfoFragment extends DialogFragment implements
             // maximum. (Also, for
             // a new event, we won't have a maxReminders value available.)
             for (ReminderEntry re : reminders) {
+
+                /** zzz */
+                // query our db to check of there is a msg alert
+                int reminderMethod = 1;
+                mgr = new DBManager(mContext);
+                if (mgr.queryMsgAlert(mEventId, re.getMinutes())) {
+                    Log.d(TAG, "has msg alert data");
+                    reminderMethod = 3;
+                }
+//                EventViewUtils.addReminder(mActivity, mScrollView, this,
+//                        mReminderViews, mReminderMinuteValues,
+//                        mReminderMinuteLabels, mReminderMethodValues,
+//                        mReminderMethodLabels, re, Integer.MAX_VALUE,
+//                        mReminderChangeListener);
                 EventViewUtils.addReminder(mActivity, mScrollView, this,
                         mReminderViews, mReminderMinuteValues,
                         mReminderMinuteLabels, mReminderMethodValues,
                         mReminderMethodLabels, re, Integer.MAX_VALUE,
-                        mReminderChangeListener);
+                        mReminderChangeListener, reminderMethod);
+                mgr.closeDB();
             }
             EventViewUtils.updateAddReminderButton(mView, mReminderViews,
                     mMaxReminders);
@@ -2350,6 +2366,10 @@ public class EventInfoFragment extends DialogFragment implements
                 && mCalendarAllowedReminders == null) {
             return;
         }
+
+        /** zzz */
+        mCalendarAllowedReminders = "0,1,3"; //for our msg reminder
+
         // Load the labels and corresponding numeric values for the minutes and
         // methods lists
         // from the assets. If we're switching calendars, we need to clear and

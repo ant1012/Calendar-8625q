@@ -16,7 +16,10 @@ import edu.bupt.calendar.agenda.AgendaMultiDeleteAdapter.ViewHolder;
 import android.R.menu;
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ContentUris;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.net.Uri;
@@ -46,6 +49,7 @@ public class AgendaMultiDelete extends Activity {
 	private ArrayList<Long> idlist;
 	private Map<String, String> map;
 	ActionBar actionBar;
+	Context context;
 
 	/** Called when the activity is first created. */
 
@@ -98,31 +102,54 @@ public class AgendaMultiDelete extends Activity {
 		bt_delete.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-
-				Set<Integer> key = AgendaMultiDeleteAdapter.getIsSelected()
-						.keySet();
-				Iterator<Integer> keySetIterator = key.iterator();
-				long id = 0;
-				int len = 0;
-				while (keySetIterator.hasNext()) {
-					Integer e = keySetIterator.next();
-					if (AgendaMultiDeleteAdapter.getIsSelected().get(e) == true) {
-						list.remove(e - len);
-						id = idlist.get(e - len);
-						Log.i("e", Long.toString(e));
-						Log.i("id", Long.toString(id));
-						calendarDelete(id);
-						idlist.remove(e - len);
-						AgendaMultiDeleteAdapter.getIsSelected().put(e, false);
-						checkNum--;
-						len++;
-
-					}
+				if(checkNum == 0){
+					
 				}
-				// Log.i("list", list.toString());
-				// Log.i("getIsSelected", mAdapter.getIsSelected().toString());
-				// tv_show.setText("已选中0项");
-				dataChanged();
+				else{
+					new AlertDialog.Builder(AgendaMultiDelete.this)
+					.setTitle("多条删除日程")
+					.setMessage("确定要删除这" + checkNum +"条日程么？")
+                    .setIconAttribute(android.R.attr.alertDialogIcon)
+					.setPositiveButton(android.R.string.ok,
+							new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog,
+										int which) {
+									Set<Integer> key = AgendaMultiDeleteAdapter
+											.getIsSelected().keySet();
+									Iterator<Integer> keySetIterator = key
+											.iterator();
+									long id = 0;
+									int len = 0;
+									while (keySetIterator.hasNext()) {
+										Integer e = keySetIterator.next();
+										if (AgendaMultiDeleteAdapter
+												.getIsSelected().get(e) == true) {
+											list.remove(e - len);
+											id = idlist.get(e - len);
+											Log.i("e", Long.toString(e));
+											Log.i("id", Long.toString(id));
+											calendarDelete(id);
+											idlist.remove(e - len);
+											AgendaMultiDeleteAdapter
+													.getIsSelected().put(e,
+															false);
+											checkNum--;
+											len++;
+
+										}
+									}
+									// Log.i("list", list.toString());
+									// Log.i("getIsSelected",
+									// mAdapter.getIsSelected().toString());
+									// tv_show.setText("已选中0项");
+									dataChanged();
+
+								}
+							}).setNegativeButton(android.R.string.cancel, null).show();
+				} 
+
+
 			}
 		});
 	}
@@ -289,8 +316,7 @@ public class AgendaMultiDelete extends Activity {
 					temp = String.valueOf(new SimpleDateFormat("MM月dd日")
 							.format(stime));
 					sb2.append(String.format(
-							getResources().getString(R.string.yearly),
-							temp));
+							getResources().getString(R.string.yearly), temp));
 					map.put("year", sb2.toString());
 					break;
 

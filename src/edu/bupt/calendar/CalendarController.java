@@ -788,8 +788,8 @@ public class CalendarController {
      */
     public void refreshCalendars() {
         /** zzz */
-        //Account[] accounts = AccountManager.get(mContext).getAccounts();
-        Account[] accounts = null;
+        Account[] accounts = AccountManager.get(mContext).getAccounts();
+//        Account[] accounts = null;
 
         Log.d(TAG, "Refreshing " + accounts.length + " accounts");
 
