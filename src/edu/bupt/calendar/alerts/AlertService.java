@@ -40,6 +40,7 @@ import android.os.Process;
 import android.provider.CalendarContract;
 import android.provider.CalendarContract.Attendees;
 import android.provider.CalendarContract.CalendarAlerts;
+import android.provider.CalendarContract.Events;
 import android.telephony.SmsManager;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
@@ -52,6 +53,7 @@ import edu.bupt.calendar.Utils;
 import edu.bupt.calendar.attendee.AttendeePhone;
 import edu.bupt.calendar.attendee.DBManager;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -292,7 +294,29 @@ public class AlertService extends Service {
         for (AttendeePhone at : attendeePhones) {
             Log.w(TAG, "send msg to " + at.phoneNumber);
 
-            String content = "test for calendar alert";
+            StringBuffer sb = new StringBuffer();
+            Cursor eventCursor = context.getContentResolver().query(
+                    Events.CONTENT_URI, new String[] {"title", "eventLocation", "dtstart", "description" }, "_id=" + event_id, null,
+                    null);
+            eventCursor.moveToFirst();
+            sb.append(context.getString(R.string.what_label));
+            sb.append(":");
+            sb.append(eventCursor.getString(0));
+            sb.append("\n");
+            sb.append(context.getString(R.string.where_label));
+            sb.append(":");
+            sb.append(eventCursor.getString(1));
+            sb.append("\n");
+            sb.append(context.getString(R.string.when_label));
+            sb.append(":");
+            sb.append(String.valueOf(new SimpleDateFormat("yyyy-MM-dd,HH:mm")
+                    .format(Long.parseLong(eventCursor.getString(2)))));
+            sb.append("\n");
+            sb.append(context.getString(R.string.description_label));
+            sb.append(":");
+            sb.append(eventCursor.getString(3));
+
+            Log.i(TAG, "sb - " + sb.toString());
 
             SmsManager sms = SmsManager.getDefault();
             // create the sentIntent parameter
@@ -305,7 +329,7 @@ public class AlertService extends Service {
             PendingIntent deliverPI = PendingIntent.getBroadcast(context.getApplicationContext(), 0,
                     deliverIntent, 0);
 
-            List<String> divideContents = sms.divideMessage(content);
+            List<String> divideContents = sms.divideMessage(sb.toString());
             for (String text : divideContents) {
                 sms.sendTextMessage(at.phoneNumber, null, text, sentPI,
                         deliverPI);
