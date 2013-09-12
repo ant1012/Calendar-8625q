@@ -403,17 +403,17 @@ public class EditEventHelper {
             Log.i(TAG, "eventIdIndex - " + eventIdIndex);
 //            saveRemindersWithBackRef(ops, eventIdIndex, reminders, originalReminders,
 //                    forceSaveReminders);
-            Cursor cursor = mContext
-                    .getContentResolver()
-                    .query(Events.CONTENT_URI,
-                            new String[] { "MAX(_id) as max_id" },
-                            null, null, "_id");
-            cursor.moveToFirst();
-            max_val = cursor.getLong(cursor.getColumnIndex("max_id"));
-            cursor.close();
-            Log.i(TAG, "max_val - " + max_val);
-
-            if (max_val == 0) { //first row
+//            Cursor cursor = mContext
+//                    .getContentResolver()
+//                    .query(Events.CONTENT_URI,
+//                            new String[] { "MAX(_id) as max_id" },
+//                            null, null, "_id");
+//            cursor.moveToFirst();
+//            max_val = cursor.getLong(cursor.getColumnIndex("max_id"));
+//            cursor.close();
+//            Log.i(TAG, "max_val - " + max_val);
+//
+//            if (max_val == 0) { //first row
                 Log.i(TAG, "max_val == 0");
                 Log.d(TAG, "save fake data");
                 // save
@@ -427,6 +427,8 @@ public class EditEventHelper {
                             .getColumnIndex("_id"));
                     Log.i(TAG, "calId - " + calId);
                 }
+                userCursor.close();
+
                 ContentValues event = new ContentValues();
                 event.put("title", "fake title");
                 event.put("description", "fake title");
@@ -443,12 +445,13 @@ public class EditEventHelper {
 
                 Log.d(TAG, "save fake data");
 
-                cursor = mContext.getContentResolver().query(
+                Cursor cursor = mContext.getContentResolver().query(
                         Events.CONTENT_URI,
                         new String[] { "MAX(_id) as max_id" }, null, null,
                         "_id");
                 cursor.moveToFirst();
                 max_val = cursor.getLong(cursor.getColumnIndex("max_id"));
+                Log.i(TAG, "max_val - " + max_val);
                 cursor.close();
 
                 Log.d(TAG, "del fake data");
@@ -457,8 +460,7 @@ public class EditEventHelper {
                         max_val);
                 mContext.getContentResolver().delete(deleteUri, null, null);
 
-                Log.i(TAG, "max_val - " + max_val);
-            }
+//            }
 
             Log.i(TAG, "eventId - " + (max_val + 1));
             saveReminders(ops, (max_val + 1), reminders, originalReminders, forceSaveReminders);
