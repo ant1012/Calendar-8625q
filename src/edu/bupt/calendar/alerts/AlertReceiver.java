@@ -250,6 +250,9 @@ public class AlertReceiver extends BroadcastReceiver {
         notificationBuilder.setSmallIcon(R.drawable.stat_notify_calendar);
         notificationBuilder.setContentIntent(clickIntent);
         notificationBuilder.setDeleteIntent(deleteIntent);
+
+        /** zzz */
+        addActionButtons = false; // i do not want this two
         if (addActionButtons) {
             // Create a snooze button.  TODO: change snooze to 10 minutes.
             PendingIntent snoozeIntent = createSnoozeIntent(context, eventId, startMillis,

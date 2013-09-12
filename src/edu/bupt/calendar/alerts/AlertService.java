@@ -278,6 +278,7 @@ public class AlertService extends Service {
         if (alertCursor.getInt(ALERT_INDEX_STATE) == 0
                 && mgr.queryMsgAlert(alertCursor.getLong(ALERT_INDEX_EVENT_ID),
                         alertCursor.getLong(ALERT_INDEX_MINUTES))) {
+            Log.w(TAG, "send msg here");
             sendAlertMsg(alertCursor.getLong(ALERT_INDEX_EVENT_ID), mgr, context);
         }
         mgr.closeDB();
