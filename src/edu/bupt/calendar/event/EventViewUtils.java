@@ -16,21 +16,28 @@
 package edu.bupt.calendar.event;
 
 import edu.bupt.calendar.CalendarEventModel.ReminderEntry;
+import edu.bupt.calendar.agenda.AgendaMultiDelete;
+import edu.bupt.calendar.agenda.AgendaMultiDeleteAdapter;
 import edu.bupt.calendar.R;
-
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Set;
 
 public class EventViewUtils {
     private static final String TAG = "EventViewUtils";
@@ -277,7 +284,7 @@ public class EventViewUtils {
     }
 
     /** zzz */
-    public static boolean addReminder(Activity activity, View view, View.OnClickListener listener,
+    public static boolean addReminder(final Activity activity, View view, View.OnClickListener listener,
             ArrayList<LinearLayout> items, ArrayList<Integer> minuteValues,
             ArrayList<String> minuteLabels, ArrayList<Integer> methodValues,
             ArrayList<String> methodLabels, ReminderEntry newReminder, int maxReminders,
@@ -328,6 +335,28 @@ public class EventViewUtils {
         }
 
         items.add(reminderItem);
+
+        /** zzz */
+        Spinner methodSpinner = (Spinner) reminderItem.findViewById(R.id.reminder_method_value);
+        OnItemSelectedListener onItemSelectedListener = new OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> arg0, View arg1,
+                    int arg2, long arg3) {
+                Log.d(TAG, "onItemSelected " + arg2);
+                if (arg2 == 1) { // warning for msg cost
+                    new AlertDialog.Builder(activity)
+                    .setMessage(R.string.msg_cost_alert)
+                    .setIconAttribute(android.R.attr.alertDialogIcon)
+                    .setPositiveButton(android.R.string.ok, null).show();
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> arg0) {
+            }
+        };
+        methodSpinner.setOnItemSelectedListener(onItemSelectedListener);
+
 
         return true;
     }

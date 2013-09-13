@@ -22,8 +22,13 @@ import android.accounts.Account;
 import android.content.Context;
 
 public class RecipientAdapter extends BaseRecipientAdapter {
+//    public RecipientAdapter(Context context) {
+//        super(context);
+//    }
+
+    /** zzz */
     public RecipientAdapter(Context context) {
-        super(context);
+        super(QUERY_TYPE_PHONE, context);
     }
 
     /**

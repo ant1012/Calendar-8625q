@@ -51,6 +51,7 @@ import android.view.ViewGroup;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityManager;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -962,6 +963,7 @@ public class EditEventView implements View.OnClickListener,
         // mEmailValidator = new Rfc822Validator(null);
         /** zzz */
         mEmailValidator = new AttendeePhoneValidator(null);
+
 
         initMultiAutoCompleteTextView((RecipientEditTextView) mAttendeesList);
 

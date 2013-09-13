@@ -21,7 +21,8 @@
     <string-array name="reminder_methods_labels">
         <item>Notification</item>
         <item>Email</item>
-        <item>SMS</item>
+        <!-- zzz -->
+        <item>Notification and send SMS</item>
         <item>Alarm</item>
     </string-array>
 
