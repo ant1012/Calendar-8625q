@@ -448,7 +448,7 @@ public class EventInfoFragment extends DialogFragment implements
                             ATTENDEES_PROJECTION, ATTENDEES_WHERE, args,
                             ATTENDEES_SORT_ORDER);
 
-                    mgr = new DBManager(mContext);
+                    mgr = new DBManager(mContext.getApplicationContext());
                     List<AttendeePhone> attendeePhones = mgr.query(args[0]);
                     for(AttendeePhone attendeePhone : attendeePhones) {
                         Log.i(TAG, attendeePhone.event_id + "/" + attendeePhone.phoneNumber);
@@ -1122,13 +1122,22 @@ public class EventInfoFragment extends DialogFragment implements
                                     "LOCATION", mWhere.getText().toString()));
                             child.addProperty(new ICalendar.Property(
                                     "DISCRIPTION", mDesc.getText().toString()));
+
+                            DBManager mgr =  new DBManager(mContext);
+                            List<AttendeePhone> attendeePhones = mgr.query(String.valueOf(mEventId));
+                            for (AttendeePhone at : attendeePhones) {
+                                child.addProperty(new ICalendar.Property(
+                                        "X-ATTENDEE-PHONE", at.phoneNumber));
+                            }
+                            mgr.closeDB();
+
                             component.addChild(child);
                             Log.d("info_action_share", component.toString());
 
                             File tempFile = null;
                             try {
                                 tempFile = File.createTempFile("calendar-"
-                                        + mTitle.getText().toString(), ".ics",
+                                        + mTitle.getText().toString(), ".vcs",
                                         mContext.getExternalCacheDir());
                                 FileOutputStream fos = new FileOutputStream(
                                         tempFile);
@@ -2414,9 +2423,12 @@ public class EventInfoFragment extends DialogFragment implements
         mReminders.addAll(mUnsupportedReminders);
         Collections.sort(mReminders);
 
+        /** zzz */
         // Check if there are any changes in the reminder
+//        boolean changed = EditEventHelper.saveReminders(ops, mEventId,
+//                mReminders, mOriginalReminders, false /* no force save */);
         boolean changed = EditEventHelper.saveReminders(ops, mEventId,
-                mReminders, mOriginalReminders, false /* no force save */);
+                mReminders, mOriginalReminders, false, mContext);
 
         if (!changed) {
             return false;

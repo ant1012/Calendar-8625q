@@ -978,6 +978,12 @@ public class EditEventHelper {
     public static boolean saveReminders(ArrayList<ContentProviderOperation> ops, long eventId,
             ArrayList<ReminderEntry> reminders, ArrayList<ReminderEntry> originalReminders,
             boolean forceSave) {
+
+        /** zzz */
+        // force save
+        Log.w(TAG, "force save");
+        forceSave = true;
+
         // If the reminders have not changed, then don't update the database
         if (reminders.equals(originalReminders) && !forceSave) {
             return false;
@@ -990,7 +996,7 @@ public class EditEventHelper {
                 .newDelete(Reminders.CONTENT_URI);
         b.withSelection(where, args);
         ops.add(b.build());
-        mgr = new DBManager(mContext);
+        mgr = new DBManager(mContext.getApplicationContext());
         mgr.deleteMsgAlert(eventId);
 
         ContentValues values = new ContentValues();
@@ -1023,6 +1029,15 @@ public class EditEventHelper {
         }
         mgr.closeDB();
         return true;
+    }
+
+    /** zzz */
+    public static boolean saveReminders(ArrayList<ContentProviderOperation> ops, long eventId,
+            ArrayList<ReminderEntry> reminders, ArrayList<ReminderEntry> originalReminders,
+            boolean forceSave, Context context) {
+        mContext = context;
+        return EditEventHelper.saveReminders(ops, eventId, reminders,
+                originalReminders, false);
     }
 
     /**

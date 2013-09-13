@@ -226,6 +226,9 @@ public class ImportEventActivity extends Activity {
                     values);
 
             Log.d(TAG, "import success");
+
+            // attendee
+
             Toast.makeText(this, R.string.title_activity_import_event,
                     Toast.LENGTH_SHORT).show();
             this.finish();

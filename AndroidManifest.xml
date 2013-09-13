@@ -301,6 +301,7 @@
 
                 <!-- <data android:scheme="file" /> -->
                 <!-- <data android:mimeType="text/calendar" /> -->
+                <data android:pathPattern=".*\.vcs" />
                 <data android:pathPattern=".*\.ics" />
             </intent-filter>
         </activity>
