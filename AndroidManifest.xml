@@ -299,10 +299,12 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <!-- <data android:scheme="file" /> -->
+                <data android:scheme="file" />
+                <data android:mimeType="*/*" />
                 <!-- <data android:mimeType="text/calendar" /> -->
-                <!-- <data android:pathPattern=".*\.vcs" /> -->
-                <data android:pathPattern=".*\.ics" />
+                <!-- <data android:mimeType="text/x-vcalendar" /> -->
+                <data android:pathPattern=".*\\.vcs" />
+                <data android:pathPattern=".*\\.ics" />
             </intent-filter>
         </activity>
     </application>
