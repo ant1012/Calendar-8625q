@@ -255,4 +255,5 @@
     <string name="choose_attendee">选择</string>
     <string name="file_not_exist">文件不存在！</string>
     <string name="msg_cost_alert">选择“通知并发送短信”提醒方式会在设定的时间点自动给参与者发送短信，将会带来短信费用</string>
+    <string name="no_sim_card">没有SIM卡</string>
 </resources>

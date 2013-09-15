@@ -24,6 +24,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Resources;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -339,19 +340,34 @@ public class EventViewUtils {
         /** zzz */
         Spinner methodSpinner = (Spinner) reminderItem.findViewById(R.id.reminder_method_value);
         OnItemSelectedListener onItemSelectedListener = new OnItemSelectedListener() {
+            boolean check = false;
             @Override
             public void onItemSelected(AdapterView<?> arg0, View arg1,
                     int arg2, long arg3) {
                 Log.d(TAG, "onItemSelected " + arg2);
-                if (arg2 == 1) { // warning for msg cost
+                if (check && arg2 == 1) { // warning for msg cost
                     new AlertDialog.Builder(activity)
                     .setMessage(R.string.msg_cost_alert)
                     .setIconAttribute(android.R.attr.alertDialogIcon)
                     .setPositiveButton(android.R.string.ok, null).show();
 
                     //no sim card
-                    
+                    try {
+                        TelephonyManager tm = (TelephonyManager) activity
+                                .getSystemService(Context.TELEPHONY_SERVICE);
+                        if (tm.getSimState() == TelephonyManager.SIM_STATE_ABSENT) {
+                            new AlertDialog.Builder(activity)
+                                    .setMessage(R.string.no_sim_card)
+                                    .setIconAttribute(
+                                            android.R.attr.alertDialogIcon)
+                                    .setPositiveButton(android.R.string.ok,
+                                            null).show();
+                        }
+                    } catch (Exception e) {
+                        Log.e(TAG, e.toString());
+                    }
                 }
+                check = true;
             }
 
             @Override

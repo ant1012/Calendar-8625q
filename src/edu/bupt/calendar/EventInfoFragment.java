@@ -1129,6 +1129,7 @@ public class EventInfoFragment extends DialogFragment implements
                                 child.addProperty(new ICalendar.Property(
                                         "X-ATTENDEE-PHONE", at.phoneNumber));
                             }
+
                             mgr.closeDB();
 
                             component.addChild(child);
