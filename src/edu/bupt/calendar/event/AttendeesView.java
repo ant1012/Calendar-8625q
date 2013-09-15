@@ -236,6 +236,8 @@ public class AttendeesView extends LinearLayout implements View.OnClickListener 
         }
         badgeView.setMaxHeight(60);
 
+        /** zzz */
+        badgeView.setVisibility(GONE);
         return view;
     }
 

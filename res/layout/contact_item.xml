@@ -48,11 +48,13 @@
             android:contentDescription="@string/accessibility_remove_attendee"
             style="@style/MinusButton" />
 
+            <!-- zzz -->
         <QuickContactBadge
             android:id="@+id/badge"
             android:layout_gravity="center_vertical"
             android:layout_width="48dip"
             android:layout_height="48dip"
+            android:visibility="gone"
             android:src="@drawable/ic_contact_picture"
             style="?android:attr/quickContactBadgeStyleWindowMedium" />
     </LinearLayout>

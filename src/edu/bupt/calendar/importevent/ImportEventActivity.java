@@ -6,22 +6,31 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import com.android.calendarcommon.ICalendar;
 import com.android.calendarcommon.ICalendar.FormatException;
+import com.android.calendarcommon.ICalendar.Property;
 
 import edu.bupt.calendar.CalendarEventModel;
+import edu.bupt.calendar.CalendarEventModel.Attendee;
 import edu.bupt.calendar.GeneralPreferences;
 import edu.bupt.calendar.R;
 import edu.bupt.calendar.Utils;
+import edu.bupt.calendar.attendee.AttendeePhone;
+import edu.bupt.calendar.attendee.DBManager;
+import edu.bupt.calendar.event.AttendeesView;
 import edu.bupt.calendar.event.EditEventHelper;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.CalendarContract.Events;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.Intent;
 import android.database.Cursor;
 import android.util.Log;
@@ -40,6 +49,7 @@ public class ImportEventActivity extends Activity {
     private TextView textViewRepeat;
     private TextView textViewWhere;
     private TextView textViewDisc;
+    private AttendeesView attendeesView;
     private ICalendar.Component parent;
     private ICalendar.Component child;
     private Context context = this;
@@ -52,6 +62,10 @@ public class ImportEventActivity extends Activity {
     private String event_tz = null;
     private long event_dateendtime;
 
+    private ArrayList<String> event_attendees = new ArrayList<String>();
+    private Context mContext;
+    private static DBManager mgr;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +75,7 @@ public class ImportEventActivity extends Activity {
         textViewDatetime = (TextView) findViewById(R.id.when_datetime);
         textViewWhere = (TextView) findViewById(R.id.where);
         textViewDisc = (TextView) findViewById(R.id.disc);
+        attendeesView = (AttendeesView) findViewById(R.id.long_attendee_list);
 
         String s = getStringFromFile();
         if (s != null) {
@@ -76,6 +91,8 @@ public class ImportEventActivity extends Activity {
         textViewDatetime.setText(simpleDateFormat.format(new Date(event_datetime)));
         textViewWhere.setText(event_where);
         textViewDisc.setText(event_disc);
+
+        mContext = getApplicationContext();
     }
 
     /** zzz */
@@ -143,6 +160,15 @@ public class ImportEventActivity extends Activity {
 
         event_where = child.getFirstProperty("LOCATION").getValue();
         event_disc = child.getFirstProperty("DISCRIPTION").getValue();
+
+        //attendee
+        if (!child.getProperties("X-ATTENDEE-PHONE").isEmpty()) {
+            for (Property pr : child.getProperties("X-ATTENDEE-PHONE")) {
+                Log.i(TAG, pr.getValue());
+                event_attendees.add(pr.getValue());
+                attendeesView.addAttendees(pr.getValue());
+            }
+        }
         return;
     }
 
@@ -204,6 +230,8 @@ public class ImportEventActivity extends Activity {
                 calId = userCursor.getString(userCursor.getColumnIndex("_id"));
 
             }
+            userCursor.close();
+
             ContentValues event = new ContentValues();
             event.put("title", event_title);
             event.put("description", event_disc);
@@ -213,6 +241,12 @@ public class ImportEventActivity extends Activity {
             event.put("dtend", event_dateendtime);
             event.put("hasAlarm", 1);
             event.put("eventTimezone", event_tz);
+            event.put("eventStatus", 1);
+            if (event_attendees.isEmpty()) {
+                event.put("hasAttendeeData", 0);
+            } else {
+                event.put("hasAttendeeData", 1);
+            }
 
             Uri newEvent = getContentResolver().insert(
                     Uri.parse("content://com.android.calendar/events"), event);
@@ -228,6 +262,29 @@ public class ImportEventActivity extends Activity {
             Log.d(TAG, "import success");
 
             // attendee
+            Cursor cursor = mContext.getContentResolver().query(
+                    Events.CONTENT_URI, new String[] { "MAX(_id) as max_id" },
+                    null, null, "_id");
+            cursor.moveToFirst();
+            long max_val = cursor.getLong(cursor.getColumnIndex("max_id"));
+            Log.i(TAG, "max_val - " + max_val);
+            cursor.close();
+            mgr = new DBManager(mContext);
+
+            for (String s : event_attendees) {
+                if(attendeesView.isMarkAsRemoved(event_attendees.indexOf(s) + 1)) { // first one is a seperator
+                    Log.i(TAG, "isMarkAsRemoved");
+                    continue;
+                }
+                Attendee attendee = new Attendee(s, s);
+                ArrayList<AttendeePhone> attendeePhones = new ArrayList<AttendeePhone>();
+                AttendeePhone attendeePhone = new AttendeePhone(max_val + 1,
+                        attendee.mName, attendee.mEmail);
+                attendeePhones.add(attendeePhone);
+                mgr.add(attendeePhones);
+            }
+            mgr.closeDB();
+
 
             Toast.makeText(this, R.string.title_activity_import_event,
                     Toast.LENGTH_SHORT).show();

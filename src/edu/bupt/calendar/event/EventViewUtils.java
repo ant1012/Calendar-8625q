@@ -348,6 +348,9 @@ public class EventViewUtils {
                     .setMessage(R.string.msg_cost_alert)
                     .setIconAttribute(android.R.attr.alertDialogIcon)
                     .setPositiveButton(android.R.string.ok, null).show();
+
+                    //no sim card
+                    
                 }
             }
 
