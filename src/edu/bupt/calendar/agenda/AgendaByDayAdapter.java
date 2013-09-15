@@ -225,7 +225,7 @@ public class AgendaByDayAdapter extends BaseAdapter {
                     mTodayJulianDay, millis, mContext);
 
             /** zzz */
-            Lunar.setLunar(mContext, date.year, date.month, date.monthDay);
+            Lunar.setLunar(mContext, date.year, date.month + 1, date.monthDay);
             dayViewText += Lunar.getLunarWithComma();
 
             // Build text for the date

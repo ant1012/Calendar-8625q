@@ -335,7 +335,7 @@ public class CalendarViewAdapter extends BaseAdapter {
         }
 
         /** zzz */
-        Lunar.setLunar(mContext, t.year, t.month, t.monthDay);
+        Lunar.setLunar(mContext, t.year, t.month + 1, t.monthDay);
         dayOfWeek += Lunar.getLunarWithComma();
         
         return dayOfWeek.toUpperCase();
