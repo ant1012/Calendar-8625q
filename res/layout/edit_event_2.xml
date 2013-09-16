@@ -233,13 +233,15 @@
             style="@style/TextAppearance.EditEvent_LabelSmall" />
     </LinearLayout>
 
+    <!-- zzz -->
        <!-- PRESENCE - Show me as [busy | available] -->
     <LinearLayout
         android:id="@+id/availability_row"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="6dp">
+        android:paddingBottom="6dp"
+        android:visibility="gone">
         <TextView
             android:id="@+id/presence_label"
             android:text="@string/presence_label"
@@ -257,13 +259,15 @@
             android:prompt="@string/presence_label" />
     </LinearLayout>
 
+    <!-- zzz -->
         <!-- PRIVACY -->
     <LinearLayout
         android:id="@+id/visibility_row"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="6dp">
+        android:paddingBottom="6dp"
+        android:visibility="gone">
         <TextView
             android:id="@+id/privacy_label"
             android:text="@string/privacy_label"

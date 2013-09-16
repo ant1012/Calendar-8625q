@@ -963,6 +963,8 @@ public class EditEventView implements View.OnClickListener,
         // mEmailValidator = new Rfc822Validator(null);
         /** zzz */
         mEmailValidator = new AttendeePhoneValidator(null);
+        view.findViewById(R.id.availability_row).setVisibility(View.INVISIBLE);
+        view.findViewById(R.id.visibility_row).setVisibility(View.INVISIBLE);
 
 
         initMultiAutoCompleteTextView((RecipientEditTextView) mAttendeesList);

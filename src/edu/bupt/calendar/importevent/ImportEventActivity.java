@@ -87,8 +87,9 @@ public class ImportEventActivity extends Activity {
         textviewTitle.setText(event_title);
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
                 "yyyy'/'MM'/'dd'-'HH':'mm");
-        
-        textViewDatetime.setText(simpleDateFormat.format(new Date(event_datetime)));
+
+        textViewDatetime.setText(simpleDateFormat.format(new Date(
+                event_datetime)));
         textViewWhere.setText(event_where);
         textViewDisc.setText(event_disc);
 
@@ -161,13 +162,17 @@ public class ImportEventActivity extends Activity {
         event_where = child.getFirstProperty("LOCATION").getValue();
         event_disc = child.getFirstProperty("DISCRIPTION").getValue();
 
-        //attendee
-        if (!child.getProperties("X-ATTENDEE-PHONE").isEmpty()) {
-            for (Property pr : child.getProperties("X-ATTENDEE-PHONE")) {
-                Log.i(TAG, pr.getValue());
-                event_attendees.add(pr.getValue());
-                attendeesView.addAttendees(pr.getValue());
+        // attendee
+        try {
+            if (!child.getProperties("X-ATTENDEE-PHONE").isEmpty()) {
+                for (Property pr : child.getProperties("X-ATTENDEE-PHONE")) {
+                    Log.i(TAG, pr.getValue());
+                    event_attendees.add(pr.getValue());
+                    attendeesView.addAttendees(pr.getValue());
+                }
             }
+        } catch (Exception e) {
+            Log.w(TAG, "no attendee data");
         }
         return;
     }
@@ -242,11 +247,11 @@ public class ImportEventActivity extends Activity {
             event.put("hasAlarm", 1);
             event.put("eventTimezone", event_tz);
             event.put("eventStatus", 1);
-            if (event_attendees.isEmpty()) {
-                event.put("hasAttendeeData", 0);
-            } else {
+//            if (event_attendees.isEmpty()) {
+//                event.put("hasAttendeeData", 0);
+//            } else {
                 event.put("hasAttendeeData", 1);
-            }
+//            }
 
             Uri newEvent = getContentResolver().insert(
                     Uri.parse("content://com.android.calendar/events"), event);
@@ -272,7 +277,12 @@ public class ImportEventActivity extends Activity {
             mgr = new DBManager(mContext);
 
             for (String s : event_attendees) {
-                if(attendeesView.isMarkAsRemoved(event_attendees.indexOf(s) + 1)) { // first one is a seperator
+                if (attendeesView
+                        .isMarkAsRemoved(event_attendees.indexOf(s) + 1)) { // first
+                                                                            // one
+                                                                            // is
+                                                                            // a
+                                                                            // seperator
                     Log.i(TAG, "isMarkAsRemoved");
                     continue;
                 }
@@ -284,7 +294,6 @@ public class ImportEventActivity extends Activity {
                 mgr.add(attendeePhones);
             }
             mgr.closeDB();
-
 
             Toast.makeText(this, R.string.title_activity_import_event,
                     Toast.LENGTH_SHORT).show();
