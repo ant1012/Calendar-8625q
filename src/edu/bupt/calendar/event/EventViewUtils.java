@@ -355,6 +355,7 @@ public class EventViewUtils {
                     try {
                         TelephonyManager tm = (TelephonyManager) activity
                                 .getSystemService(Context.TELEPHONY_SERVICE);
+                        Log.i(TAG, "" + tm.getSimState());
                         if (tm.getSimState() == TelephonyManager.SIM_STATE_ABSENT) {
                             new AlertDialog.Builder(activity)
                                     .setMessage(R.string.no_sim_card)

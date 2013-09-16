@@ -52,6 +52,7 @@ public class EditEventActivity extends AbstractCalendarActivity {
 
     /** zzz */
     public static String number;
+    public static String name;
 
     @Override
     protected void onCreate(Bundle icicle) {
@@ -184,19 +185,19 @@ public class EditEventActivity extends AbstractCalendarActivity {
                         phones.moveToFirst();
                         number = phones.getString(phones
                                 .getColumnIndex("data1"));
-                        Log.i(TAG, "number - " + number);
                     }
-                    String name = c
+                    name = c
                             .getString(c
                                     .getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
 
+                    Log.i(TAG, "name - " + name);
                 }
             }
             break;
         default:
             break;
         }
-        mEditFragment.mView.onContactsChoosed(number, null);
+        mEditFragment.mView.onContactsChoosed(number, name);
     }
 
 }
