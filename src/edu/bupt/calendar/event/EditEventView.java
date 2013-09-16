@@ -126,8 +126,11 @@ public class EditEventView implements View.OnClickListener,
     CheckBox mAllDayCheckBox;
     Spinner mCalendarsSpinner;
     Spinner mRepeatsSpinner;
-    Spinner mAvailabilitySpinner;
-    Spinner mAccessLevelSpinner;
+
+
+    /** zzz */
+//    Spinner mAvailabilitySpinner;
+//    Spinner mAccessLevelSpinner;
     RadioGroup mResponseRadioGroup;
     TextView mTitleTextView;
     TextView mLocationTextView;
@@ -839,10 +842,15 @@ public class EditEventView implements View.OnClickListener,
             mModel.mEnd = mEndTime.toMillis(true);
         }
         mModel.mTimezone = mTimezone;
-        mModel.mAccessLevel = mAccessLevelSpinner.getSelectedItemPosition();
+
+        /** zzz */
+//        mModel.mAccessLevel = mAccessLevelSpinner.getSelectedItemPosition();
         // TODO set correct availability value
-        mModel.mAvailability = mAvailabilityValues.get(mAvailabilitySpinner
-                .getSelectedItemPosition());
+        
+
+        /** zzz */
+//        mModel.mAvailability = mAvailabilityValues.get(mAvailabilitySpinner
+//                .getSelectedItemPosition());
 
         int selection;
         // If we're making an exception we don't want it to be a repeating
@@ -898,8 +906,12 @@ public class EditEventView implements View.OnClickListener,
         mEndDateHome = (TextView) view.findViewById(R.id.end_date_home_tz);
         mAllDayCheckBox = (CheckBox) view.findViewById(R.id.is_all_day);
         mRepeatsSpinner = (Spinner) view.findViewById(R.id.repeats);
-        mAvailabilitySpinner = (Spinner) view.findViewById(R.id.availability);
-        mAccessLevelSpinner = (Spinner) view.findViewById(R.id.visibility);
+
+
+        /** zzz */
+//        mAvailabilitySpinner = (Spinner) view.findViewById(R.id.availability);
+//        mAccessLevelSpinner = (Spinner) view.findViewById(R.id.visibility);
+        
         mCalendarSelectorGroup = view
                 .findViewById(R.id.calendar_selector_group);
         mCalendarSelectorWrapper = view
@@ -942,8 +954,10 @@ public class EditEventView implements View.OnClickListener,
         mViewOnlyList.add(view.findViewById(R.id.timezone_textview_row));
 
         mEditOnlyList.add(view.findViewById(R.id.all_day_row));
-        mEditOnlyList.add(view.findViewById(R.id.availability_row));
-        mEditOnlyList.add(view.findViewById(R.id.visibility_row));
+
+        /** zzz */
+//        mEditOnlyList.add(view.findViewById(R.id.availability_row));
+//        mEditOnlyList.add(view.findViewById(R.id.visibility_row));
         mEditOnlyList.add(view.findViewById(R.id.from_row));
         mEditOnlyList.add(view.findViewById(R.id.to_row));
         mEditOnlyList.add(mTimezoneRow);
@@ -963,8 +977,8 @@ public class EditEventView implements View.OnClickListener,
         // mEmailValidator = new Rfc822Validator(null);
         /** zzz */
         mEmailValidator = new AttendeePhoneValidator(null);
-        view.findViewById(R.id.availability_row).setVisibility(View.INVISIBLE);
-        view.findViewById(R.id.visibility_row).setVisibility(View.INVISIBLE);
+//        view.findViewById(R.id.availability_row).setVisibility(View.INVISIBLE);
+//        view.findViewById(R.id.visibility_row).setVisibility(View.INVISIBLE);
 
 
         initMultiAutoCompleteTextView((RecipientEditTextView) mAttendeesList);
@@ -1011,7 +1025,9 @@ public class EditEventView implements View.OnClickListener,
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(mActivity,
                 android.R.layout.simple_spinner_item, mAvailabilityLabels);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mAvailabilitySpinner.setAdapter(adapter);
+
+        /** zzz */
+//        mAvailabilitySpinner.setAdapter(adapter);
     }
 
     /**
@@ -1257,9 +1273,12 @@ public class EditEventView implements View.OnClickListener,
 
         int availIndex = mAvailabilityValues.indexOf(model.mAvailability);
         if (availIndex != -1) {
-            mAvailabilitySpinner.setSelection(availIndex);
+
+            /** zzz */
+//            mAvailabilitySpinner.setSelection(availIndex);
         }
-        mAccessLevelSpinner.setSelection(model.mAccessLevel);
+        /** zzz */
+//        mAccessLevelSpinner.setSelection(model.mAccessLevel);
 
         View responseLabel = mView.findViewById(R.id.response_label);
 

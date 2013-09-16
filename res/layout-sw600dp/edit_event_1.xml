@@ -397,6 +397,7 @@
     </TableRow>
 
     <!-- PRESENCE - Show me as [busy | available] -->
+    <!-- zzz
     <TableRow
         android:id="@+id/availability_row">
         <TextView
@@ -409,8 +410,10 @@
             style="@style/TextAppearance.EditEvent_Spinner"
             android:prompt="@string/presence_label" />
     </TableRow>
+     -->
 
     <!-- PRIVACY -->
+    <!-- zzz
     <TableRow
         android:id="@+id/visibility_row">
         <TextView
@@ -423,5 +426,6 @@
             style="@style/TextAppearance.EditEvent_Spinner"
             android:prompt="@string/privacy_label" />
     </TableRow>
+         -->
 
 </TableLayout>

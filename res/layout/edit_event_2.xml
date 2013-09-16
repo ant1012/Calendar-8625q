@@ -233,8 +233,8 @@
             style="@style/TextAppearance.EditEvent_LabelSmall" />
     </LinearLayout>
 
-    <!-- zzz -->
        <!-- PRESENCE - Show me as [busy | available] -->
+    <!-- zzz
     <LinearLayout
         android:id="@+id/availability_row"
         android:orientation="vertical"
@@ -258,9 +258,10 @@
             android:contentDescription="@string/accessibility_reminder_showmeas"
             android:prompt="@string/presence_label" />
     </LinearLayout>
+     -->
 
-    <!-- zzz -->
         <!-- PRIVACY -->
+    <!-- zzz
     <LinearLayout
         android:id="@+id/visibility_row"
         android:orientation="vertical"
@@ -283,5 +284,6 @@
             android:contentDescription="@string/accessibility_reminder_privacy"
             android:prompt="@string/privacy_label" />
     </LinearLayout>
+     -->
 
 </LinearLayout>
