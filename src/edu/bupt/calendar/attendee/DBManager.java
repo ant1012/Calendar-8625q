@@ -42,8 +42,8 @@ public class DBManager {
     public void add(MsgAlert msgAlert) {
         db.beginTransaction();
         try {
-            db.execSQL("INSERT INTO MsgAlert VALUES(null, ?, ?)",
-                    new Object[] { msgAlert.event_id, msgAlert.alert_time });
+            db.execSQL("INSERT INTO MsgAlert VALUES(null, ?, ?)", new Object[] {
+                    msgAlert.event_id, msgAlert.alert_time });
             db.setTransactionSuccessful();
         } finally {
             db.endTransaction();
@@ -91,6 +91,20 @@ public class DBManager {
     }
 
     /**
+     * query if a phone number is a attendee of event
+     * 
+     */
+    public int queryPhone(String s) {
+        int event_id = 0;
+        AttendeePhone attendeePhone = new AttendeePhone();
+        Cursor c = queryTheCursorOfPhoneNumber(s);
+        c.moveToNext();
+        event_id = c.getInt(c.getColumnIndex("event_id"));
+        c.close();
+        return event_id;
+    }
+
+    /**
      * query all AttendeePhones, return cursor
      * 
      */
@@ -110,6 +124,16 @@ public class DBManager {
     }
 
     /**
+     * query all AttendeePhones, return cursor
+     * 
+     */
+    private Cursor queryTheCursorOfPhoneNumber(String s) {
+        Cursor c = db.rawQuery("SELECT * FROM AttendeePhone WHERE phoneNumber="
+                + s, null);
+        return c;
+    }
+
+    /**
      * delete one attendee
      * 
      */
@@ -123,8 +147,8 @@ public class DBManager {
      * 
      */
     private Cursor queryTheCursorMsgalert(String s) {
-        Cursor c = db.rawQuery("SELECT * FROM MsgAlert WHERE event_id="
-                + s, null);
+        Cursor c = db.rawQuery("SELECT * FROM MsgAlert WHERE event_id=" + s,
+                null);
         return c;
     }
 
@@ -143,8 +167,6 @@ public class DBManager {
         c.close();
         return false;
     }
-
-
 
     /**
      * delete one msg alert

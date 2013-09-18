@@ -59,7 +59,13 @@
         <meta-data
             android:name="com.google.android.backup.api_key"
             android:value="AEdPqrEAAAAIM256oVOGnuSel5QKDpL8je_T65ZI8rFnDinssA" />
-
+        
+        <!-- zzz -->
+        <provider
+            android:name=".MyContentProvider"
+            android:authorities="edu.bupt.calendar.attendee" >
+        </provider>
+        
         <activity
             android:name="edu.bupt.calendar.AllInOneActivity"
             android:exported="true"
