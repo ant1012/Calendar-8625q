@@ -267,13 +267,13 @@ public class ImportEventActivity extends Activity {
             Log.d(TAG, "import success");
 
             // attendee
-            Cursor cursor = mContext.getContentResolver().query(
-                    Events.CONTENT_URI, new String[] { "MAX(_id) as max_id" },
-                    null, null, "_id");
-            cursor.moveToFirst();
-            long max_val = cursor.getLong(cursor.getColumnIndex("max_id"));
-            Log.i(TAG, "max_val - " + max_val);
-            cursor.close();
+//            Cursor cursor = mContext.getContentResolver().query(
+//                    Events.CONTENT_URI, new String[] { "MAX(_id) as max_id" },
+//                    null, null, "_id");
+//            cursor.moveToFirst();
+//            long max_val = cursor.getLong(cursor.getColumnIndex("max_id"));
+//            Log.i(TAG, "max_val - " + max_val);
+//            cursor.close();
             mgr = new DBManager(mContext);
 
             for (String s : event_attendees) {
@@ -288,10 +288,11 @@ public class ImportEventActivity extends Activity {
                 }
                 Attendee attendee = new Attendee(s, s);
                 ArrayList<AttendeePhone> attendeePhones = new ArrayList<AttendeePhone>();
-                AttendeePhone attendeePhone = new AttendeePhone(max_val + 1,
+                AttendeePhone attendeePhone = new AttendeePhone(id,
                         attendee.mName, attendee.mEmail);
                 attendeePhones.add(attendeePhone);
                 mgr.add(attendeePhones);
+                Log.d(TAG, "import attendee");
             }
             mgr.closeDB();
 
