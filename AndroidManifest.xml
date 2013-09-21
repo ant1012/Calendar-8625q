@@ -62,7 +62,7 @@
         
         <!-- zzz -->
         <provider
-            android:name=".MyContentProvider"
+            android:name="edu.bupt.calendar.attendee.MyContentProvider"
             android:authorities="edu.bupt.calendar.attendee" >
         </provider>
         
@@ -306,9 +306,9 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data android:scheme="file" />
-                <data android:mimeType="*/*" />
-                <!-- <data android:mimeType="text/calendar" /> -->
-                <!-- <data android:mimeType="text/x-vcalendar" /> -->
+                <!-- <data android:mimeType="*/*" /> -->
+                <data android:mimeType="text/calendar" />
+                <data android:mimeType="text/x-vcalendar" />
                 <data android:pathPattern=".*\\.vcs" />
                 <data android:pathPattern=".*\\.ics" />
             </intent-filter>

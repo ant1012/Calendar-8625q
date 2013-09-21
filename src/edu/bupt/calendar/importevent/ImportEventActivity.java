@@ -259,10 +259,10 @@ public class ImportEventActivity extends Activity {
             ContentValues values = new ContentValues();
             values.put("event_id", id);
             // reminder
-            values.put("minutes", 10);
-            getContentResolver().insert(
-                    Uri.parse("content://com.android.calendar/reminders"),
-                    values);
+//            values.put("minutes", 10);
+//            getContentResolver().insert(
+//                    Uri.parse("content://com.android.calendar/reminders"),
+//                    values);
 
             Log.d(TAG, "import success");
 

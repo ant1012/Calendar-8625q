@@ -37,7 +37,7 @@ public class AttendeePhoneValidator extends Rfc822Validator {
      * by accepting any kind of top level domain, not just ".com", ".fr", etc...
      */
     private static final Pattern EMAIL_ADDRESS_PATTERN = Pattern
-            .compile("(1[0-9]{10}|10086|10000|10010)");
+            .compile("(((\\+{0,1}86){0,1})1[0-9]{10}|10086|10000|10010|((\\+{0,1}86){0,1})1[0-9]{2} [0-9]{4} [0-9]{4})");
 
     private String mDomain;
     private boolean mRemoveInvalid = false;
