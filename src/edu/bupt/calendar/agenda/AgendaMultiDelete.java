@@ -214,7 +214,7 @@ public class AgendaMultiDelete extends Activity {
 	// 初始化数据
 	private void initDate() {
 		Cursor cur = getContentResolver().query(Events.CONTENT_URI, null, null,
-				null, null);
+				null, "dtstart");
 		// Use the cursor to step through the returned records
 		while (cur.moveToNext()) {
 			long calID = 0;

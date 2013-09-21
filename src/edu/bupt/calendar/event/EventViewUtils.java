@@ -229,7 +229,8 @@ public class EventViewUtils {
      * initial position of the spinner into the spinner's tag for comparison
      * with any new position setting.
      */
-    public static boolean addReminder(Activity activity, View view, View.OnClickListener listener,
+    /** zzz */
+    public static boolean addReminder(final Activity activity, View view, View.OnClickListener listener,
             ArrayList<LinearLayout> items, ArrayList<Integer> minuteValues,
             ArrayList<String> minuteLabels, ArrayList<Integer> methodValues,
             ArrayList<String> methodLabels, ReminderEntry newReminder, int maxReminders,
@@ -278,6 +279,49 @@ public class EventViewUtils {
             spinner.setTag(index);
             spinner.setOnItemSelectedListener(onItemSelected);
         }
+
+        /** zzz */
+        Spinner methodSpinner = (Spinner) reminderItem
+                .findViewById(R.id.reminder_method_value);
+        OnItemSelectedListener onItemSelectedListener = new OnItemSelectedListener() {
+            boolean check = false;
+
+            @Override
+            public void onItemSelected(AdapterView<?> arg0, View arg1,
+                    int arg2, long arg3) {
+                Log.d(TAG, "onItemSelected " + arg2);
+                if (check && arg2 == 1) { // warning for msg cost
+                    new AlertDialog.Builder(activity)
+                            .setMessage(R.string.msg_cost_alert)
+                            .setIconAttribute(android.R.attr.alertDialogIcon)
+                            .setPositiveButton(android.R.string.ok, null)
+                            .show();
+
+                    // no sim card
+                    try {
+                        TelephonyManager tm = (TelephonyManager) activity
+                                .getSystemService(Context.TELEPHONY_SERVICE);
+                        Log.i(TAG, "" + tm.getSimState());
+                        if (tm.getSimState() == TelephonyManager.SIM_STATE_ABSENT) {
+                            new AlertDialog.Builder(activity)
+                                    .setMessage(R.string.no_sim_card)
+                                    .setIconAttribute(
+                                            android.R.attr.alertDialogIcon)
+                                    .setPositiveButton(android.R.string.ok,
+                                            null).show();
+                        }
+                    } catch (Exception e) {
+                        Log.e(TAG, e.toString());
+                    }
+                }
+                check = true;
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> arg0) {
+            }
+        };
+        methodSpinner.setOnItemSelectedListener(onItemSelectedListener);
 
         items.add(reminderItem);
 
@@ -376,7 +420,6 @@ public class EventViewUtils {
             }
         };
         methodSpinner.setOnItemSelectedListener(onItemSelectedListener);
-
 
         return true;
     }
