@@ -786,10 +786,12 @@ public class AllInOneActivity extends Activity implements EventHandler,
                 mController.sendEventRelatedEvent(
                         this, EventType.CREATE_EVENT, -1, t.toMillis(true), 0, 0, 0, -1);
                 return true;
-            case R.id.action_select_visible_calendars:
-                mController.sendEvent(this, EventType.LAUNCH_SELECT_VISIBLE_CALENDARS, null, null,
-                        0, 0);
-                return true;
+            /** zzz */
+            // case R.id.action_select_visible_calendars:
+            // mController.sendEvent(this,
+            // EventType.LAUNCH_SELECT_VISIBLE_CALENDARS, null, null,
+            // 0, 0);
+            // return true;
             case R.id.action_settings:
                 mController.sendEvent(this, EventType.LAUNCH_SETTINGS, null, null, 0, 0);
                 return true;
