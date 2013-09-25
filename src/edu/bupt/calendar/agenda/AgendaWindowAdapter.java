@@ -39,7 +39,6 @@ import android.widget.AbsListView.OnScrollListener;
 import android.widget.BaseAdapter;
 import android.widget.GridLayout;
 import android.widget.TextView;
-
 import edu.bupt.calendar.CalendarController;
 import edu.bupt.calendar.CalendarController.EventType;
 import edu.bupt.calendar.CalendarController.ViewType;
@@ -47,6 +46,8 @@ import edu.bupt.calendar.R;
 import edu.bupt.calendar.StickyHeaderListView;
 import edu.bupt.calendar.Utils;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Formatter;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -914,8 +915,36 @@ public class AgendaWindowAdapter extends BaseAdapter
     private void updateHeaderFooter(final int start, final int end) {
         mHeaderView.setText(mContext.getString(R.string.show_older_events,
                 formatDateString(start)));
+        /** zzz */
+//        Log.i(TAG, "start - " + start);
+        long millis1900 = 0;
+        long millis2048 = 0;
+        try {
+            millis1900 = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse("1901-01-01 00:00:00").getTime();
+            millis2048 = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse("2038-01-01 00:00:00").getTime();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        Time timeStart = new Time(mTimeZone);
+        timeStart.setJulianDay(start);
+        long millis = timeStart.toMillis(false);
+        Log.i(TAG, "millis - " + millis + "; time1900 - " + millis1900);
+        if(millis < millis1900) {
+            mHeaderView.setOnClickListener(null);
+        }
+        
         mFooterView.setText(mContext.getString(R.string.show_newer_events,
                 formatDateString(end)));
+        
+
+        Time timeEnd = new Time(mTimeZone);
+        timeEnd.setJulianDay(end);
+        long millisEnd = timeEnd.toMillis(false);
+        Log.i(TAG, "millisEnd - " + millisEnd + "; time2048 - " + millis2048);
+        if(millisEnd > millis2048) {
+            mFooterView.setOnClickListener(null);
+        }
     }
 
     private class QueryHandler extends AsyncQueryHandler {
