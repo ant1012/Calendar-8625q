@@ -48,12 +48,12 @@
     <!-- zzz -->
     <uses-sdk android:minSdkVersion="16" >
     </uses-sdk>
-
+<!-- ddd 修改 显示图标 -->
     <application
         android:name="edu.bupt.calendar.CalendarApplication"
         android:backupAgent="edu.bupt.calendar.CalendarBackupAgent"
         android:hardwareAccelerated="true"
-        android:icon="@mipmap/ic_launcher_calendar"
+        android:icon="@mipmap/start_icon1"
         android:label="@string/app_label"
         android:taskAffinity="android.task.calendar" >
         <meta-data
@@ -307,7 +307,7 @@
 
                 <data android:scheme="file" />
                 <!-- <data android:mimeType="*/*" /> -->
-                <data android:mimeType="text/calendar" />
+                <data android:mimeType="text/vcalendar" />
                 <data android:mimeType="text/x-vcalendar" />
                 <data android:pathPattern=".*\\.vcs" />
                 <data android:pathPattern=".*\\.ics" />

@@ -173,9 +173,10 @@
         <item name="android:endYear">2036</item>
         <item name="android:startYear">1970</item>
     </style>
-
-    <style name="CalendarActionBarStyle" parent="android:style/Widget.Holo.Light.ActionBar.Solid">
-        <item name="android:displayOptions">showCustom</item>
+<!-- ddd -->
+	<style name="CalendarActionBarStyle" parent="android:style/Widget.Holo.Light.ActionBar.Solid">
+		<item name="android:displayOptions">showCustom</item>
+        <item name="android:background">@drawable/ab_solid_custom_blue_inverse_holo</item>
     </style>
 
     <style name="CalendarTheme.WithActionBarWallpaper" parent="CalendarTheme.WithActionBar">

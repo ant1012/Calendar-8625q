@@ -629,12 +629,13 @@ public class Utils {
 
     public static int getDisplayColorFromColor(int color) {
         // STOPSHIP - Finalize color adjustment algorithm before shipping
-
-        float[] hsv = new float[3];
-        Color.colorToHSV(color, hsv);
-        hsv[1] = Math.min(hsv[1] * SATURATION_ADJUST, 1.0f);
-        hsv[2] = hsv[2] * INTENSITY_ADJUST;
-        return Color.HSVToColor(hsv);
+          //ddd 修改颜色
+//        float[] hsv = new float[3];
+//        Color.colorToHSV(color, hsv);
+//        hsv[1] = Math.min(hsv[1] * SATURATION_ADJUST, 1.0f);
+//        hsv[2] = hsv[2] * INTENSITY_ADJUST;
+//        return Color.HSVToColor(hsv);
+    	return 0xff33b5e5;
     }
 
     // This takes a color and computes what it would look like blended with
