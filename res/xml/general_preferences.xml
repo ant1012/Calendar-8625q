@@ -35,25 +35,35 @@
             android:key="preferences_week_start_day"
             android:title="@string/preferences_week_start_day_title" />
 
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="preferences_home_tz_enabled"
-            android:summary="@string/preferences_use_home_tz_descrip"
-            android:title="@string/preferences_use_home_tz_title" />
+        <!-- zzz -->
+        <!-- <CheckBoxPreference -->
+        <!-- android:defaultValue="false" -->
+        <!-- android:key="preferences_home_tz_enabled" -->
+        <!-- android:summary="@string/preferences_use_home_tz_descrip" -->
+        <!-- android:title="@string/preferences_use_home_tz_title" /> -->
 
+
+        <!-- <ListPreference -->
+        <!-- android:defaultValue="@string/preferences_home_tz_default" -->
+        <!-- android:dependency="preferences_home_tz_enabled" -->
+        <!-- android:dialogTitle="@string/preferences_home_tz_title" -->
+        <!-- android:entries="@array/timezone_labels" -->
+        <!-- android:entryValues="@array/timezone_values" -->
+        <!-- android:key="preferences_home_tz" -->
+        <!-- android:title="@string/preferences_home_tz_title" /> -->
         <ListPreference
-            android:defaultValue="@string/preferences_home_tz_default"
-            android:dependency="preferences_home_tz_enabled"
-            android:dialogTitle="@string/preferences_home_tz_title"
-            android:entries="@array/timezone_labels"
-            android:entryValues="@array/timezone_values"
-            android:key="preferences_home_tz"
-            android:title="@string/preferences_home_tz_title" />
+            android:defaultValue="0"
+            android:dialogTitle="@string/preference_time_setting"
+            android:entries="@array/time_setting"
+            android:entryValues="@array/time_setting_values"
+            android:key="TimeSettingPreference"
+            android:title="@string/preference_time_setting" />
 
-        <PreferenceScreen
-            android:key="preferences_clear_search_history"
-            android:summary="@string/preferences_clear_search_history_summary"
-            android:title="@string/preferences_clear_search_history_title" />
+        <!-- zzz -->
+        <!-- <PreferenceScreen -->
+        <!-- android:key="preferences_clear_search_history" -->
+        <!-- android:summary="@string/preferences_clear_search_history_summary" -->
+        <!-- android:title="@string/preferences_clear_search_history_title" /> -->
         <!-- zzz -->
         <CheckBoxPreference
             android:defaultValue="true"
@@ -98,11 +108,12 @@
             android:key="preferences_default_reminder"
             android:title="@string/preferences_default_reminder_title" />
 
-        <PreferenceScreen
-            android:fragment="edu.bupt.calendar.QuickResponseSettings"
-            android:key="preferences_quick_responses"
-            android:summary="@string/quick_response_settings_summary"
-            android:title="@string/quick_response_settings" />
+        <!-- zzz -->
+        <!-- <PreferenceScreen -->
+        <!-- android:fragment="edu.bupt.calendar.QuickResponseSettings" -->
+        <!-- android:key="preferences_quick_responses" -->
+        <!-- android:summary="@string/quick_response_settings_summary" -->
+        <!-- android:title="@string/quick_response_settings" /> -->
     </PreferenceCategory>
 
 </PreferenceScreen>

@@ -37,12 +37,13 @@ import android.provider.CalendarContract;
 import android.provider.CalendarContract.CalendarCache;
 import android.provider.SearchRecentSuggestions;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.Toast;
 import edu.bupt.calendar.alerts.AlertReceiver;
 import edu.bupt.calendar.festival.Lunar;
 
-public class GeneralPreferences extends PreferenceFragment implements
-        OnSharedPreferenceChangeListener, OnPreferenceChangeListener {
+public class GeneralPreferences extends PreferenceFragment implements OnSharedPreferenceChangeListener,
+        OnPreferenceChangeListener {
     // The name of the shared preferences file. This name must be maintained for
     // historical
     // reasons, as it's what PreferenceManager assigned the first time the file
@@ -93,7 +94,11 @@ public class GeneralPreferences extends PreferenceFragment implements
     private static final String ALERT_TYPE_ALERTS = "0";
     private static final String ALERT_TYPE_STATUS_BAR = "1";
     private static final String ALERT_TYPE_OFF = "2";
-    static final String KEY_HOME_TZ_ENABLED = "preferences_home_tz_enabled";
+
+    /** zzz */
+    // static final String KEY_HOME_TZ_ENABLED = "preferences_home_tz_enabled";
+    static final String KEY_TIME_DISP = "TimeSettingPreference";
+
     static final String KEY_HOME_TZ = "preferences_home_tz";
 
     // Default preference values
@@ -105,28 +110,35 @@ public class GeneralPreferences extends PreferenceFragment implements
     ListPreference mVibrateWhen;
     RingtonePreference mRingtone;
     CheckBoxPreference mPopup;
-    CheckBoxPreference mUseHomeTZ;
+
+    /** zzz */
+    // CheckBoxPreference mUseHomeTZ;
+    ListPreference mTimeDisp;
+
     CheckBoxPreference mHideDeclined;
-    ListPreference mHomeTZ;
+
+    /** zzz */
+    // ListPreference mHomeTZ;
+
     ListPreference mWeekStart;
     ListPreference mDefaultReminder;
 
     /** zzz */
     CheckBoxPreference mShowLunar;
     public static final String KEY_SHOW_LUNAR = "preferences_show_lunar";
+    private static final String TAG = "GeneralPreferences";
 
     private static CharSequence[][] mTimezones;
 
     /** Return a properly configured SharedPreferences instance */
     public static SharedPreferences getSharedPreferences(Context context) {
-        return context.getSharedPreferences(SHARED_PREFS_NAME,
-                Context.MODE_PRIVATE);
+        return context.getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE);
     }
 
     /** Set the default shared preferences in the proper context */
     public static void setDefaultValues(Context context) {
-        PreferenceManager.setDefaultValues(context, SHARED_PREFS_NAME,
-                Context.MODE_PRIVATE, R.xml.general_preferences, false);
+        PreferenceManager.setDefaultValues(context, SHARED_PREFS_NAME, Context.MODE_PRIVATE, R.xml.general_preferences,
+                false);
     }
 
     @Override
@@ -146,53 +158,52 @@ public class GeneralPreferences extends PreferenceFragment implements
         addPreferencesFromResource(R.xml.general_preferences);
 
         final PreferenceScreen preferenceScreen = getPreferenceScreen();
-        mAlert = (CheckBoxPreference) preferenceScreen
-                .findPreference(KEY_ALERTS);
-        mVibrateWhen = (ListPreference) preferenceScreen
-                .findPreference(KEY_ALERTS_VIBRATE_WHEN);
-        Vibrator vibrator = (Vibrator) activity
-                .getSystemService(Context.VIBRATOR_SERVICE);
+        mAlert = (CheckBoxPreference) preferenceScreen.findPreference(KEY_ALERTS);
+        mVibrateWhen = (ListPreference) preferenceScreen.findPreference(KEY_ALERTS_VIBRATE_WHEN);
+        Vibrator vibrator = (Vibrator) activity.getSystemService(Context.VIBRATOR_SERVICE);
         if (vibrator == null || !vibrator.hasVibrator()) {
-            PreferenceCategory mAlertGroup = (PreferenceCategory) preferenceScreen
-                    .findPreference(KEY_ALERTS_CATEGORY);
+            PreferenceCategory mAlertGroup = (PreferenceCategory) preferenceScreen.findPreference(KEY_ALERTS_CATEGORY);
             mAlertGroup.removePreference(mVibrateWhen);
         } else {
             mVibrateWhen.setSummary(mVibrateWhen.getEntry());
         }
 
-        mRingtone = (RingtonePreference) preferenceScreen
-                .findPreference(KEY_ALERTS_RINGTONE);
-        mPopup = (CheckBoxPreference) preferenceScreen
-                .findPreference(KEY_ALERTS_POPUP);
-        mUseHomeTZ = (CheckBoxPreference) preferenceScreen
-                .findPreference(KEY_HOME_TZ_ENABLED);
-        mHideDeclined = (CheckBoxPreference) preferenceScreen
-                .findPreference(KEY_HIDE_DECLINED);
-        mWeekStart = (ListPreference) preferenceScreen
-                .findPreference(KEY_WEEK_START_DAY);
-        mDefaultReminder = (ListPreference) preferenceScreen
-                .findPreference(KEY_DEFAULT_REMINDER);
-        mHomeTZ = (ListPreference) preferenceScreen.findPreference(KEY_HOME_TZ);
-        String tz = mHomeTZ.getValue();
+        mRingtone = (RingtonePreference) preferenceScreen.findPreference(KEY_ALERTS_RINGTONE);
+        mPopup = (CheckBoxPreference) preferenceScreen.findPreference(KEY_ALERTS_POPUP);
+
+        /** zzz */
+        // mUseHomeTZ = (CheckBoxPreference)
+        // preferenceScreen.findPreference(KEY_HOME_TZ_ENABLED);
+        mTimeDisp = (ListPreference) preferenceScreen.findPreference(KEY_TIME_DISP);
+
+        mHideDeclined = (CheckBoxPreference) preferenceScreen.findPreference(KEY_HIDE_DECLINED);
+        mWeekStart = (ListPreference) preferenceScreen.findPreference(KEY_WEEK_START_DAY);
+        mDefaultReminder = (ListPreference) preferenceScreen.findPreference(KEY_DEFAULT_REMINDER);
+        /** zzz */
+        // mHomeTZ = (ListPreference)
+        // preferenceScreen.findPreference(KEY_HOME_TZ);
+
+        /** zzz */
+        // String tz = mHomeTZ.getValue();
 
         mWeekStart.setSummary(mWeekStart.getEntry());
         mDefaultReminder.setSummary(mDefaultReminder.getEntry());
 
         /** zzz */
-        mShowLunar = (CheckBoxPreference) preferenceScreen
-                .findPreference(KEY_SHOW_LUNAR);
+        mShowLunar = (CheckBoxPreference) preferenceScreen.findPreference(KEY_SHOW_LUNAR);
 
-        if (mTimezones == null) {
-            mTimezones = (new TimezoneAdapter(activity, tz,
-                    System.currentTimeMillis())).getAllTimezones();
-        }
-        mHomeTZ.setEntryValues(mTimezones[0]);
-        mHomeTZ.setEntries(mTimezones[1]);
-        CharSequence tzName = mHomeTZ.getEntry();
-        if (TextUtils.isEmpty(tzName)) {
-            tzName = Utils.getTimeZone(activity, null);
-        }
-        mHomeTZ.setSummary(tzName);
+        /** zzz */
+        // if (mTimezones == null) {
+        // mTimezones = (new TimezoneAdapter(activity, tz,
+        // System.currentTimeMillis())).getAllTimezones();
+        // }
+        // mHomeTZ.setEntryValues(mTimezones[0]);
+        // mHomeTZ.setEntries(mTimezones[1]);
+        // CharSequence tzName = mHomeTZ.getEntry();
+        // if (TextUtils.isEmpty(tzName)) {
+        // tzName = Utils.getTimeZone(activity, null);
+        // }
+        // mHomeTZ.setSummary(tzName);
 
         migrateOldPreferences(sharedPreferences);
 
@@ -202,8 +213,7 @@ public class GeneralPreferences extends PreferenceFragment implements
     @Override
     public void onResume() {
         super.onResume();
-        getPreferenceScreen().getSharedPreferences()
-                .registerOnSharedPreferenceChangeListener(this);
+        getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
         setPreferenceListeners(this);
     }
 
@@ -212,8 +222,14 @@ public class GeneralPreferences extends PreferenceFragment implements
      * listener.
      */
     private void setPreferenceListeners(OnPreferenceChangeListener listener) {
-        mUseHomeTZ.setOnPreferenceChangeListener(listener);
-        mHomeTZ.setOnPreferenceChangeListener(listener);
+
+        /** zzz */
+        // mUseHomeTZ.setOnPreferenceChangeListener(listener);
+        mTimeDisp.setOnPreferenceChangeListener(listener);
+
+        /** zzz */
+        // mHomeTZ.setOnPreferenceChangeListener(listener);
+
         mWeekStart.setOnPreferenceChangeListener(listener);
         mDefaultReminder.setOnPreferenceChangeListener(listener);
         mRingtone.setOnPreferenceChangeListener(listener);
@@ -227,14 +243,12 @@ public class GeneralPreferences extends PreferenceFragment implements
     @Override
     public void onPause() {
         super.onPause();
-        getPreferenceScreen().getSharedPreferences()
-                .unregisterOnSharedPreferenceChangeListener(this);
+        getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
         setPreferenceListeners(null);
     }
 
     @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
-            String key) {
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         Activity a = getActivity();
         if (key.equals(KEY_ALERTS)) {
             updateChildPreferences();
@@ -260,9 +274,20 @@ public class GeneralPreferences extends PreferenceFragment implements
     @Override
     public boolean onPreferenceChange(Preference preference, Object newValue) {
         String tz;
-        if (preference == mUseHomeTZ) {
-            if ((Boolean) newValue) {
-                tz = mHomeTZ.getValue();
+
+        /** zzz */
+        // if (preference == mUseHomeTZ) {
+        // if ((Boolean) newValue) {
+        // tz = mHomeTZ.getValue();
+        // } else {
+        // tz = CalendarCache.TIMEZONE_TYPE_AUTO;
+        // }
+        // Utils.setTimeZone(getActivity(), tz);
+        // return true;
+        if (preference == mTimeDisp) {
+            if (((String) newValue).equals("0")) {
+                tz = CalendarCache.TIMEZONE_TYPE_AUTO;
+                Log.v(TAG, "tz - " + tz);
             } else {
                 tz = CalendarCache.TIMEZONE_TYPE_AUTO;
             }
@@ -271,18 +296,17 @@ public class GeneralPreferences extends PreferenceFragment implements
         } else if (preference == mHideDeclined) {
             mHideDeclined.setChecked((Boolean) newValue);
             Activity act = getActivity();
-            Intent intent = new Intent(
-                    Utils.getWidgetScheduledUpdateAction(act));
-            intent.setDataAndType(CalendarContract.CONTENT_URI,
-                    Utils.APPWIDGET_DATA_TYPE);
+            Intent intent = new Intent(Utils.getWidgetScheduledUpdateAction(act));
+            intent.setDataAndType(CalendarContract.CONTENT_URI, Utils.APPWIDGET_DATA_TYPE);
             act.sendBroadcast(intent);
             return true;
-        } else if (preference == mHomeTZ) {
-            tz = (String) newValue;
-            // We set the value here so we can read back the entry
-            mHomeTZ.setValue(tz);
-            mHomeTZ.setSummary(mHomeTZ.getEntry());
-            Utils.setTimeZone(getActivity(), tz);
+            /** zzz */
+            // } else if (preference == mHomeTZ) {
+            // tz = (String) newValue;
+            // // We set the value here so we can read back the entry
+            // mHomeTZ.setValue(tz);
+            // mHomeTZ.setSummary(mHomeTZ.getEntry());
+            // Utils.setTimeZone(getActivity(), tz);
         } else if (preference == mWeekStart) {
             mWeekStart.setValue((String) newValue);
             mWeekStart.setSummary(mWeekStart.getEntry());
@@ -301,10 +325,8 @@ public class GeneralPreferences extends PreferenceFragment implements
             mShowLunar.setChecked((Boolean) newValue);
             Lunar.setShowLunch((Boolean) newValue);
             Activity act = getActivity();
-            Intent intent = new Intent(
-                    Utils.getWidgetScheduledUpdateAction(act));
-            intent.setDataAndType(CalendarContract.CONTENT_URI,
-                    Utils.APPWIDGET_DATA_TYPE);
+            Intent intent = new Intent(Utils.getWidgetScheduledUpdateAction(act));
+            intent.setDataAndType(CalendarContract.CONTENT_URI, Utils.APPWIDGET_DATA_TYPE);
             act.sendBroadcast(intent);
             return true;
         } else {
@@ -322,16 +344,14 @@ public class GeneralPreferences extends PreferenceFragment implements
      */
     private void migrateOldPreferences(SharedPreferences prefs) {
         // If needed, migrate vibration setting from a previous version
-        if (!prefs.contains(KEY_ALERTS_VIBRATE_WHEN)
-                && prefs.contains(KEY_ALERTS_VIBRATE)) {
+        if (!prefs.contains(KEY_ALERTS_VIBRATE_WHEN) && prefs.contains(KEY_ALERTS_VIBRATE)) {
             int stringId = prefs.getBoolean(KEY_ALERTS_VIBRATE, false) ? R.string.prefDefault_alerts_vibrate_true
                     : R.string.prefDefault_alerts_vibrate_false;
             mVibrateWhen.setValue(getActivity().getString(stringId));
         }
         // If needed, migrate the old alerts type settin
         if (!prefs.contains(KEY_ALERTS) && prefs.contains(KEY_ALERTS_TYPE)) {
-            String type = prefs.getString(KEY_ALERTS_TYPE,
-                    ALERT_TYPE_STATUS_BAR);
+            String type = prefs.getString(KEY_ALERTS_TYPE, ALERT_TYPE_STATUS_BAR);
             if (type.equals(ALERT_TYPE_OFF)) {
                 mAlert.setChecked(false);
                 mPopup.setChecked(false);
@@ -361,8 +381,7 @@ public class GeneralPreferences extends PreferenceFragment implements
             mRingtone.setEnabled(true);
             mPopup.setEnabled(true);
         } else {
-            mVibrateWhen.setValue(getActivity().getString(
-                    R.string.prefDefault_alerts_vibrate_false));
+            mVibrateWhen.setValue(getActivity().getString(R.string.prefDefault_alerts_vibrate_false));
             mVibrateWhen.setEnabled(false);
             mRingtone.setEnabled(false);
             mPopup.setEnabled(false);
@@ -370,16 +389,13 @@ public class GeneralPreferences extends PreferenceFragment implements
     }
 
     @Override
-    public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen,
-            Preference preference) {
+    public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen, Preference preference) {
         final String key = preference.getKey();
         if (KEY_CLEAR_SEARCH_HISTORY.equals(key)) {
-            SearchRecentSuggestions suggestions = new SearchRecentSuggestions(
-                    getActivity(), Utils.getSearchAuthority(getActivity()),
-                    CalendarRecentSuggestionsProvider.MODE);
+            SearchRecentSuggestions suggestions = new SearchRecentSuggestions(getActivity(),
+                    Utils.getSearchAuthority(getActivity()), CalendarRecentSuggestionsProvider.MODE);
             suggestions.clearHistory();
-            Toast.makeText(getActivity(), R.string.search_history_cleared,
-                    Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), R.string.search_history_cleared, Toast.LENGTH_SHORT).show();
             return true;
         } else {
             return super.onPreferenceTreeClick(preferenceScreen, preference);

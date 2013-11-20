@@ -194,4 +194,11 @@
     <item msgid="4298472806133153766">"月"</item>
     <item msgid="5033084974413793845">"日程"</item>
   </string-array>
+
+  <!-- zzz -->
+    <string-array name="time_setting">
+        <item>当地时间</item>
+        <item>北京时间</item>
+    </string-array>
+
 </resources>
