@@ -821,5 +821,6 @@
     <string name="file_not_exist">File does not exist!</string>
     <string name="msg_cost_alert">Select "Notification and send SMS" mode will send text messages to participants automatically at the set time, will bring SMS costs</string>
     <string name="no_sim_card">There is no SIM card</string>
+    <string name="home_tz">Asia/Shanghai</string>
 
 </resources>

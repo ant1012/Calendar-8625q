@@ -287,10 +287,10 @@ public class GeneralPreferences extends PreferenceFragment implements OnSharedPr
         if (preference == mTimeDisp) {
             if (((String) newValue).equals("0")) {
                 tz = CalendarCache.TIMEZONE_TYPE_AUTO;
-                Log.v(TAG, "tz - " + tz);
             } else {
-                tz = CalendarCache.TIMEZONE_TYPE_AUTO;
+                tz = getString(R.string.home_tz);
             }
+            Log.v(TAG, "tz - " + tz);
             Utils.setTimeZone(getActivity(), tz);
             return true;
         } else if (preference == mHideDeclined) {
