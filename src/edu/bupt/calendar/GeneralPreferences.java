@@ -289,6 +289,7 @@ public class GeneralPreferences extends PreferenceFragment implements OnSharedPr
                 tz = CalendarCache.TIMEZONE_TYPE_AUTO;
             } else {
                 tz = getString(R.string.home_tz);
+                tz = CalendarCache.TIMEZONE_TYPE_AUTO;
             }
             Log.v(TAG, "tz - " + tz);
             Utils.setTimeZone(getActivity(), tz);
