@@ -209,31 +209,32 @@ public class AgendaAdapter extends ResourceCursorAdapter {
         }
         mStringBuilder.setLength(0);
         whenString = DateUtils.formatDateRange(context, mFormatter, begin, end, flags, tzString).toString();
-        if (!allDay && !TextUtils.equals(tzString, eventTz)) {
-            String displayName;
 
-            /** zzz */
-            // // Figure out if this is in DST
-            // Time date = new Time(tzString);
-            // date.set(begin);
-            //
-            // TimeZone tz = TimeZone.getTimeZone(tzString);
-            // if (tz == null || tz.getID().equals("GMT")) {
-            // displayName = tzString;
-            // } else {
-            // displayName = tz.getDisplayName(date.isDst != 0, TimeZone.SHORT);
-            // }
-            // whenString += " (" + displayName + ")";
-            SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-            boolean showBJTime = !sp.getString("TimeSettingPreference", "0").equals("0");
-            TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-            if (tm.isNetworkRoaming() || sp.getBoolean("RoamingTestPreference", false)) {
-                displayName = showBJTime ? context.getResources().getStringArray(R.array.time_setting)[1] : context
-                        .getResources().getStringArray(R.array.time_setting)[0];
-                whenString += " (" + displayName + ")";
-            }
-
+        /** zzz */
+        // if (!allDay && !TextUtils.equals(tzString, eventTz)) {
+        // String displayName;
+        // // Figure out if this is in DST
+        // Time date = new Time(tzString);
+        // date.set(begin);
+        //
+        // TimeZone tz = TimeZone.getTimeZone(tzString);
+        // if (tz == null || tz.getID().equals("GMT")) {
+        // displayName = tzString;
+        // } else {
+        // displayName = tz.getDisplayName(date.isDst != 0, TimeZone.SHORT);
+        // }
+        // whenString += " (" + displayName + ")";
+        String displayName;
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        boolean showBJTime = !sp.getString("TimeSettingPreference", "0").equals("0");
+        TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+        if (tm.isNetworkRoaming() || sp.getBoolean("RoamingTestPreference", false)) {
+            displayName = showBJTime ? context.getResources().getStringArray(R.array.time_setting)[1] : context
+                    .getResources().getStringArray(R.array.time_setting)[0];
+            whenString += " (" + displayName + ")";
         }
+
+        // }
         when.setText(whenString);
 
         /*
