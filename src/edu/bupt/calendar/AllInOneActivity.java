@@ -51,10 +51,12 @@ import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.provider.CalendarContract;
 import android.provider.CalendarContract.Attendees;
 import android.provider.CalendarContract.Calendars;
 import android.provider.CalendarContract.Events;
+import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.text.format.DateUtils;
@@ -1076,10 +1078,17 @@ public class AllInOneActivity extends Activity implements EventHandler,
             mWeekTextView.setVisibility(View.GONE);
         }
 
+        /** zzz */
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        TelephonyManager tm = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
+        // if (mHomeTime != null
+        // && (mCurrentView == ViewType.DAY || mCurrentView == ViewType.WEEK
+        // || mCurrentView == ViewType.AGENDA)
+        // && !TextUtils.equals(mTimeZone, Time.getCurrentTimezone())) {
         if (mHomeTime != null
-                && (mCurrentView == ViewType.DAY || mCurrentView == ViewType.WEEK
-                        || mCurrentView == ViewType.AGENDA)
-                && !TextUtils.equals(mTimeZone, Time.getCurrentTimezone())) {
+                && (mCurrentView == ViewType.DAY || mCurrentView == ViewType.WEEK || mCurrentView == ViewType.AGENDA)
+                && tm.isNetworkRoaming() || sp.getBoolean("RoamingTestPreference", false)) {
+
             Time time = new Time(mTimeZone);
             time.setToNow();
             long millis = time.toMillis(true);
@@ -1088,11 +1097,22 @@ public class AllInOneActivity extends Activity implements EventHandler,
             if (DateFormat.is24HourFormat(this)) {
                 flags |= DateUtils.FORMAT_24HOUR;
             }
+
+            /** zzz */
             // Formats the time as
-            String timeString = (new StringBuilder(
-                    Utils.formatDateRange(this, millis, millis, flags))).append(" ").append(
-                    TimeZone.getTimeZone(mTimeZone).getDisplayName(
-                            isDST, TimeZone.SHORT, Locale.getDefault())).toString();
+            // String timeString = (new StringBuilder(
+            // Utils.formatDateRange(this, millis, millis,
+            // flags))).append(" ").append(
+            // TimeZone.getTimeZone(mTimeZone).getDisplayName(
+            // isDST, TimeZone.SHORT, Locale.getDefault())).toString();
+            String displayedTimezone = null;
+            boolean showBJTime = !sp.getString("TimeSettingPreference", "0").equals("0");
+            displayedTimezone = showBJTime ? this.getResources().getStringArray(R.array.time_setting)[1] : this
+                    .getResources().getStringArray(R.array.time_setting)[0];
+
+            String timeString = (new StringBuilder(Utils.formatDateRange(this, millis, millis, flags))).append(" ")
+                    .append(displayedTimezone).toString();
+
             mHomeTime.setText(timeString);
             mHomeTime.setVisibility(View.VISIBLE);
             // Update when the minute changes

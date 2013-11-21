@@ -47,6 +47,7 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.CalendarContract;
 import android.provider.CalendarContract.Attendees;
 import android.provider.CalendarContract.Calendars;
@@ -57,6 +58,7 @@ import android.provider.ContactsContract.CommonDataKinds;
 import android.provider.ContactsContract.Intents;
 import android.provider.ContactsContract.QuickContact;
 import android.telephony.SmsManager;
+import android.telephony.TelephonyManager;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
@@ -1299,9 +1301,21 @@ public class EventInfoFragment extends DialogFragment implements OnCheckedChange
                 localTimezone, mAllDay, context);
 
         String displayedTimezone = null;
-        if (!mAllDay) {
-            displayedTimezone = Utils.getDisplayedTimezone(mStartMillis, localTimezone, eventTimezone);
+
+        /** zzz */
+
+        // if (!mAllDay) {
+        // displayedTimezone = Utils.getDisplayedTimezone(mStartMillis,
+        // localTimezone, eventTimezone);
+        // }
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(mContext);
+        boolean showBJTime = !sp.getString("TimeSettingPreference", "0").equals("0");
+        TelephonyManager tm = (TelephonyManager) mContext.getSystemService(Context.TELEPHONY_SERVICE);
+        if (tm.isNetworkRoaming() || sp.getBoolean("RoamingTestPreference", false)) {
+            displayedTimezone = showBJTime ? mContext.getResources().getStringArray(R.array.time_setting)[1] : mContext
+                    .getResources().getStringArray(R.array.time_setting)[0];
         }
+
         // Display the datetime. Make the timezone (if any) transparent.
         if (displayedTimezone == null) {
             setTextCommon(view, R.id.when_datetime, displayedDatetime);

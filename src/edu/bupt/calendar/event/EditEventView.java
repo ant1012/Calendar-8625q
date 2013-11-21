@@ -272,7 +272,9 @@ public class EditEventView implements View.OnClickListener,
             setDate(mEndDateButton, endMillis);
             setTime(mStartTimeButton, startMillis);
             setTime(mEndTimeButton, endMillis);
-            updateHomeTime();
+
+            /** zzz */
+            // updateHomeTime();
         }
     }
 
@@ -355,7 +357,9 @@ public class EditEventView implements View.OnClickListener,
             setDate(mEndDateButton, endMillis);
             setTime(mEndTimeButton, endMillis); // In case end time had to be
             // reset
-            updateHomeTime();
+
+            /** zzz */
+            // updateHomeTime();
         }
     }
 
@@ -749,7 +753,9 @@ public class EditEventView implements View.OnClickListener,
         } else if (dialog == mTimezoneDialog) {
             if (which >= 0 && which < mTimezoneAdapter.getCount()) {
                 setTimezone(which);
-                updateHomeTime();
+
+                /** zzz */
+                // updateHomeTime();
                 dialog.dismiss();
             }
         }
@@ -1598,7 +1604,9 @@ public class EditEventView implements View.OnClickListener,
     public void setModification(int modifyWhich) {
         mModification = modifyWhich;
         updateView();
-        updateHomeTime();
+
+        /** zzz */
+        // updateHomeTime();
     }
 
     // Find the calendar position in the cursor that matches calendar in
@@ -1801,7 +1809,9 @@ public class EditEventView implements View.OnClickListener,
             mTimezoneRow.setVisibility(View.VISIBLE);
         }
         mAllDay = isChecked;
-        updateHomeTime();
+
+        /** zzz */
+        // updateHomeTime();
     }
 
     @Override

@@ -17,9 +17,12 @@
 package edu.bupt.calendar.agenda;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.database.Cursor;
+import android.preference.PreferenceManager;
 import android.provider.CalendarContract.Attendees;
+import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.text.format.DateUtils;
@@ -29,7 +32,6 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ResourceCursorAdapter;
 import android.widget.TextView;
-
 import edu.bupt.calendar.ColorChipView;
 import edu.bupt.calendar.R;
 import edu.bupt.calendar.Utils;
@@ -45,7 +47,8 @@ public class AgendaAdapter extends ResourceCursorAdapter {
     private final int mStandardColor;
     private final int mWhereColor;
     private final int mWhereDeclinedColor;
-    // Note: Formatter is not thread safe. Fine for now as it is only used by the main thread.
+    // Note: Formatter is not thread safe. Fine for now as it is only used by
+    // the main thread.
     private final Formatter mFormatter;
     private final StringBuilder mStringBuilder;
     private float mScale;
@@ -121,10 +124,9 @@ public class AgendaAdapter extends ResourceCursorAdapter {
             holder.title = (TextView) view.findViewById(R.id.title);
             holder.when = (TextView) view.findViewById(R.id.when);
             holder.where = (TextView) view.findViewById(R.id.where);
-            holder.textContainer = (LinearLayout)
-                    view.findViewById(R.id.agenda_item_text_container);
+            holder.textContainer = (LinearLayout) view.findViewById(R.id.agenda_item_text_container);
             holder.selectedMarker = view.findViewById(R.id.selected_marker);
-            holder.colorChip = (ColorChipView)view.findViewById(R.id.agenda_item_color);
+            holder.colorChip = (ColorChipView) view.findViewById(R.id.agenda_item_color);
         }
 
         holder.startTimeMilli = cursor.getLong(AgendaWindowAdapter.INDEX_BEGIN);
@@ -206,52 +208,60 @@ public class AgendaAdapter extends ResourceCursorAdapter {
             flags |= DateUtils.FORMAT_24HOUR;
         }
         mStringBuilder.setLength(0);
-        whenString = DateUtils.formatDateRange(context, mFormatter, begin, end, flags, tzString)
-                .toString();
+        whenString = DateUtils.formatDateRange(context, mFormatter, begin, end, flags, tzString).toString();
         if (!allDay && !TextUtils.equals(tzString, eventTz)) {
             String displayName;
-            // Figure out if this is in DST
-            Time date = new Time(tzString);
-            date.set(begin);
 
-            TimeZone tz = TimeZone.getTimeZone(tzString);
-            if (tz == null || tz.getID().equals("GMT")) {
-                displayName = tzString;
-            } else {
-                displayName = tz.getDisplayName(date.isDst != 0, TimeZone.SHORT);
+            /** zzz */
+            // // Figure out if this is in DST
+            // Time date = new Time(tzString);
+            // date.set(begin);
+            //
+            // TimeZone tz = TimeZone.getTimeZone(tzString);
+            // if (tz == null || tz.getID().equals("GMT")) {
+            // displayName = tzString;
+            // } else {
+            // displayName = tz.getDisplayName(date.isDst != 0, TimeZone.SHORT);
+            // }
+            // whenString += " (" + displayName + ")";
+            SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+            boolean showBJTime = !sp.getString("TimeSettingPreference", "0").equals("0");
+            TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+            if (tm.isNetworkRoaming() || sp.getBoolean("RoamingTestPreference", false)) {
+                displayName = showBJTime ? context.getResources().getStringArray(R.array.time_setting)[1] : context
+                        .getResources().getStringArray(R.array.time_setting)[0];
+                whenString += " (" + displayName + ")";
             }
-            whenString += " (" + displayName + ")";
+
         }
         when.setText(whenString);
 
-   /* Recurring event icon is removed
-        String rrule = cursor.getString(AgendaWindowAdapter.INDEX_RRULE);
-        if (!TextUtils.isEmpty(rrule)) {
-            when.setCompoundDrawablesWithIntrinsicBounds(null, null,
-                    context.getResources().getDrawable(R.drawable.ic_repeat_dark), null);
-            when.setCompoundDrawablePadding(5);
-        } else {
-            when.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
-        } */
+        /*
+         * Recurring event icon is removed String rrule =
+         * cursor.getString(AgendaWindowAdapter.INDEX_RRULE); if
+         * (!TextUtils.isEmpty(rrule)) {
+         * when.setCompoundDrawablesWithIntrinsicBounds(null, null,
+         * context.getResources().getDrawable(R.drawable.ic_repeat_dark), null);
+         * when.setCompoundDrawablePadding(5); } else {
+         * when.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+         * }
+         */
 
         /*
-        // Repeating info
-        View repeatContainer = view.findViewById(R.id.repeat_icon);
-        String rrule = cursor.getString(AgendaWindowAdapter.INDEX_RRULE);
-        if (!TextUtils.isEmpty(rrule)) {
-            repeatContainer.setVisibility(View.VISIBLE);
-        } else {
-            repeatContainer.setVisibility(View.GONE);
-        }
-        */
+         * // Repeating info View repeatContainer =
+         * view.findViewById(R.id.repeat_icon); String rrule =
+         * cursor.getString(AgendaWindowAdapter.INDEX_RRULE); if
+         * (!TextUtils.isEmpty(rrule)) {
+         * repeatContainer.setVisibility(View.VISIBLE); } else {
+         * repeatContainer.setVisibility(View.GONE); }
+         */
 
         /*
-        // Reminder
-        boolean hasAlarm = cursor.getInt(AgendaWindowAdapter.INDEX_HAS_ALARM) != 0;
-        if (hasAlarm) {
-            updateReminder(view, context, begin, cursor.getLong(AgendaWindowAdapter.INDEX_EVENT_ID));
-        }
-        */
+         * // Reminder boolean hasAlarm =
+         * cursor.getInt(AgendaWindowAdapter.INDEX_HAS_ALARM) != 0; if
+         * (hasAlarm) { updateReminder(view, context, begin,
+         * cursor.getLong(AgendaWindowAdapter.INDEX_EVENT_ID)); }
+         */
 
         // Where
         String whereString = cursor.getString(AgendaWindowAdapter.INDEX_EVENT_LOCATION);
@@ -264,29 +274,23 @@ public class AgendaAdapter extends ResourceCursorAdapter {
     }
 
     /*
-    public static void updateReminder(View view, Context context, long begin, long eventId) {
-        ContentResolver cr = context.getContentResolver();
-        Uri uri = Reminders.CONTENT_URI;
-        String where = String.format(REMINDERS_WHERE, eventId);
-
-        Cursor remindersCursor = cr.query(uri, REMINDERS_PROJECTION, where, null, null);
-        if (remindersCursor != null) {
-            LayoutInflater inflater =
-                    (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            LinearLayout parent = (LinearLayout) view.findViewById(R.id.reminders_container);
-            parent.removeAllViews();
-            while (remindersCursor.moveToNext()) {
-                int alarm = remindersCursor.getInt(REMINDERS_INDEX_MINUTES);
-                String before = EditEvent.constructReminderLabel(context, alarm, true);
-                LinearLayout reminderItem = (LinearLayout)
-                        inflater.inflate(R.layout.agenda_reminder_item, null);
-                TextView reminderItemText = (TextView) reminderItem.findViewById(R.id.reminder);
-                reminderItemText.setText(before);
-                parent.addView(reminderItem);
-            }
-        }
-        remindersCursor.close();
-    }
-    */
+     * public static void updateReminder(View view, Context context, long begin,
+     * long eventId) { ContentResolver cr = context.getContentResolver(); Uri
+     * uri = Reminders.CONTENT_URI; String where =
+     * String.format(REMINDERS_WHERE, eventId);
+     * 
+     * Cursor remindersCursor = cr.query(uri, REMINDERS_PROJECTION, where, null,
+     * null); if (remindersCursor != null) { LayoutInflater inflater =
+     * (LayoutInflater)
+     * context.getSystemService(Context.LAYOUT_INFLATER_SERVICE); LinearLayout
+     * parent = (LinearLayout) view.findViewById(R.id.reminders_container);
+     * parent.removeAllViews(); while (remindersCursor.moveToNext()) { int alarm
+     * = remindersCursor.getInt(REMINDERS_INDEX_MINUTES); String before =
+     * EditEvent.constructReminderLabel(context, alarm, true); LinearLayout
+     * reminderItem = (LinearLayout)
+     * inflater.inflate(R.layout.agenda_reminder_item, null); TextView
+     * reminderItemText = (TextView) reminderItem.findViewById(R.id.reminder);
+     * reminderItemText.setText(before); parent.addView(reminderItem); } }
+     * remindersCursor.close(); }
+     */
 }
-
