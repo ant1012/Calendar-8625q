@@ -218,8 +218,8 @@ public class AllInOneActivity extends Activity implements EventHandler,
             options.putBoolean("allowSkip", true);
 
             /** zzz*/
-            //AccountManager am = AccountManager.get(AllInOneActivity.this);
-            AccountManager am = null;
+            AccountManager am = AccountManager.get(AllInOneActivity.this);
+//            AccountManager am = null;
 
             am.addAccount("com.google", CalendarContract.AUTHORITY, null, options,
                     AllInOneActivity.this,
