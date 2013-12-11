@@ -22,8 +22,9 @@
             android:defaultValue="false"
             android:key="preferences_hide_declined"
             android:title="@string/preferences_hide_declined_title" />
+<!--         默认显示周序号 -->
         <CheckBoxPreference
-            android:defaultValue="false"
+            android:defaultValue="true"
             android:key="preferences_show_week_num"
             android:title="@string/preferences_show_week_num_title" />
 
