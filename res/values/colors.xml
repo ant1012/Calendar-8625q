@@ -173,5 +173,7 @@
 <!--     修改email导入日历页面  import_event_title_bg 颜色-->
     <color name="import_event_bg">#ffffff</color>
     <color name="import_event_title_bg">#33B5E5</color>
+
+    <color name="default_account_color">#33B5E5</color>
    
 </resources>

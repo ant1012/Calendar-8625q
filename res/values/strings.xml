@@ -824,4 +824,11 @@
 <!--     <string name="home_tz">America/Los_Angeles</string> -->
     <string name="home_tz">Asia/Shanghai</string>
 
+    <!-- default account -->
+    <string name="default_account_owneraccount">My calendar</string>
+    <string name="default_account_name">My calendar</string>
+    <string name="default_account_accountname">My calendar</string>
+    <string name="default_account_accounttype">My calendar</string>
+    <string name="default_account_dispname">My calendar</string>
+
 </resources>

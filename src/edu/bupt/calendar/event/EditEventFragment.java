@@ -316,6 +316,16 @@ public class EditEventFragment extends Fragment implements EventHandler {
                                         + matrixCursor.getCount() + " calendars");
                             }
                             mView.setCalendarsCursor(matrixCursor, isAdded() && isResumed());
+                            
+                            /** zzz */
+                            //query again
+
+                            // Start a query in the background to read the list of calendars
+                            mHandler.startQuery(TOKEN_CALENDARS, null, Calendars.CONTENT_URI,
+                                    EditEventHelper.CALENDARS_PROJECTION,
+                                    EditEventHelper.CALENDARS_WHERE_WRITEABLE_VISIBLE, null /* selection args */,
+                                    null /* sort order */);
+
                         } else {
                             // Populate model for an existing event
                             EditEventHelper.setModelFromCalendarCursor(mModel, cursor);
