@@ -1063,7 +1063,7 @@ public class EditEventView implements View.OnClickListener, DialogInterface.OnCa
                 // }
 
                 /** zzz */
-                // query our db to check of there is a msg alert
+                // query our db to check if there is a msg alert
                 int reminderMethod = 1;
                 Log.i(TAG, "model.mId - " + model.mId);
                 Log.i(TAG, "re.getMinutes() - " + re.getMinutes());
