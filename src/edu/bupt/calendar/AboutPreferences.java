@@ -22,6 +22,16 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
 
+/**
+ * 北邮ANT实验室
+ * zzz
+ * 
+ * '设置->关于'指向的页面，展示出软件版本号
+ * 
+ * 此文件取自codeaurora提供的适用于高通8625Q的android 4.1.2源码，未作修改
+ * 
+ * */
+
 public class AboutPreferences extends PreferenceFragment {
     private static final String BUILD_VERSION = "build_version";
 

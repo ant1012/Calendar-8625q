@@ -44,6 +44,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 北邮ANT实验室
+ * zzz
+ * 
+ * 用于判断输入的邮箱地址是否合法，原始的代码中用于参与者邮箱的合法性判断
+ × 需求不要求添加参与人邮箱而要求使用电话号码，此类实际被电话号码的搜索功能调用
+ * 
+ * 此文件取自codeaurora提供的适用于高通8625Q的android 4.1.2源码，未作修改
+ * 
+ * */
+
+/**
  * A base class for email address autocomplete adapters. It uses
  * {@link Email#CONTENT_FILTER_URI} to search for data rows by email address
  * and/or contact name. It also searches registered {@link Directory}'s.

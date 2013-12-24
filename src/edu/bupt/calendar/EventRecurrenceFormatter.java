@@ -23,6 +23,16 @@ import android.text.format.DateUtils;
 
 import java.util.Calendar;
 
+/**
+ * 北邮ANT实验室
+ * zzz
+ * 
+ * 重复日程相关
+ * 
+ * 此文件取自codeaurora提供的适用于高通8625Q的android 4.1.2源码，未作修改
+ * 
+ * */
+
 public class EventRecurrenceFormatter
 {
     public static String getRepeatString(Resources r, EventRecurrence recurrence) {

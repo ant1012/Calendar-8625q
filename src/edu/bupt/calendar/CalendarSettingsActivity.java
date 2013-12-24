@@ -33,6 +33,14 @@ import android.view.MenuItem;
 
 import java.util.List;
 
+/**
+ * 北邮ANT实验室
+ * zzz
+ * 
+ * 此文件取自codeaurora提供的适用于高通8625Q的android 4.1.2源码，有修改
+ * 
+ * */
+
 public class CalendarSettingsActivity extends PreferenceActivity {
     private static final int CHECK_ACCOUNTS_DELAY = 3000;
     private Account[] mAccounts;
@@ -43,6 +51,7 @@ public class CalendarSettingsActivity extends PreferenceActivity {
     public void onBuildHeaders(List<Header> target) {
         loadHeadersFromResource(R.xml.calendar_settings_headers, target);
         /** zzz */
+        // zzz 取消对账户的判断，使设置页面中不出现账户信息的条目，避免对默认本地账户的更改带来其他问题
         //Account[] accounts = AccountManager.get(CalendarSettingsActivity.this).getAccounts();
         Account[] accounts = null;
 
@@ -119,6 +128,7 @@ public class CalendarSettingsActivity extends PreferenceActivity {
         @Override
         public void run() {
             /** zzz */
+            // zzz 取消对账户的判断，使设置页面中不出现账户信息的条目，避免对默认本地账户的更改带来其他问题
             //Account[] accounts = AccountManager.get(CalendarSettingsActivity.this).getAccounts();
             Account[] accounts = null;
 

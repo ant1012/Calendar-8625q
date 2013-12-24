@@ -29,6 +29,14 @@ import android.widget.FrameLayout;
 import android.widget.ListView;
 
 /**
+ * 北邮ANT实验室
+ * zzz
+ * 
+ * 此文件取自codeaurora提供的适用于高通8625Q的android 4.1.2源码，未作修改
+ * 
+ * */
+
+/**
  * Implements a ListView class with a sticky header at the top. The header is
  * per section and it is pinned to the top as long as its section is at the top
  * of the view. If it is not, the header slides up or down (depending on the

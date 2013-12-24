@@ -19,6 +19,14 @@ package com.android.ex.chips;
 import android.accounts.Account;
 
 /**
+ * 北邮ANT实验室
+ * zzz
+ * 
+ * 此文件取自codeaurora提供的适用于高通8625Q的android 4.1.2源码，未作修改
+ * 
+ * */
+
+/**
  * The AccountSpecificAdapter interface describes an Adapter
  * that can take an account to retrieve information tied to
  * a specific account.

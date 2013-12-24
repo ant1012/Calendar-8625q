@@ -30,6 +30,16 @@ import android.os.Bundle;
 import android.provider.CalendarContract.Attendees;
 import android.util.Log;
 
+/**
+ * 北邮ANT实验室
+ * zzz
+ * 
+ * 查看日程详情的Activity，包含一个Fragment
+ * 
+ * 此文件取自codeaurora提供的适用于高通8625Q的android 4.1.2源码，未作修改
+ * 
+ * */
+
 public class EventInfoActivity extends Activity {
 //        implements CalendarController.EventHandler, SearchView.OnQueryTextListener,
 //        SearchView.OnCloseListener {

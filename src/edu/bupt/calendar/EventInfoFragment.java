@@ -123,6 +123,16 @@ import java.util.List;
 import java.util.TimeZone;
 import java.util.regex.Pattern;
 
+/**
+ * 北邮ANT实验室
+ * zzz
+ * 
+ * 查看日程详情，附着于EventInfoActivity
+ * 
+ * 此文件取自codeaurora提供的适用于高通8625Q的android 4.1.2源码，有修改
+ * 
+ * */
+
 public class EventInfoFragment extends DialogFragment implements OnCheckedChangeListener,
         CalendarController.EventHandler, OnClickListener, DeleteEventHelper.DeleteNotifyListener {
 
@@ -391,6 +401,7 @@ public class EventInfoFragment extends DialogFragment implements OnCheckedChange
     private Context mContext;
 
     /** zzz */
+    // zzz 用于控制日程参与人的数据库 (功能8)
     private DBManager mgr;
 
     private class QueryHandler extends AsyncQueryService {
@@ -437,23 +448,26 @@ public class EventInfoFragment extends DialogFragment implements OnCheckedChange
                     // start attendees query
                     uri = Attendees.CONTENT_URI;
                     /** zzz */
+                    // zzz 查询并显示已经设置过的参与人 (功能8)
                     Log.d(TAG, "startQuery");
                     startQuery(TOKEN_QUERY_ATTENDEES, null, uri, ATTENDEES_PROJECTION, ATTENDEES_WHERE, args,
-                            ATTENDEES_SORT_ORDER);
+                            ATTENDEES_SORT_ORDER); //此部分未修改
 
                     mgr = new DBManager(mContext.getApplicationContext());
-                    List<AttendeePhone> attendeePhones = mgr.query(args[0]);
+                    List<AttendeePhone> attendeePhones = mgr.query(args[0]); // zzz 查询数据库
                     for (AttendeePhone attendeePhone : attendeePhones) {
                         Log.i(TAG, attendeePhone.event_id + "/" + attendeePhone.phoneNumber);
                         Attendee attendee = new Attendee(attendeePhone.name, attendeePhone.phoneNumber);
+                        // zzz 参与人有三种状态：同意 拒绝 未响应，对应不同的显示效果
                         mNoResponseAttendees.add(new Attendee(attendeePhone.name, attendeePhone.phoneNumber,
-                                Attendees.ATTENDEE_STATUS_NONE, null, null));
+                                Attendees.ATTENDEE_STATUS_NONE, null, null)); // zzz 查询到的参与人数据添加到未响应的列表里
                     }
                     mgr.closeDB();
-                    updateAttendees(mView);
+                    updateAttendees(mView); // zzz 更新界面显示
 
                 } else {
                     /** zzz */
+                    // zzz 调试用到的log
                     Log.d(TAG, "sendAccessibilityEventIfQueryDone");
                     sendAccessibilityEventIfQueryDone(TOKEN_QUERY_ATTENDEES);
                 }
@@ -859,6 +873,7 @@ public class EventInfoFragment extends DialogFragment implements OnCheckedChange
                             if (!mIsOrganizer) {
 
                                 /** zzz */
+                                // zzz 不显示组织者，只显示参与者；实际此方法未被调用
                                 // setVisibilityCommon(view,
                                 // R.id.organizer_container, View.VISIBLE);
                                 setVisibilityCommon(view, R.id.organizer_container, View.GONE);
@@ -969,8 +984,10 @@ public class EventInfoFragment extends DialogFragment implements OnCheckedChange
             break;
 
         /** zzz */
+        // zzz 添加分享日程的按钮
         case R.id.info_action_share:
             /** ccczzz */
+            // zzz 弹出对话框选择分享方式：短信 邮件
             shareDialog();
             break;
         default:
@@ -980,8 +997,14 @@ public class EventInfoFragment extends DialogFragment implements OnCheckedChange
     }
 
     /*** ccczzz */
+    /**
+     * 北邮ANT实验室
+     * zzz
+     * 
+     * 弹出对话框，选择分享方式：短信 邮件
+     * 
+     * */
     private void shareDialog() {
-        // TODO Auto-generated method stub
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
         builder.setTitle(R.string.share_title);
         builder.setItems(new String[] { getString(R.string.share_msg), getString(R.string.share_mail) },
@@ -989,33 +1012,32 @@ public class EventInfoFragment extends DialogFragment implements OnCheckedChange
 
                     @Override
                     public void onClick(DialogInterface arg0, int arg1) {
-                        // TODO Auto-generated method stub
                         switch (arg1) {
-                        case 0:
+                        case 0: // zzz 邮件方式分享日程 (功能11)
                             Log.i("selected item", "message");
-                            Uri uri = Uri.parse("smsto:");
-                            StringBuffer sb = new StringBuffer();
+                            Uri uri = Uri.parse("smsto:"); // zzz 用Uri调起短信应用
+                            StringBuffer sb = new StringBuffer(); // zzz 构建短信内容
                             sb.append(new ICalendar.Property(getString(R.string.accessibility_pick_start_time),
                                     contentIsEmpty(String.valueOf(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
                                             .format(mStartMillis))))
-                                    + "\r\n");
+                                    + "\r\n"); // zzz 开始时间
                             sb.append(new ICalendar.Property(getString(R.string.accessibility_pick_end_time),
                                     contentIsEmpty(String.valueOf(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
                                             .format(mEndMillis))))
-                                    + "\r\n");
+                                    + "\r\n"); // zzz 结束时间
                             sb.append(new ICalendar.Property(getString(R.string.hint_what), contentIsEmpty(mTitle
-                                    .getText().toString())) + "\r\n");
+                                    .getText().toString())) + "\r\n"); // zzz 标题
                             sb.append(new ICalendar.Property(getString(R.string.hint_where), contentIsEmpty(mWhere
-                                    .getText().toString())) + "\r\n");
+                                    .getText().toString())) + "\r\n"); // zzz 地点
                             sb.append(new ICalendar.Property(getString(R.string.hint_description), contentIsEmpty(mDesc
-                                    .getText().toString())));
+                                    .getText().toString()))); // zzz 描述
 
                             Intent it = new Intent(Intent.ACTION_SENDTO, uri);
-                            it.putExtra("sms_body", sb.toString());
+                            it.putExtra("sms_body", sb.toString()); // zzz 短信内容作为Extra传给短信应用
                             startActivity(it);
                             break;
 
-                        case 1:
+                        case 1: // zzz 短信方式分享日程 (功能10)
                             Log.i("selected item", "mail");
 
                             ICalendar.Component component = new ICalendar.Component(ICalendar.Component.VCALENDAR, null);
@@ -1032,25 +1054,26 @@ public class EventInfoFragment extends DialogFragment implements OnCheckedChange
                             // mContext, GeneralPreferences.KEY_HOME_TZ,
                             // TimeZone.getDefault().getID()) : //
                             // TimeZone.getDefault().getID();
-                            String tzid = TimeZone.getDefault().getID();
+                            String tzid = TimeZone.getDefault().getID(); // zzz vCalendar格式文件需要时区信息
 
                             ICalendar.Property dtstart_prop = new ICalendar.Property("DTSTART",//
-                                    new SimpleDateFormat("yyyyMMdd'T'HHmmss").format(mStartMillis));
+                                    new SimpleDateFormat("yyyyMMdd'T'HHmmss").format(mStartMillis)); // zzz 开始时间
                             dtstart_prop.addParameter(new ICalendar.Parameter("TZID", tzid));
                             child.addProperty(dtstart_prop);
 
                             ICalendar.Property dtend_prop = new ICalendar.Property("DTEND",//
-                                    new SimpleDateFormat("yyyyMMdd'T'HHmmss").format(mEndMillis));
+                                    new SimpleDateFormat("yyyyMMdd'T'HHmmss").format(mEndMillis));// zzz 结束时间
                             dtend_prop.addParameter(new ICalendar.Parameter("TZID", tzid));
                             child.addProperty(dtend_prop);
 
-                            child.addProperty(new ICalendar.Property("SUMMARY", mTitle.getText().toString()));
-                            child.addProperty(new ICalendar.Property("LOCATION", mWhere.getText().toString()));
-                            child.addProperty(new ICalendar.Property("DISCRIPTION", mDesc.getText().toString()));
+                            child.addProperty(new ICalendar.Property("SUMMARY", mTitle.getText().toString())); // zzz 标题
+                            child.addProperty(new ICalendar.Property("LOCATION", mWhere.getText().toString())); // zzz 地点
+                            child.addProperty(new ICalendar.Property("DISCRIPTION", mDesc.getText().toString())); // zzz 描述
 
                             DBManager mgr = new DBManager(mContext);
                             List<AttendeePhone> attendeePhones = mgr.query(String.valueOf(mEventId));
                             for (AttendeePhone at : attendeePhones) {
+                                // zzz 自定义的vCalendar属性，参与人的电话号码
                                 child.addProperty(new ICalendar.Property("X-ATTENDEE-PHONE", at.phoneNumber));
                             }
 
@@ -1062,7 +1085,7 @@ public class EventInfoFragment extends DialogFragment implements OnCheckedChange
                             File tempFile = null;
                             try {
                                 tempFile = File.createTempFile("calendar-" + mTitle.getText().toString(), ".vcs",
-                                        mContext.getExternalCacheDir());
+                                        mContext.getExternalCacheDir()); // zzz 保存临时文件，用于邮件发送
                                 FileOutputStream fos = new FileOutputStream(tempFile);
                                 byte[] bytes = component.toString().getBytes();
                                 fos.write(bytes);
@@ -1078,12 +1101,12 @@ public class EventInfoFragment extends DialogFragment implements OnCheckedChange
                             // tempFile.getAbsolutePath()));
 
                             Intent i = new Intent(Intent.ACTION_SEND);
-                            i.setType("application/octet-stream");
+                            i.setType("application/octet-stream"); // zzz 流类型，调起邮件应用
                             i.putExtra(Intent.EXTRA_SUBJECT, mTitle.getText().toString());
                             // i.putParcelableArrayListExtra(Intent.EXTRA_STREAM,
                             // uris);
                             i.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(tempFile));
-                            startActivity(Intent.createChooser(i, getText(R.string.select_email_app)));
+                            startActivity(Intent.createChooser(i, getText(R.string.select_email_app))); // zzz 提供可选的应用
                             break;
                         default:
                             break;
@@ -1091,6 +1114,13 @@ public class EventInfoFragment extends DialogFragment implements OnCheckedChange
                     }
 
                     /*** ccczzz */
+                    /**
+                     * 北邮ANT实验室
+                     * zzz
+                     * 
+                     * 短信分享时，对空属性的处理
+                     * 
+                     * */
                     private String contentIsEmpty(String valueOf) {
                         // TODO Auto-generated method stub
                         String content = valueOf.isEmpty() ? getString(R.string.share_empty) : valueOf;
@@ -1309,9 +1339,9 @@ public class EventInfoFragment extends DialogFragment implements OnCheckedChange
         // localTimezone, eventTimezone);
         // }
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(mContext);
-        boolean showBJTime = !sp.getString("TimeSettingPreference", "0").equals("0");
+        boolean showBJTime = !sp.getString("TimeSettingPreference", "0").equals("0"); // zzz 获取时区显示的设置
         TelephonyManager tm = (TelephonyManager) mContext.getSystemService(Context.TELEPHONY_SERVICE);
-        if (tm.isNetworkRoaming() || sp.getBoolean("RoamingTestPreference", false)) {
+        if (tm.isNetworkRoaming() || sp.getBoolean("RoamingTestPreference", false)) { // zzz 漫游时显示时区信息(功能17)
             displayedTimezone = showBJTime ? mContext.getResources().getStringArray(R.array.time_setting)[1] : mContext
                     .getResources().getStringArray(R.array.time_setting)[0];
         }
@@ -1361,6 +1391,7 @@ public class EventInfoFragment extends DialogFragment implements OnCheckedChange
                 textView.setText(location.trim());
                 try {
                     /** zzz */
+                    // zzz 点击地点的文字跳转到地图 (功能12)
                     Linkify.addLinks(textView, mWildcardPattern, "geo:0,0?q=");
                     // linkifyTextView(textView);
                 } catch (Exception ex) {
@@ -1818,6 +1849,7 @@ public class EventInfoFragment extends DialogFragment implements OnCheckedChange
             if (!mIsOrganizer && !TextUtils.isEmpty(mEventOrganizerDisplayName)) {
 
                 /** zzz */
+                // zzz 隐藏组织者的相关信息
                 // setTextCommon(view, R.id.organizer,
                 // mEventOrganizerDisplayName);
                 // setVisibilityCommon(view, R.id.organizer_container,
@@ -1896,6 +1928,7 @@ public class EventInfoFragment extends DialogFragment implements OnCheckedChange
         }
 
         /** zzz */
+        // zzz 在Actionbar中显示分享按钮 (功能10 功能11)
         MenuItem share = mMenu.findItem(R.id.info_action_share);
         if (share != null) {
             share.setVisible(mCanModifyCalendar);
@@ -1963,6 +1996,7 @@ public class EventInfoFragment extends DialogFragment implements OnCheckedChange
         } else {
 
             /** zzz */
+            // zzz 不显示邮件参与人的信息，因为只支持电话参与人
             // setVisibilityCommon(mView, R.id.email_attendees_container,
             // View.VISIBLE);
             setVisibilityCommon(mView, R.id.email_attendees_container, View.GONE);
@@ -2019,12 +2053,13 @@ public class EventInfoFragment extends DialogFragment implements OnCheckedChange
             for (ReminderEntry re : reminders) {
 
                 /** zzz */
+                // zzz 查询是否有短信提醒
                 // query our db to check of there is a msg alert
                 int reminderMethod = 1;
                 mgr = new DBManager(mContext);
                 if (mgr.queryMsgAlert(mEventId, re.getMinutes())) {
                     Log.d(TAG, "has msg alert data");
-                    reminderMethod = 3;
+                    reminderMethod = 3; // zzz 如果短信数据库中有id和时间都匹配的项，则将当前提醒显示为'提醒并发送短信' (功能9)
                 }
                 // EventViewUtils.addReminder(mActivity, mScrollView, this,
                 // mReminderViews, mReminderMinuteValues,
@@ -2058,6 +2093,7 @@ public class EventInfoFragment extends DialogFragment implements OnCheckedChange
         // CalendarEventModel.
 
         /** zzz */
+        // zzz 取消关于参与人是否同意的显示项，因为取消了邮件参与人，而短信参与人无法设定此状态
         setVisibilityCommon(view, R.id.response_container, View.GONE);
         return;
 
@@ -2235,6 +2271,7 @@ public class EventInfoFragment extends DialogFragment implements OnCheckedChange
         }
 
         /** zzz */
+        // zzz 使提醒类型支持'提醒并发送短信'
         mCalendarAllowedReminders = "0,1,3"; // for our msg reminder
 
         // Load the labels and corresponding numeric values for the minutes and
@@ -2276,6 +2313,7 @@ public class EventInfoFragment extends DialogFragment implements OnCheckedChange
         Collections.sort(mReminders);
 
         /** zzz */
+        // 保存提醒项
         // Check if there are any changes in the reminder
         // boolean changed = EditEventHelper.saveReminders(ops, mEventId,
         // mReminders, mOriginalReminders, false /* no force save */);

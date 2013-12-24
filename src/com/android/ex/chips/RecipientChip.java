@@ -22,6 +22,14 @@ import android.text.style.DynamicDrawableSpan;
 import android.text.style.ImageSpan;
 
 /**
+ * 北邮ANT实验室
+ * zzz
+ * 
+ * 此文件取自codeaurora提供的适用于高通8625Q的android 4.1.2源码，未作修改
+ * 
+ * */
+
+/**
  * RecipientChip defines an ImageSpan that contains information relevant to a
  * particular recipient.
  */

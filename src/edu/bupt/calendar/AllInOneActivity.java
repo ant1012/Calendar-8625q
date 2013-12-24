@@ -87,6 +87,16 @@ import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
+/**
+ * 北邮ANT实验室
+ * zzz
+ * 
+ * 日历的入口Activity，即主界面，包括4个Fragment
+ * 
+ * 此文件取自codeaurora提供的适用于高通8625Q的android 4.1.2源码，有修改
+ * 
+ * */
+
 public class AllInOneActivity extends Activity implements EventHandler,
         OnSharedPreferenceChangeListener, SearchView.OnQueryTextListener, ActionBar.TabListener,
         ActionBar.OnNavigationListener, OnSuggestionListener {
@@ -217,9 +227,10 @@ public class AllInOneActivity extends Activity implements EventHandler,
                     getResources().getString(R.string.create_an_account_desc));
             options.putBoolean("allowSkip", true);
 
-            /** zzz*/
+            /** zzz */
             AccountManager am = AccountManager.get(AllInOneActivity.this);
-//            AccountManager am = null;
+            // zzz 尝试跳过日历对账户的检查，取消账户机制，最终没有采用这种方法
+            // AccountManager am = null;
 
             am.addAccount("com.google", CalendarContract.AUTHORITY, null, options,
                     AllInOneActivity.this,
@@ -787,13 +798,15 @@ public class AllInOneActivity extends Activity implements EventHandler,
                 }
                 mController.sendEventRelatedEvent(
                         this, EventType.CREATE_EVENT, -1, t.toMillis(true), 0, 0, 0, -1);
-                return true;
+
             /** zzz */
+            // zzz 取消选择账户的菜单项
             // case R.id.action_select_visible_calendars:
             // mController.sendEvent(this,
             // EventType.LAUNCH_SELECT_VISIBLE_CALENDARS, null, null,
             // 0, 0);
             // return true;
+
             case R.id.action_settings:
                 mController.sendEvent(this, EventType.LAUNCH_SETTINGS, null, null, 0, 0);
                 return true;
@@ -830,6 +843,7 @@ public class AllInOneActivity extends Activity implements EventHandler,
                 return false;
 
             /** zzz */
+            // zzz 提供多条删除功能的菜单入口 (功能15)
             case R.id.action_mutidelete:
                 mController.sendEvent(this, EventType.LAUNCH_MULTIDELETE, null, null, 0, 0);
                 return true;
@@ -1079,6 +1093,7 @@ public class AllInOneActivity extends Activity implements EventHandler,
         }
 
         /** zzz */
+        // zzz 判断是否漫游，决定是否显示'本地时间'或者'北京时间'的状态条 (功能17)
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         TelephonyManager tm = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
         // if (mHomeTime != null
@@ -1087,9 +1102,9 @@ public class AllInOneActivity extends Activity implements EventHandler,
         // && !TextUtils.equals(mTimeZone, Time.getCurrentTimezone())) {
         if (mHomeTime != null
                 && (mCurrentView == ViewType.DAY || mCurrentView == ViewType.WEEK || mCurrentView == ViewType.AGENDA)
-                && tm.isNetworkRoaming() || sp.getBoolean("RoamingTestPreference", false)) {
+                && tm.isNetworkRoaming() || sp.getBoolean("RoamingTestPreference", false)) { // zzz 只在漫游时显示
 
-            Time time = new Time(mTimeZone);
+            Time time = new Time(mTimeZone); // zzz 在这里控制实际显示的时间所用的时区
             time.setToNow();
             long millis = time.toMillis(true);
             boolean isDST = time.isDst != 0;
@@ -1106,12 +1121,12 @@ public class AllInOneActivity extends Activity implements EventHandler,
             // TimeZone.getTimeZone(mTimeZone).getDisplayName(
             // isDST, TimeZone.SHORT, Locale.getDefault())).toString();
             String displayedTimezone = null;
-            boolean showBJTime = !sp.getString("TimeSettingPreference", "0").equals("0");
+            boolean showBJTime = !sp.getString("TimeSettingPreference", "0").equals("0"); // zzz 获取时间设置项的值
             displayedTimezone = showBJTime ? this.getResources().getStringArray(R.array.time_setting)[1] : this
-                    .getResources().getStringArray(R.array.time_setting)[0];
+                    .getResources().getStringArray(R.array.time_setting)[0]; // zzz 根据设置项当前值，显示'本地时间'或者'北京时间'
 
             String timeString = (new StringBuilder(Utils.formatDateRange(this, millis, millis, flags))).append(" ")
-                    .append(displayedTimezone).toString();
+                    .append(displayedTimezone).toString(); // zzz 组成字符串以显示在副标题栏中
 
             mHomeTime.setText(timeString);
             mHomeTime.setVisibility(View.VISIBLE);

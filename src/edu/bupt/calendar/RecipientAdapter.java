@@ -21,12 +21,23 @@ import com.android.ex.chips.BaseRecipientAdapter;
 import android.accounts.Account;
 import android.content.Context;
 
+/**
+ * 北邮ANT实验室
+ * zzz
+ * 
+ * 选择参与人时的自动补全列表
+ * 
+ * 此文件取自codeaurora提供的适用于高通8625Q的android 4.1.2源码，有修改
+ * 
+ * */
+
 public class RecipientAdapter extends BaseRecipientAdapter {
 //    public RecipientAdapter(Context context) {
 //        super(context);
 //    }
 
     /** zzz */
+    // zzz 搜索电话号码而不是邮箱地址
     public RecipientAdapter(Context context) {
         super(QUERY_TYPE_PHONE, context);
     }

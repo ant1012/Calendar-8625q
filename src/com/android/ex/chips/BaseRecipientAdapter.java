@@ -56,6 +56,14 @@ import java.util.Set;
 import edu.bupt.calendar.R;
 
 /**
+ * 北邮ANT实验室
+ * zzz
+ * 
+ * 此文件取自codeaurora提供的适用于高通8625Q的android 4.1.2源码，未作修改
+ * 
+ * */
+
+/**
  * Adapter for showing a recipient list.
  */
 public abstract class BaseRecipientAdapter extends BaseAdapter implements Filterable,

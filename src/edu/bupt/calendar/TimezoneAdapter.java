@@ -37,6 +37,14 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 /**
+ * 北邮ANT实验室
+ * zzz
+ * 
+ * 此文件取自codeaurora提供的适用于高通8625Q的android 4.1.2源码，未作修改
+ * 
+ * */
+
+/**
  * {@link TimezoneAdapter} is a custom adapter implementation that allows you to
  * easily display a list of timezones for users to choose from. In addition, it
  * provides a two-stage behavior that initially only loads a small set of

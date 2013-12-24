@@ -34,6 +34,16 @@ import android.widget.ViewSwitcher;
 import android.widget.ViewSwitcher.ViewFactory;
 
 /**
+ * 北邮ANT实验室
+ * zzz
+ * 
+ * 附着于AllInOneActivity，日视图
+ * 
+ * 此文件取自codeaurora提供的适用于高通8625Q的android 4.1.2源码，未作修改
+ * 
+ * */
+
+/**
  * This is the base class for Day and Week Activities.
  */
 public class DayFragment extends Fragment implements CalendarController.EventHandler, ViewFactory {

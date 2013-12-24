@@ -23,6 +23,18 @@ import android.widget.AutoCompleteTextView;
 
 import java.util.regex.Pattern;
 
+
+/**
+ * 北邮ANT实验室
+ * zzz
+ * 
+ * 用于判断输入的邮箱地址是否合法，原始的代码中用于参与者邮箱的合法性判断
+ × 由于需求不要求添加参与人邮箱而要求使用电话号码，因此用AttendeePhoneValidator继承了此类，用来判断电话号码是否合法
+ * 
+ * 此文件取自codeaurora提供的适用于高通8625Q的android 4.1.2源码，未作修改
+ * 
+ * */
+
 /**
  * This class works as a Validator for AutoCompleteTextView for
  * email addresses.  If a token does not appear to be a valid address,

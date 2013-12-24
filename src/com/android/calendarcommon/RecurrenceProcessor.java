@@ -22,6 +22,16 @@ import android.util.Log;
 
 import java.util.TreeSet;
 
+/**
+ * 北邮ANT实验室
+ * zzz
+ * 
+ * 用于对重复日程的处理
+ * 
+ * 此文件取自codeaurora提供的适用于高通8625Q的android 4.1.2源码，未作修改
+ * 
+ * */
+
 public class RecurrenceProcessor
 {
     // these are created once and reused.

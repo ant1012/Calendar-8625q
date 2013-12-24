@@ -33,6 +33,16 @@ import java.util.HashSet;
 import java.util.Locale;
 
 /**
+ * 北邮ANT实验室
+ * zzz
+ * 
+ * 日历的工具类
+ * 
+ * 此文件取自codeaurora提供的适用于高通8625Q的android 4.1.2源码，有修改
+ * 
+ * */
+
+/**
  * A class containing utility methods related to Calendar apps.
  * 
  * This class is expected to move into the app framework eventually.
@@ -73,6 +83,7 @@ public class CalendarUtils {
          * should be used in the Calendar app to the Calendar Preferences.
          */
         /** zzz */
+        // zzz 根据取消了对家时区的设置，只允许设置为北京时间 (功能17)
         // public static final String KEY_HOME_TZ_ENABLED =
         // "preferences_home_tz_enabled";
         public static final String KEY_TIME_DISP = "TimeSettingPreference";
@@ -127,7 +138,7 @@ public class CalendarUtils {
                         // Write the prefs
 
                         /** zzz */
-                        // TODO
+                        // zzz 根据取消了对家时区的设置，只允许设置为北京时间 (功能17)
                         // setSharedPreference(prefs, KEY_HOME_TZ_ENABLED,
                         // mUseHomeTZ);
                         // setSharedPreference(prefs, KEY_HOME_TZ, mHomeTZ);
@@ -232,7 +243,7 @@ public class CalendarUtils {
                 SharedPreferences prefs = getSharedPreferences(context, mPrefsName);
 
                 /** zzz */
-                // TODO
+                // zzz 根据取消了对家时区的设置，只允许设置为北京时间 (功能17)
                 // setSharedPreference(prefs, KEY_HOME_TZ_ENABLED, mUseHomeTZ);
                 // setSharedPreference(prefs, KEY_HOME_TZ, mHomeTZ);
 
@@ -291,7 +302,7 @@ public class CalendarUtils {
                     SharedPreferences prefs = getSharedPreferences(context, mPrefsName);
 
                     /** zzz */
-                    // TODO
+                    // zzz 根据取消了对家时区的设置，只允许设置为北京时间 (功能17)
                     // mUseHomeTZ = prefs.getBoolean(KEY_HOME_TZ_ENABLED,
                     // false);
                     // mHomeTZ = prefs.getString(KEY_HOME_TZ, Time.getCurrentTimezone());

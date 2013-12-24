@@ -46,6 +46,14 @@ import edu.bupt.calendar.CalendarController.EventType;
 import edu.bupt.calendar.CalendarController.ViewType;
 import edu.bupt.calendar.agenda.AgendaFragment;
 
+/**
+ * 北邮ANT实验室
+ * zzz
+ * 
+ * 此文件取自codeaurora提供的适用于高通8625Q的android 4.1.2源码，未作修改
+ * 
+ * */
+
 public class SearchActivity extends Activity implements CalendarController.EventHandler,
         SearchView.OnQueryTextListener, OnActionExpandListener {
 

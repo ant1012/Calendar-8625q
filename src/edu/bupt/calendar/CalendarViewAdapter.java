@@ -31,6 +31,15 @@ import android.widget.TextView;
 import java.util.Formatter;
 import java.util.Locale;
 
+/**
+ * 北邮ANT实验室
+ * zzz
+ * 
+ * 标题栏左上角的四种视图的选择按钮，用于切换日、周、月、日程 (功能2)
+ * 
+ * 此文件取自codeaurora提供的适用于高通8625Q的android 4.1.2源码，有修改
+ * 
+ * */
 
 /*
  * The MenuSpinnerAdapter defines the look of the ActionBar's pull down menu
@@ -335,6 +344,7 @@ public class CalendarViewAdapter extends BaseAdapter {
         }
 
         /** zzz */
+        // zzz 在日视图和日程视图的标题栏显示农历 (功能3)
         Lunar.setLunar(mContext, t.year, t.month + 1, t.monthDay);
         dayOfWeek += Lunar.getLunarWithComma();
         

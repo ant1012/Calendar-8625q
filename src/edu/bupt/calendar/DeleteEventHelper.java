@@ -40,6 +40,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
+ * 北邮ANT实验室
+ * zzz
+ * 
+ * 此文件取自codeaurora提供的适用于高通8625Q的android 4.1.2源码，未作修改
+ * 
+ * */
+
+/**
  * A helper class for deleting events.  If a normal event is selected for
  * deletion, then this pops up a confirmation dialog.  If the user confirms,
  * then the normal event is deleted.

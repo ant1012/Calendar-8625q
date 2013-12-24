@@ -33,6 +33,14 @@ import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
+ * 北邮ANT实验室
+ * zzz
+ * 
+ * 此文件取自codeaurora提供的适用于高通8625Q的android 4.1.2源码，未作修改
+ * 
+ * */
+
+/**
  * A helper class that executes {@link ContentResolver} calls in a background
  * {@link android.app.Service}. This minimizes the chance of the call getting
  * lost because the caller ({@link android.app.Activity}) is killed. It is

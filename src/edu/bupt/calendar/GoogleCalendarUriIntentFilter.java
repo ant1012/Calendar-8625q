@@ -41,6 +41,14 @@ import android.util.Log;
 import com.android.calendarcommon.DateException;
 import com.android.calendarcommon.Duration;
 
+/**
+ * 北邮ANT实验室
+ * zzz
+ * 
+ * 此文件取自codeaurora提供的适用于高通8625Q的android 4.1.2源码，未作修改
+ * 
+ * */
+
 public class GoogleCalendarUriIntentFilter extends Activity {
     private static final String TAG = "GoogleCalendarUriIntentFilter";
     static final boolean debug = false;

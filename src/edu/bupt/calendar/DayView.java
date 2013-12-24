@@ -89,6 +89,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
+ * 北邮ANT实验室
+ * zzz
+ * 
+ * 此文件取自codeaurora提供的适用于高通8625Q的android 4.1.2源码，未作修改
+ * 
+ * */
+
+/**
  * View for multi-day view. So far only 1 and 7 day have been tested.
  */
 public class DayView extends View implements View.OnCreateContextMenuListener,

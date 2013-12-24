@@ -42,6 +42,16 @@ import android.widget.Toast;
 import edu.bupt.calendar.alerts.AlertReceiver;
 import edu.bupt.calendar.festival.Lunar;
 
+/**
+ * 北邮ANT实验室
+ * zzz
+ * 
+ * 设置->常规设置页面
+ * 
+ * 此文件取自codeaurora提供的适用于高通8625Q的android 4.1.2源码，有修改
+ * 
+ * */
+
 public class GeneralPreferences extends PreferenceFragment implements OnSharedPreferenceChangeListener,
         OnPreferenceChangeListener {
     // The name of the shared preferences file. This name must be maintained for
@@ -96,6 +106,7 @@ public class GeneralPreferences extends PreferenceFragment implements OnSharedPr
     private static final String ALERT_TYPE_OFF = "2";
 
     /** zzz */
+    // zzz 添加漫游时时间现实方案的设置，代替默认的显示时区设置(功能17)
     // static final String KEY_HOME_TZ_ENABLED = "preferences_home_tz_enabled";
     static final String KEY_TIME_DISP = "TimeSettingPreference";
 
@@ -112,18 +123,21 @@ public class GeneralPreferences extends PreferenceFragment implements OnSharedPr
     CheckBoxPreference mPopup;
 
     /** zzz */
+    // zzz 添加漫游时时间现实方案的设置，代替默认的显示时区设置(功能17)
     // CheckBoxPreference mUseHomeTZ;
     ListPreference mTimeDisp;
 
     CheckBoxPreference mHideDeclined;
 
     /** zzz */
+    // zzz 添加漫游时时间现实方案的设置，代替默认的显示时区设置(功能17)
     // ListPreference mHomeTZ;
 
     ListPreference mWeekStart;
     ListPreference mDefaultReminder;
 
     /** zzz */
+    // zzz 添加是否显示农历的设置(功能3)
     CheckBoxPreference mShowLunar;
     public static final String KEY_SHOW_LUNAR = "preferences_show_lunar";
     private static final String TAG = "GeneralPreferences";
@@ -172,6 +186,7 @@ public class GeneralPreferences extends PreferenceFragment implements OnSharedPr
         mPopup = (CheckBoxPreference) preferenceScreen.findPreference(KEY_ALERTS_POPUP);
 
         /** zzz */
+        // zzz 添加漫游时时间现实方案的设置，代替默认的显示时区设置(功能17)
         // mUseHomeTZ = (CheckBoxPreference)
         // preferenceScreen.findPreference(KEY_HOME_TZ_ENABLED);
         mTimeDisp = (ListPreference) preferenceScreen.findPreference(KEY_TIME_DISP);
@@ -180,19 +195,23 @@ public class GeneralPreferences extends PreferenceFragment implements OnSharedPr
         mWeekStart = (ListPreference) preferenceScreen.findPreference(KEY_WEEK_START_DAY);
         mDefaultReminder = (ListPreference) preferenceScreen.findPreference(KEY_DEFAULT_REMINDER);
         /** zzz */
+        // zzz 添加漫游时时间现实方案的设置，代替默认的显示时区设置(功能17)
         // mHomeTZ = (ListPreference)
         // preferenceScreen.findPreference(KEY_HOME_TZ);
 
         /** zzz */
+        // zzz 添加漫游时时间现实方案的设置，代替默认的显示时区设置(功能17)
         // String tz = mHomeTZ.getValue();
 
         mWeekStart.setSummary(mWeekStart.getEntry());
         mDefaultReminder.setSummary(mDefaultReminder.getEntry());
 
         /** zzz */
+        // zzz 添加是否显示农历的设置(功能3)
         mShowLunar = (CheckBoxPreference) preferenceScreen.findPreference(KEY_SHOW_LUNAR);
 
         /** zzz */
+        // zzz 添加漫游时时间现实方案的设置，代替默认的显示时区设置(功能17)
         // if (mTimezones == null) {
         // mTimezones = (new TimezoneAdapter(activity, tz,
         // System.currentTimeMillis())).getAllTimezones();
@@ -224,10 +243,12 @@ public class GeneralPreferences extends PreferenceFragment implements OnSharedPr
     private void setPreferenceListeners(OnPreferenceChangeListener listener) {
 
         /** zzz */
+        // zzz 添加漫游时时间现实方案的设置，代替默认的显示时区设置(功能17)
         // mUseHomeTZ.setOnPreferenceChangeListener(listener);
         mTimeDisp.setOnPreferenceChangeListener(listener);
 
         /** zzz */
+        // zzz 添加漫游时时间现实方案的设置，代替默认的显示时区设置(功能17)
         // mHomeTZ.setOnPreferenceChangeListener(listener);
 
         mWeekStart.setOnPreferenceChangeListener(listener);
@@ -237,6 +258,7 @@ public class GeneralPreferences extends PreferenceFragment implements OnSharedPr
         mVibrateWhen.setOnPreferenceChangeListener(listener);
 
         /** zzz */
+        // zzz 添加是否显示农历的设置(功能3)
         mShowLunar.setOnPreferenceChangeListener(listener);
     }
 
@@ -276,6 +298,7 @@ public class GeneralPreferences extends PreferenceFragment implements OnSharedPr
         String tz;
 
         /** zzz */
+        // zzz 添加漫游时时间现实方案的设置，代替默认的显示时区设置(功能17)
         // if (preference == mUseHomeTZ) {
         // if ((Boolean) newValue) {
         // tz = mHomeTZ.getValue();
@@ -301,6 +324,7 @@ public class GeneralPreferences extends PreferenceFragment implements OnSharedPr
             act.sendBroadcast(intent);
             return true;
             /** zzz */
+            // zzz 添加漫游时时间现实方案的设置，代替默认的显示时区设置(功能17)
             // } else if (preference == mHomeTZ) {
             // tz = (String) newValue;
             // // We set the value here so we can read back the entry
@@ -321,6 +345,7 @@ public class GeneralPreferences extends PreferenceFragment implements OnSharedPr
             mVibrateWhen.setSummary(mVibrateWhen.getEntry());
         }
         /** zzz */
+        // zzz 添加是否显示农历的设置(功能3)
         else if (preference == mShowLunar) {
             mShowLunar.setChecked((Boolean) newValue);
             Lunar.setShowLunch((Boolean) newValue);

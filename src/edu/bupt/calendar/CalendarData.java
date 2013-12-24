@@ -16,6 +16,14 @@
 
 package edu.bupt.calendar;
 
+/**
+ * 北邮ANT实验室
+ * zzz
+ * 
+ * 此文件取自codeaurora提供的适用于高通8625Q的android 4.1.2源码，未作修改
+ * 
+ * */
+
 public final class CalendarData {
     static final String[] s12HoursNoAmPm = { "12", "1", "2", "3", "4",
         "5", "6", "7", "8", "9", "10", "11", "12",

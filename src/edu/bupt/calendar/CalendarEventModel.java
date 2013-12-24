@@ -37,6 +37,14 @@ import java.util.LinkedHashSet;
 import java.util.TimeZone;
 
 /**
+ * 北邮ANT实验室
+ * zzz
+ * 
+ * 此文件取自codeaurora提供的适用于高通8625Q的android 4.1.2源码，未作修改
+ * 
+ * */
+
+/**
  * Stores all the information needed to fill out an entry in the events table.
  * This is a convenient way for storing information needed by the UI to write to
  * the events table. Only fields that are important to the UI are included.

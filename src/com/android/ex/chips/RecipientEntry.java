@@ -21,6 +21,14 @@ import android.provider.ContactsContract.CommonDataKinds.Email;
 import android.provider.ContactsContract.DisplayNameSources;
 
 /**
+ * 北邮ANT实验室
+ * zzz
+ * 
+ * 此文件取自codeaurora提供的适用于高通8625Q的android 4.1.2源码，未作修改
+ * 
+ * */
+
+/**
  * Represents one entry inside recipient auto-complete list.
  */
 public class RecipientEntry {

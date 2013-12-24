@@ -92,6 +92,16 @@ import java.util.regex.Matcher;
 import edu.bupt.calendar.R;
 
 /**
+ * 北邮ANT实验室
+ * zzz
+ * 
+ * 此文件实现了参与人选择时的提示补全功能
+ * 
+ * 此文件取自codeaurora提供的适用于高通8625Q的android 4.1.2源码，未作修改
+ * 
+ * */
+
+/**
  * RecipientEditTextView is an auto complete text view for use with applications
  * that use the new Chips UI for addressing a message to recipients.
  */

@@ -58,6 +58,14 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TimeZone;
 
+/**
+ * 北邮ANT实验室
+ * zzz
+ * 
+ * 此文件取自codeaurora提供的适用于高通8625Q的android 4.1.2源码，有修改
+ * 
+ * */
+
 public class Utils {
     private static final boolean DEBUG = false;
     private static final String TAG = "CalUtils";
@@ -113,6 +121,7 @@ public class Utils {
     static final String SHARED_PREFS_NAME = "edu.bupt.calendar_preferences";
 
     /** zzz */
+    // zzz 参与人选择时使用电话号码而不是邮箱，导致参与人回复是否参加的状态不可用
     // public static final String KEY_QUICK_RESPONSES =
     // "preferences_quick_responses";
 
@@ -748,6 +757,7 @@ public class Utils {
                 || minPixels < 0) {
 
             /** zzz */
+            // zzz 取消此log防止刷屏
             // Log.e(TAG,
             // "Bad values for createDNAStrands! events:" + events + " dayXs:"
             // + Arrays.toString(dayXs) + " bot-top:" + (bottom - top) +
@@ -1528,6 +1538,7 @@ public class Utils {
      */
     
     /** zzz */
+    // zzz 参与人选择时使用电话号码而不是邮箱，导致参与人回复是否参加的状态不可用
     // public static String[] getQuickResponses(Context context) {
     // String[] s = Utils.getSharedPreference(context, KEY_QUICK_RESPONSES,
     // (String[]) null);

@@ -25,6 +25,16 @@ import java.util.Set;
 import java.util.ArrayList;
 
 /**
+ * 北邮ANT实验室
+ * zzz
+ * 
+ * 将日程项输出成ICalendar文件格式，利用了此文件提供的类和方法实现了日程通过vcf文件共享
+ * 
+ * 此文件取自codeaurora提供的适用于高通8625Q的android 4.1.2源码，未作修改
+ * 
+ * */
+
+/**
  * Parses RFC 2445 iCalendar objects.
  */
 public class ICalendar {

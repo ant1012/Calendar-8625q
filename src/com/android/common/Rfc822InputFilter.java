@@ -20,6 +20,17 @@ import android.text.InputFilter;
 import android.text.Spanned;
 import android.text.SpannableStringBuilder;
 
+
+/**
+ * 北邮ANT实验室
+ * zzz
+ * 
+ * 用于判断输入的邮箱地址是否合法，原始的代码中用于参与者邮箱的合法性判断
+ * 
+ * 此文件取自codeaurora提供的适用于高通8625Q的android 4.1.2源码，未作修改
+ * 
+ * */
+
 /**
  * Implements special address cleanup rules:
  * The first space key entry following an "@" symbol that is followed by any combination
