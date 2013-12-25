@@ -27,6 +27,14 @@ import android.os.IBinder;
 import android.provider.CalendarContract.CalendarAlerts;
 
 /**
+ * 北邮ANT实验室
+ * zzz
+ * 
+ * 此文件取自codeaurora提供的适用于高通8625Q的android 4.1.2源码，未作修改
+ * 
+ * */
+
+/**
  * Service for asynchronously marking a fired alarm as dismissed and scheduling
  * a new alarm in the future.
  */

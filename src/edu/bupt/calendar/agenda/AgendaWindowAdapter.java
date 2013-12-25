@@ -54,6 +54,16 @@ import java.util.LinkedList;
 import java.util.Locale;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+/**
+ * 北邮ANT实验室
+ * zzz
+ * 
+ * 日程视图中的显示范围，点击查看之前或之后的日程的按钮
+ * 
+ * 此文件取自codeaurora提供的适用于高通8625Q的android 4.1.2源码，有修改
+ * 
+ * */
+
 /*
 Bugs Bugs Bugs:
 - At rotation and launch time, the initial position is not set properly. This code is calling
@@ -916,6 +926,7 @@ public class AgendaWindowAdapter extends BaseAdapter
         mHeaderView.setText(mContext.getString(R.string.show_older_events,
                 formatDateString(start)));
         /** zzz */
+        // zzz 由于原生系统源码中的bug，只能1900和2048年之间的范围，否则会出现数据混乱
 //        Log.i(TAG, "start - " + start);
         long millis1900 = 0;
         long millis2048 = 0;
@@ -930,7 +941,7 @@ public class AgendaWindowAdapter extends BaseAdapter
         timeStart.setJulianDay(start);
         long millis = timeStart.toMillis(false);
         Log.i(TAG, "millis - " + millis + "; time1900 - " + millis1900);
-        if(millis < millis1900) {
+        if(millis < millis1900) { // zzz 如果时间范围可能会引起bug，则取消掉更改时间窗口的点击响应，使范围保证在1900-2048之间
             mHeaderView.setOnClickListener(null);
         }
         

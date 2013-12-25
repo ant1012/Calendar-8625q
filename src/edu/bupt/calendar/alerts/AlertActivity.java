@@ -41,6 +41,14 @@ import edu.bupt.calendar.R;
 import edu.bupt.calendar.Utils;
 
 /**
+ * 北邮ANT实验室
+ * zzz
+ * 
+ * 此文件取自codeaurora提供的适用于高通8625Q的android 4.1.2源码，未作修改
+ * 
+ * */
+
+/**
  * The alert panel that pops up when there is a calendar event alarm.
  * This activity is started by an intent that specifies an event id.
   */

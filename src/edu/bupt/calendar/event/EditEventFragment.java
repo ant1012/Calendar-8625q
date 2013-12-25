@@ -68,6 +68,16 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * 北邮ANT实验室
+ * zzz
+ * 
+ * 日程编辑的Fragment，附着于EditEventActivity
+ * 
+ * 此文件取自codeaurora提供的适用于高通8625Q的android 4.1.2源码，有修改
+ * 
+ * */
+
 public class EditEventFragment extends Fragment implements EventHandler {
     private static final String TAG = "EditEventActivity";
 
@@ -124,6 +134,7 @@ public class EditEventFragment extends Fragment implements EventHandler {
     private boolean mUseCustomActionBar;
 
     /** zzz */
+    // zzz 辅助参与者和短信提醒的数据库操作
     private DBManager mgr;
 
     private final View.OnClickListener mActionBarListener = new View.OnClickListener() {
@@ -190,6 +201,7 @@ public class EditEventFragment extends Fragment implements EventHandler {
                         };
 
                         /** zzz*/
+                        // zzz 查询并显示当前存在的参与者信息(功能8)
                         Log.d(TAG, "startQuery TOKEN_ATTENDEES");
                         Log.i(TAG, "eventId - " + eventId);
                         mgr = new DBManager(mContext);
@@ -197,11 +209,11 @@ public class EditEventFragment extends Fragment implements EventHandler {
                         for(AttendeePhone attendeePhone : attendeePhones) {
                             Log.i(TAG, attendeePhone.event_id + "/" + attendeePhone.phoneNumber);
                             Attendee attendee = new Attendee(attendeePhone.name, attendeePhone.phoneNumber);
-                            mModel.addAttendee(attendee);
+                            mModel.addAttendee(attendee); // 将参与者信息读取到日程对象中
                             mOriginalModel.addAttendee(attendee);
                         }
 
-                        setModelIfDone(TOKEN_ATTENDEES);
+                        setModelIfDone(TOKEN_ATTENDEES); // 更新
 
 //                        mHandler.startQuery(TOKEN_ATTENDEES, null, attUri,
 //                                EditEventHelper.ATTENDEES_PROJECTION,

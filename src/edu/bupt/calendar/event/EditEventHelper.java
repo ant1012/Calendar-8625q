@@ -57,6 +57,16 @@ import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.TimeZone;
 
+/**
+ * 北邮ANT实验室
+ * zzz
+ * 
+ * 日程编辑的工具类
+ * 
+ * 此文件取自codeaurora提供的适用于高通8625Q的android 4.1.2源码，有修改
+ * 
+ * */
+
 public class EditEventHelper {
     private static final String TAG = "EditEventHelper";
 
@@ -153,6 +163,7 @@ public class EditEventHelper {
     };
 
     /** zzz */
+    // zzz 辅助参与者和短信提醒的数据库操作
     private static Context mContext;
     private static DBManager mgr;
 
@@ -559,6 +570,7 @@ public class EditEventHelper {
                         args[0] = Long.toString(eventId);
 
                         /** zzz */
+                        // zzz 删除参与者(功能8)
                         Log.d(TAG, "newDelete");
                         mgr = new DBManager(mContext);
                         for (String removedAttendee : removedAttendees) {
@@ -584,6 +596,7 @@ public class EditEventHelper {
                 if (newAttendees.size() > 0) {
                     // Insert the new attendees
                     /** zzz */
+                    // zzz 插入新的参与人(功能8)
                     mgr = new DBManager(mContext);
 
                     for (Attendee attendee : newAttendees.values()) {
@@ -675,7 +688,7 @@ public class EditEventHelper {
                             ArrayList<AttendeePhone> attendeePhones = new ArrayList<AttendeePhone>();
                             AttendeePhone attendeePhone = new AttendeePhone(
                                     max_val + 1, attendee.mName,
-                                    attendee.mEmail);
+                                    attendee.mEmail); // zzz 当前的eventId最大值+1就是新建的日程的eventId
                             attendeePhones.add(attendeePhone);
                             mgr.add(attendeePhones);
 
@@ -980,6 +993,7 @@ public class EditEventHelper {
             boolean forceSave) {
 
         /** zzz */
+        // 强制保存，因为修改了提醒项或者参与者的电话可能不会触发保存动作
         // force save
         Log.w(TAG, "force save");
         forceSave = true;
@@ -1007,6 +1021,7 @@ public class EditEventHelper {
             ReminderEntry re = reminders.get(i);
 
             /** zzz */
+            // zzz 如果有‘提醒并发送短信‘的提醒项，需要单独保存到自己的数据库中
             if (re.getMethod() == 3) {
                 Log.i("zzz", "re.getMethod() - " + re.getMethod());
                 values.clear();
@@ -1032,6 +1047,13 @@ public class EditEventHelper {
     }
 
     /** zzz */
+    /**
+     * 北邮ANT实验室
+     * zzz
+     * 
+     * 保存提醒项，被EditEventFragment调用
+     * 
+     * */
     public static boolean saveReminders(ArrayList<ContentProviderOperation> ops, long eventId,
             ArrayList<ReminderEntry> reminders, ArrayList<ReminderEntry> originalReminders,
             boolean forceSave, Context context) {

@@ -10,6 +10,16 @@ import java.util.regex.Pattern;
 import com.android.common.Rfc822Validator;
 
 /**
+ * 北邮ANT实验室
+ * zzz
+ * 
+ * 根据Rfc822Validator.java重写了其中的重要参数，使参与者支持电话号码而不是邮箱
+ * 
+ * (功能8)
+ * 
+ * */
+
+/**
  * modified on Rfc822Validator
  * by zzz
  * 
@@ -36,8 +46,12 @@ public class AttendeePhoneValidator extends Rfc822Validator {
      * exist at the time of this writing, so this regexp relaxes that constraint
      * by accepting any kind of top level domain, not just ".com", ".fr", etc...
      */
+
+    // zzz 修改了正则表达式，使参与者匹配的格式支持电话号码而不是邮箱
     private static final Pattern EMAIL_ADDRESS_PATTERN = Pattern
-            .compile("(((\\+{0,1}86){0,1})1[0-9]{10}|10086|10000|10010|((\\+{0,1}86){0,1})1[0-9]{2} [0-9]{4} [0-9]{4})");
+            .compile("[0-9+ -]{1,15}");
+    //private static final Pattern EMAIL_ADDRESS_PATTERN = Pattern
+    //       .compile("(((\\+{0,1}86){0,1})1[0-9]{10}|10086|10000|10010|((\\+{0,1}86){0,1})1[0-9]{2} [0-9]{4} [0-9]{4})");
 
     private String mDomain;
     private boolean mRemoveInvalid = false;

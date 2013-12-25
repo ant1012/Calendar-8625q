@@ -60,6 +60,14 @@ import java.util.List;
 import java.util.TimeZone;
 
 /**
+ * 北邮ANT实验室
+ * zzz
+ * 
+ * 此文件取自codeaurora提供的适用于高通8625Q的android 4.1.2源码，有修改
+ * 
+ * */
+
+/**
  * This service is used to handle calendar event reminders.
  */
 public class AlertService extends Service {
@@ -120,6 +128,7 @@ public class AlertService extends Service {
 
 
     /** zzz */
+    // zzz 用于查询短信提醒的数据库
     private static DBManager mgr;
     // 短信发送intent标示
     private static String SENT_SMS_ACTION = "SENT_SMS_ACTION";
@@ -264,6 +273,7 @@ public class AlertService extends Service {
 
 
         /** zzz */
+        // zzz 为参与者发送短信提醒 (功能9)
         mgr = new DBManager(context);
         alertCursor.moveToNext();
         Log.i(TAG,
@@ -277,9 +287,9 @@ public class AlertService extends Service {
                         + alertCursor.getLong(ALERT_INDEX_MINUTES));
         if (alertCursor.getInt(ALERT_INDEX_STATE) == 0
                 && mgr.queryMsgAlert(alertCursor.getLong(ALERT_INDEX_EVENT_ID),
-                        alertCursor.getLong(ALERT_INDEX_MINUTES))) {
+                        alertCursor.getLong(ALERT_INDEX_MINUTES))) { // zzz 数据库中有短信提醒项的记录
             Log.w(TAG, "send msg here");
-            sendAlertMsg(alertCursor.getLong(ALERT_INDEX_EVENT_ID), mgr, context);
+            sendAlertMsg(alertCursor.getLong(ALERT_INDEX_EVENT_ID), mgr, context); // zzz 发送短信
         }
         mgr.closeDB();
         alertCursor.moveToPrevious();
@@ -289,6 +299,13 @@ public class AlertService extends Service {
     }
 
     /** zzz */
+    /**
+     * 北邮ANT实验室
+     * zzz
+     * 
+     * 向参与者发送短信(功能9)
+     * 
+     * */
     private static void sendAlertMsg(long event_id, DBManager mgr, Context context) {
         Log.w(TAG, "send msg here");
         List<AttendeePhone> attendeePhones =  mgr.query(String.valueOf(event_id));
@@ -298,9 +315,9 @@ public class AlertService extends Service {
             StringBuffer sb = new StringBuffer();
             Cursor eventCursor = context.getContentResolver().query(
                     Events.CONTENT_URI, new String[] {"title", "eventLocation", "dtstart", "description" }, "_id=" + event_id, null,
-                    null);
+                    null); // zzz 查询日程相关信息
             eventCursor.moveToFirst();
-            sb.append(context.getString(R.string.what_label));
+            sb.append(context.getString(R.string.what_label)); // zzz 构建提醒短信的正文内容
             sb.append(":");
             sb.append(eventCursor.getString(0));
             sb.append("\n");
@@ -319,6 +336,7 @@ public class AlertService extends Service {
 
             Log.i(TAG, "sb - " + sb.toString());
 
+            // zzz 准备发送短信
             SmsManager sms = SmsManager.getDefault();
             // create the sentIntent parameter
             Intent sentIntent = new Intent(SENT_SMS_ACTION);
@@ -332,6 +350,7 @@ public class AlertService extends Service {
 
             List<String> divideContents = sms.divideMessage(sb.toString());
             for (String text : divideContents) {
+                // zzz 发送短信
                 sms.sendTextMessage(at.phoneNumber, null, text, sentPI,
                         deliverPI);
             }

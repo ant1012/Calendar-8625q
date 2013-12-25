@@ -1,5 +1,15 @@
 package edu.bupt.calendar.attendee;
 
+/**
+ * 北邮ANT实验室
+ * zzz
+ * 
+ * 日程参与者类
+ * 
+ * (功能8)
+ * 
+ * */
+
 public class AttendeePhone {
     public int _id;
     public long event_id;

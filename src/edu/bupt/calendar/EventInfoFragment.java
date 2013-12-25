@@ -2045,6 +2045,11 @@ public class EventInfoFragment extends DialogFragment implements OnCheckedChange
                 EventViewUtils.addMinutesToList(mActivity, mReminderMinuteValues, mReminderMinuteLabels,
                         re.getMinutes());
             }
+
+            /** zzz */
+            // zzz 用于检测重复的提醒项
+            ArrayList<Integer> reminderList = new ArrayList<Integer>();
+
             // Create a UI element for each reminder. We display all of the
             // reminders we get
             // from the provider, even if the count exceeds the calendar
@@ -2066,9 +2071,14 @@ public class EventInfoFragment extends DialogFragment implements OnCheckedChange
                 // mReminderMinuteLabels, mReminderMethodValues,
                 // mReminderMethodLabels, re, Integer.MAX_VALUE,
                 // mReminderChangeListener);
-                EventViewUtils.addReminder(mActivity, mScrollView, this, mReminderViews, mReminderMinuteValues,
-                        mReminderMinuteLabels, mReminderMethodValues, mReminderMethodLabels, re, Integer.MAX_VALUE,
-                        mReminderChangeListener, reminderMethod);
+                // zzz 如果有重复的项则不显示
+                if (!reminderList.contains(re.getMinutes())) {
+                    EventViewUtils.addReminder(mActivity, mScrollView, this, mReminderViews, mReminderMinuteValues,
+                            mReminderMinuteLabels, mReminderMethodValues, mReminderMethodLabels, re, Integer.MAX_VALUE,
+                            mReminderChangeListener, reminderMethod);
+
+                    reminderList.add(re.getMinutes());
+                }
                 mgr.closeDB();
             }
             EventViewUtils.updateAddReminderButton(mView, mReminderViews, mMaxReminders);

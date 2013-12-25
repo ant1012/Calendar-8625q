@@ -105,6 +105,16 @@ import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * 北邮ANT实验室
+ * zzz
+ * 
+ * 日程编辑的View，附着于EditEventFragment
+ * 
+ * 此文件取自codeaurora提供的适用于高通8625Q的android 4.1.2源码，有修改
+ * 
+ * */
+
 public class EditEventView implements View.OnClickListener, DialogInterface.OnCancelListener,
         DialogInterface.OnClickListener, OnItemSelectedListener {
     private static final String TAG = "EditEvent";
@@ -131,6 +141,7 @@ public class EditEventView implements View.OnClickListener, DialogInterface.OnCa
     Spinner mRepeatsSpinner;
 
     /** zzz */
+    // zzz 取消了无用的属性项
     // Spinner mAvailabilitySpinner;
     // Spinner mAccessLevelSpinner;
     RadioGroup mResponseRadioGroup;
@@ -144,6 +155,7 @@ public class EditEventView implements View.OnClickListener, DialogInterface.OnCa
     MultiAutoCompleteTextView mAttendeesList;
 
     /** zzz */
+    // zzz 添加选择联系人的ImageButton
     ImageButton mChooseAttendee;
     public boolean jumpedToChooser = false;
     private DBManager mgr;
@@ -275,7 +287,7 @@ public class EditEventView implements View.OnClickListener, DialogInterface.OnCa
             setTime(mEndTimeButton, endMillis);
 
             /** zzz */
-            // updateHomeTime();
+            updateHomeTime();
         }
     }
 
@@ -359,7 +371,7 @@ public class EditEventView implements View.OnClickListener, DialogInterface.OnCa
             // reset
 
             /** zzz */
-            // updateHomeTime();
+            updateHomeTime();
         }
     }
 
@@ -719,7 +731,7 @@ public class EditEventView implements View.OnClickListener, DialogInterface.OnCa
                 setTimezone(which);
 
                 /** zzz */
-                // updateHomeTime();
+                updateHomeTime();
                 dialog.dismiss();
             }
         }
@@ -805,10 +817,12 @@ public class EditEventView implements View.OnClickListener, DialogInterface.OnCa
         mModel.mTimezone = mTimezone;
 
         /** zzz */
+        // zzz 取消了无用的属性项
         // mModel.mAccessLevel = mAccessLevelSpinner.getSelectedItemPosition();
         // TODO set correct availability value
 
         /** zzz */
+        // zzz 取消了无用的属性项
         // mModel.mAvailability = mAvailabilityValues.get(mAvailabilitySpinner
         // .getSelectedItemPosition());
 
@@ -866,6 +880,7 @@ public class EditEventView implements View.OnClickListener, DialogInterface.OnCa
         mRepeatsSpinner = (Spinner) view.findViewById(R.id.repeats);
 
         /** zzz */
+        // zzz 取消了无用的属性项
         // mAvailabilitySpinner = (Spinner)
         // view.findViewById(R.id.availability);
         // mAccessLevelSpinner = (Spinner) view.findViewById(R.id.visibility);
@@ -884,6 +899,7 @@ public class EditEventView implements View.OnClickListener, DialogInterface.OnCa
         mAttendeesList = (MultiAutoCompleteTextView) view.findViewById(R.id.attendees);
 
         /** zzz */
+        // zzz 添加参与者的ImageButton
         mChooseAttendee = (ImageButton) view.findViewById(R.id.choose_attendees);
 
         mTitleTextView.setTag(mTitleTextView.getBackground());
@@ -910,6 +926,7 @@ public class EditEventView implements View.OnClickListener, DialogInterface.OnCa
         mEditOnlyList.add(view.findViewById(R.id.all_day_row));
 
         /** zzz */
+        // zzz 取消了无用的属性项
         // mEditOnlyList.add(view.findViewById(R.id.availability_row));
         // mEditOnlyList.add(view.findViewById(R.id.visibility_row));
         mEditOnlyList.add(view.findViewById(R.id.from_row));
@@ -928,6 +945,7 @@ public class EditEventView implements View.OnClickListener, DialogInterface.OnCa
 
         // mEmailValidator = new Rfc822Validator(null);
         /** zzz */
+        // zzz 取消了无用的属性项
         mEmailValidator = new AttendeePhoneValidator(null);
         // view.findViewById(R.id.availability_row).setVisibility(View.INVISIBLE);
         // view.findViewById(R.id.visibility_row).setVisibility(View.INVISIBLE);
@@ -978,6 +996,7 @@ public class EditEventView implements View.OnClickListener, DialogInterface.OnCa
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         /** zzz */
+        // zzz 取消了无用的属性项
         // mAvailabilitySpinner.setAdapter(adapter);
     }
 
@@ -992,6 +1011,7 @@ public class EditEventView implements View.OnClickListener, DialogInterface.OnCa
         CalendarEventModel model = mModel;
 
         /** zzz */
+        // zzz 已存在的提醒
         if (model != null) {
             Log.v(TAG, "model - " + model.mReminders);
         }
@@ -1013,6 +1033,7 @@ public class EditEventView implements View.OnClickListener, DialogInterface.OnCa
         mReminderMethodLabels = loadStringArray(r, R.array.reminder_methods_labels);
 
         /** zzz */
+        // 强制允许短信提醒模式
         // here msg reminder methods should be allowed
         Log.i(TAG, "mModel.mCalendarAllowedReminders - " + mModel.mCalendarAllowedReminders);
         mModel.mCalendarAllowedReminders = "0,1,3";
@@ -1049,7 +1070,10 @@ public class EditEventView implements View.OnClickListener, DialogInterface.OnCa
             mUnsupportedReminders.clear();
 
             /** zzz */
+            // zzz 辅助查询数据库
             mgr = new DBManager(mActivity);
+            // zzz 用于检测重复的提醒项
+            ArrayList<Integer> reminderList = new ArrayList<Integer>();
             for (ReminderEntry re : reminders) {
                 // if (mReminderMethodValues.contains(re.getMethod())
                 // || re.getMethod() == Reminders.METHOD_DEFAULT) {
@@ -1063,6 +1087,7 @@ public class EditEventView implements View.OnClickListener, DialogInterface.OnCa
                 // }
 
                 /** zzz */
+                // zzz 查询是否存在短信提醒项，如果存在则显示到列表中
                 // query our db to check if there is a msg alert
                 int reminderMethod = 1;
                 Log.i(TAG, "model.mId - " + model.mId);
@@ -1071,9 +1096,13 @@ public class EditEventView implements View.OnClickListener, DialogInterface.OnCa
                     Log.d(TAG, "has msg alert data");
                     reminderMethod = 3;
                 }
-                EventViewUtils.addReminder(mActivity, mScrollView, this, mReminderItems, mReminderMinuteValues,
-                        mReminderMinuteLabels, mReminderMethodValues, mReminderMethodLabels, re, Integer.MAX_VALUE,
-                        null, reminderMethod);
+                // zzz 如果有重复的项则不显示
+                if (!reminderList.contains(re.getMinutes())) {
+                    EventViewUtils.addReminder(mActivity, mScrollView, this, mReminderItems, mReminderMinuteValues,
+                            mReminderMinuteLabels, mReminderMethodValues, mReminderMethodLabels, re, Integer.MAX_VALUE,
+                            null, reminderMethod);
+                    reminderList.add(re.getMinutes());
+                }
             }
             mgr.closeDB();
         }

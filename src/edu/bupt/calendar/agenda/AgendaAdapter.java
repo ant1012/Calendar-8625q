@@ -44,6 +44,8 @@ import java.util.TimeZone;
  * 北邮ANT实验室
  * zzz
  * 
+ * 日程视图中每条日程的Adapter
+ * 
  * 此文件取自codeaurora提供的适用于高通8625Q的android 4.1.2源码，有修改
  * 
  * */
@@ -219,6 +221,7 @@ public class AgendaAdapter extends ResourceCursorAdapter {
         whenString = DateUtils.formatDateRange(context, mFormatter, begin, end, flags, tzString).toString();
 
         /** zzz */
+        // zzz 时间现实方案相关(功能17)
         // if (!allDay && !TextUtils.equals(tzString, eventTz)) {
         // String displayName;
         // // Figure out if this is in DST
@@ -234,11 +237,11 @@ public class AgendaAdapter extends ResourceCursorAdapter {
         // whenString += " (" + displayName + ")";
         String displayName;
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-        boolean showBJTime = !sp.getString("TimeSettingPreference", "0").equals("0");
+        boolean showBJTime = !sp.getString("TimeSettingPreference", "0").equals("0"); // zzz 获取时区显示的设置
         TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
         if (tm.isNetworkRoaming() || sp.getBoolean("RoamingTestPreference", false)) {
             displayName = showBJTime ? context.getResources().getStringArray(R.array.time_setting)[1] : context
-                    .getResources().getStringArray(R.array.time_setting)[0];
+                    .getResources().getStringArray(R.array.time_setting)[0]; // zzz 漫游时显示时区信息(功能17)
             whenString += " (" + displayName + ")";
         }
 

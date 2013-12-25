@@ -44,6 +44,16 @@ import edu.bupt.calendar.R;
 import edu.bupt.calendar.StickyHeaderListView;
 import edu.bupt.calendar.Utils;
 
+/**
+ * 北邮ANT实验室
+ * zzz
+ * 
+ * 日程视图
+ * 
+ * 此文件取自codeaurora提供的适用于高通8625Q的android 4.1.2源码，未作修改
+ * 
+ * */
+
 public class AgendaFragment extends Fragment implements CalendarController.EventHandler,
         OnScrollListener {
 

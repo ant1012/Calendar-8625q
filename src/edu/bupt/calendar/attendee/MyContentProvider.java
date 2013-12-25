@@ -8,12 +8,22 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 
+/**
+ * 北邮ANT实验室
+ * zzz
+ * 
+ * 日程参与者的ContentProvider，使其他应用(通讯录)可以获取日程参与者的信息
+ * 
+ * (功能8) (通讯录功能24)
+ * 
+ * */
+
 public class MyContentProvider extends ContentProvider {
     // private DBManager mgr;
 
     private static SQLiteDatabase database;
     public static final Uri CONTENT_URI = Uri
-            .parse("content://edu.bupt.calendar.attendee");
+            .parse("content://edu.bupt.calendar.attendee"); // zzz 通过Uri来调用
 
     @Override
     public int delete(Uri arg0, String arg1, String[] arg2) {
@@ -42,7 +52,7 @@ public class MyContentProvider extends ContentProvider {
             String[] selectionArgs, String sortOrder) {
 
         return database.query("AttendeePhone", projection, selection,
-                selectionArgs, null, null, sortOrder);
+                selectionArgs, null, null, sortOrder); // 主要提供查询功能，其他功能暂时没有需求
 
     }
 

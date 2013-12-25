@@ -39,6 +39,16 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Locale;
 
+/**
+ * 北邮ANT实验室
+ * zzz
+ * 
+ * 日程视图中每天的Adapter
+ * 
+ * 此文件取自codeaurora提供的适用于高通8625Q的android 4.1.2源码，有修改
+ * 
+ * */
+
 public class AgendaByDayAdapter extends BaseAdapter {
     private static final int TYPE_DAY = 0;
     private static final int TYPE_MEETING = 1;
@@ -225,6 +235,7 @@ public class AgendaByDayAdapter extends BaseAdapter {
                     mTodayJulianDay, millis, mContext);
 
             /** zzz */
+            // zzz 在每天的Adapter中显示当天的农历信息(功能3)
             Lunar.setLunar(mContext, date.year, date.month + 1, date.monthDay);
             dayViewText += Lunar.getLunarWithComma();
 

@@ -8,6 +8,16 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+/**
+ * 北邮ANT实验室
+ * zzz
+ * 
+ * 数据库Helper
+ * 
+ * (功能8) (功能9)
+ * 
+ * */
+
 public class DBManager {
     private DBHelper helper;
     private SQLiteDatabase db;
@@ -17,6 +27,15 @@ public class DBManager {
         db = helper.getWritableDatabase();
     }
 
+    /**
+     * 北邮ANT实验室
+     * zzz
+     * 
+     * 添加参与者
+     * 
+     * (功能8)
+     * 
+     * */
     /**
      * add attendeePhone
      * 
@@ -36,6 +55,15 @@ public class DBManager {
     }
 
     /**
+     * 北邮ANT实验室
+     * zzz
+     * 
+     * 添加短信提醒
+     * 
+     * (功能9)
+     * 
+     * */
+    /**
      * add MsgAlert
      * 
      */
@@ -50,6 +78,15 @@ public class DBManager {
         }
     }
 
+    /**
+     * 北邮ANT实验室
+     * zzz
+     * 
+     * 查询参与人的电话号码列表
+     * 
+     * (功能8)
+     * 
+     * */
     /**
      * query all AttendeePhones, return list
      * 
@@ -71,6 +108,15 @@ public class DBManager {
     }
 
     /**
+     * 北邮ANT实验室
+     * zzz
+     * 
+     * 查询参与人列表
+     * 
+     * (功能8)
+     * 
+     * */
+    /**
      * query for event id
      * 
      */
@@ -91,6 +137,15 @@ public class DBManager {
     }
 
     /**
+     * 北邮ANT实验室
+     * zzz
+     * 
+     * 查询某号码是否参与了某日程
+     * 
+     * (功能8)
+     * 
+     * */
+    /**
      * query if a phone number is a attendee of event
      * 
      */
@@ -105,6 +160,15 @@ public class DBManager {
     }
 
     /**
+     * 北邮ANT实验室
+     * zzz
+     * 
+     * 查询参与者数据表
+     * 
+     * (功能8)
+     * 
+     * */
+    /**
      * query all AttendeePhones, return cursor
      * 
      */
@@ -113,6 +177,15 @@ public class DBManager {
         return c;
     }
 
+    /**
+     * 北邮ANT实验室
+     * zzz
+     * 
+     * 根据id查询参与者数据表
+     * 
+     * (功能8)
+     * 
+     * */
     /**
      * query all AttendeePhones, return cursor
      * 
@@ -124,6 +197,15 @@ public class DBManager {
     }
 
     /**
+     * 北邮ANT实验室
+     * zzz
+     * 
+     * 根据号码查询参与者数据表
+     * 
+     * (功能8)
+     * 
+     * */
+    /**
      * query all AttendeePhones, return cursor
      * 
      */
@@ -134,14 +216,32 @@ public class DBManager {
     }
 
     /**
+     * 北邮ANT实验室
+     * zzz
+     * 
+     * 删除参与者信息
+     * 
+     * (功能8)
+     * 
+     * */
+    /**
      * delete one attendee
      * 
      */
     public void deleteAttendee(String event_id, String attendee) {
         db.execSQL("delete from AttendeePhone where event_id=" + event_id
-                + " and phoneNumber=" + attendee);
+                + " and phoneNumber=\"" + attendee + '\"'); // zzz 加引号 否则当号码中有空格时会引起sql语句错误
     }
 
+    /**
+     * 北邮ANT实验室
+     * zzz
+     * 
+     * 根据id查询短信提醒信息
+     * 
+     * (功能9)
+     * 
+     * */
     /**
      * query all AttendeePhones, return cursor
      * 
@@ -152,6 +252,15 @@ public class DBManager {
         return c;
     }
 
+    /**
+     * 北邮ANT实验室
+     * zzz
+     * 
+     * 查询某日程在某时间是否要发送短信提醒
+     * 
+     * (功能9)
+     * 
+     * */
     /**
      * query for event id
      * 
@@ -169,6 +278,15 @@ public class DBManager {
     }
 
     /**
+     * 北邮ANT实验室
+     * zzz
+     * 
+     * 删除短信提醒信息
+     * 
+     * (功能8)
+     * 
+     * */
+    /**
      * delete one msg alert
      * 
      */
@@ -176,6 +294,13 @@ public class DBManager {
         db.execSQL("delete from MsgAlert where event_id=" + event_id);
     }
 
+    /**
+     * 北邮ANT实验室
+     * zzz
+     * 
+     * 关闭数据库
+     * 
+     * */
     /**
      * close database
      */

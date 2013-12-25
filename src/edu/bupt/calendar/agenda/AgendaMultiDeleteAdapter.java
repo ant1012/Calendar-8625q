@@ -14,7 +14,17 @@ import android.widget.BaseAdapter;
 import android.widget.CheckBox;  
 import android.widget.ImageView;
 import android.widget.TextView;  
-  
+
+/**
+ * 北邮ANT实验室
+ * zzz
+ * 
+ * 多条删除日程的界面的Adapter
+ * 
+ * (功能15)
+ * 
+ * */
+
 public class AgendaMultiDeleteAdapter extends BaseAdapter {  
     // 填充数据的list  
     private ArrayList<Map<String,String>> list;  

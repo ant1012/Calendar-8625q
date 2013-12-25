@@ -37,6 +37,16 @@ import edu.bupt.calendar.CalendarController.EventInfo;
 import edu.bupt.calendar.R;
 import edu.bupt.calendar.Utils;
 
+/**
+ * 北邮ANT实验室
+ * zzz
+ * 
+ * 日程编辑的Activity
+ * 
+ * 此文件取自codeaurora提供的适用于高通8625Q的android 4.1.2源码，有修改
+ * 
+ * */
+
 public class EditEventActivity extends AbstractCalendarActivity {
     private static final String TAG = "EditEventActivity";
 
@@ -51,6 +61,7 @@ public class EditEventActivity extends AbstractCalendarActivity {
     private EventInfo mEventInfo;
 
     /** zzz */
+    // zzz 参与者的信息
     public static String number;
     public static String name;
 
@@ -156,13 +167,15 @@ public class EditEventActivity extends AbstractCalendarActivity {
     }
 
     /** zzz */
+    // zzz 如果在EditEventFragment中点击了选择参与人的Button，选择完成后返回会调起此Acitivity
+    // 需要重写onActivityResult方法拿到选择的参与者的信息
     // back from choosing a attendee phone number from system cantact app, and
     // then send it to EditEventFragment
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (resultCode) {
         case RESULT_OK:
-            if (resultCode == Activity.RESULT_OK) {
+            if (resultCode == Activity.RESULT_OK) { // zzz 选择了参与者
 
                 Uri contactData = data.getData();
                 Cursor c = managedQuery(contactData, null, null, null, null);
@@ -176,7 +189,7 @@ public class EditEventActivity extends AbstractCalendarActivity {
                             .getString(c
                                     .getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER));
 
-                    if (hasPhone.equalsIgnoreCase("1")) {
+                    if (hasPhone.equalsIgnoreCase("1")) { // 选择的联系人的电话
                         Cursor phones = getContentResolver()
                                 .query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
                                         null,

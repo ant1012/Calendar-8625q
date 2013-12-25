@@ -40,6 +40,16 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
+/**
+ * 北邮ANT实验室
+ * zzz
+ * 
+ * 多条删除日程的界面，由菜单进入
+ * 
+ * (功能15)
+ * 
+ * */
+
 public class AgendaMultiDelete extends Activity {
 	private ListView lv;
 	private AgendaMultiDeleteAdapter mAdapter;

@@ -47,6 +47,14 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 /**
+ * 北邮ANT实验室
+ * zzz
+ * 
+ * 此文件取自codeaurora提供的适用于高通8625Q的android 4.1.2源码，有修改
+ * 
+ * */
+
+/**
  * Receives android.intent.action.EVENT_REMINDER intents and handles event
  * reminders. The intent URI specifies an alert id in the CalendarAlerts
  * database table. This class also receives the BOOT_COMPLETED intent so that it
@@ -103,6 +111,7 @@ public class AlertReceiver extends BroadcastReceiver {
             final long eventId = intent.getLongExtra(EXTRA_EVENT_ID, -1);
 
             /** zzz */
+            // zzz 取消掉与参与人的邮箱相关的提醒
             // if (eventId != -1) {
             // Intent i = new Intent(context, QuickResponseActivity.class);
             // i.putExtra(QuickResponseActivity.EXTRA_EVENT_ID, eventId);
@@ -251,7 +260,9 @@ public class AlertReceiver extends BroadcastReceiver {
         notificationBuilder.setDeleteIntent(deleteIntent);
 
         /** zzz */
+        // zzz 取消notification中的多余Button
         addActionButtons = false; // i do not want this two
+
         if (addActionButtons) {
             // Create a snooze button. TODO: change snooze to 10 minutes.
             PendingIntent snoozeIntent = createSnoozeIntent(context, eventId, startMillis, endMillis, notificationId);

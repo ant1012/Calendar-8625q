@@ -55,6 +55,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 
+/**
+ * 北邮ANT实验室
+ * zzz
+ * 
+ * 显示日程参与者的列表，使参与者支持电话号码而不是邮箱
+ * 
+ * 此文件取自codeaurora提供的适用于高通8625Q的android 4.1.2源码，有修改
+ * 
+ * */
+
 public class AttendeesView extends LinearLayout implements View.OnClickListener {
     private static final String TAG = "AttendeesView";
     private static final boolean DEBUG = false;
@@ -237,6 +247,7 @@ public class AttendeesView extends LinearLayout implements View.OnClickListener 
         badgeView.setMaxHeight(60);
 
         /** zzz */
+        // zzz 因为放弃了参与者邮箱的机制，所以头像匹配会有很大的问题，所以直接不显示头像
         badgeView.setVisibility(GONE);
         return view;
     }
