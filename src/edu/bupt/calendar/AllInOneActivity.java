@@ -798,6 +798,10 @@ public class AllInOneActivity extends Activity implements EventHandler,
                 }
                 mController.sendEventRelatedEvent(
                         this, EventType.CREATE_EVENT, -1, t.toMillis(true), 0, 0, 0, -1);
+                
+                /** zzz */
+                // zzz 退出switch
+                return true;
 
             /** zzz */
             // zzz 取消选择账户的菜单项

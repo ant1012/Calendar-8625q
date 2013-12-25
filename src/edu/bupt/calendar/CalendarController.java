@@ -57,7 +57,7 @@ import java.util.WeakHashMap;
  * 北邮ANT实验室
  * zzz
  * 
- * 此文件取自codeaurora提供的适用于高通8625Q的android 4.1.2源码，未作修改
+ * 此文件取自codeaurora提供的适用于高通8625Q的android 4.1.2源码，有修改
  * 
  * */
 
@@ -144,6 +144,7 @@ public class CalendarController {
         final long LAUNCH_SELECT_VISIBLE_CALENDARS = 1L << 11;
 
         /** zzz */
+        // zzz 多条删除Activity的入口
         final long LAUNCH_MULTIDELETE = 1L << 12;
     }
 
@@ -562,6 +563,10 @@ public class CalendarController {
         }
 
         if (!handled) {
+
+            /** zzz */
+            Log.v(TAG, "event.eventType - " + event.eventType);
+
             // Launch Settings
             if (event.eventType == EventType.LAUNCH_SETTINGS) {
                 launchSettings();
@@ -599,6 +604,7 @@ public class CalendarController {
             }
             
             /** ccczzz */
+            // zzz 启动多条删除Acitivity
             else if (event.eventType == EventType.LAUNCH_MULTIDELETE) {
             	launchMultiDelete();
                 return;
@@ -712,6 +718,10 @@ public class CalendarController {
     }
 
     private void launchSettings() {
+
+        /** zzz */
+        Log.v(TAG, "launchSettings");
+
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setClass(mContext, CalendarSettingsActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -719,6 +729,10 @@ public class CalendarController {
     }
 
     private void launchCreateEvent(long startMillis, long endMillis, boolean allDayEvent) {
+
+        /** zzz */
+        Log.v(TAG, "launchCreateEvent");
+
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setClass(mContext, EditEventActivity.class);
         intent.putExtra(EXTRA_EVENT_BEGIN_TIME, startMillis);

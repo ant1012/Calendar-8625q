@@ -40,6 +40,16 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Set;
 
+/**
+ * 北邮ANT实验室
+ * zzz
+ * 
+ * 查看日程的工具类
+ * 
+ * 此文件取自codeaurora提供的适用于高通8625Q的android 4.1.2源码，有修改
+ * 
+ * */
+
 public class EventViewUtils {
     private static final String TAG = "EventViewUtils";
 
@@ -229,7 +239,6 @@ public class EventViewUtils {
      * initial position of the spinner into the spinner's tag for comparison
      * with any new position setting.
      */
-    /** zzz */
     public static boolean addReminder(final Activity activity, View view, View.OnClickListener listener,
             ArrayList<LinearLayout> items, ArrayList<Integer> minuteValues,
             ArrayList<String> minuteLabels, ArrayList<Integer> methodValues,
@@ -281,6 +290,7 @@ public class EventViewUtils {
         }
 
         /** zzz */
+        // zzz 添加提醒时，如果选择了‘提醒并发送短信’，则需要提示用户该提醒功能会带来短信费用(功能9)
         Spinner methodSpinner = (Spinner) reminderItem
                 .findViewById(R.id.reminder_method_value);
         OnItemSelectedListener onItemSelectedListener = new OnItemSelectedListener() {
@@ -291,6 +301,7 @@ public class EventViewUtils {
                     int arg2, long arg3) {
                 Log.d(TAG, "onItemSelected " + arg2);
                 if (check && arg2 == 1) { // warning for msg cost
+                    // zzz 提示用户该提醒功能会带来短信费用
                     new AlertDialog.Builder(activity)
                             .setMessage(R.string.msg_cost_alert)
                             .setIconAttribute(android.R.attr.alertDialogIcon)
@@ -298,6 +309,7 @@ public class EventViewUtils {
                             .show();
 
                     // no sim card
+                    // zzz 没有sim卡时提醒用户无法发送短信
                     try {
                         TelephonyManager tm = (TelephonyManager) activity
                                 .getSystemService(Context.TELEPHONY_SERVICE);
@@ -329,6 +341,14 @@ public class EventViewUtils {
     }
 
     /** zzz */
+    /**
+     * 北邮ANT实验室
+     * zzz
+     * 
+     * 重写了带reminderMethod参数的addReminder方法，只修改了OnItemSelectedListener
+     * 对已经存在的提醒项也添加选择‘提醒并发送短信’项时的费用提醒
+     * 
+     */
     public static boolean addReminder(final Activity activity, View view, View.OnClickListener listener,
             ArrayList<LinearLayout> items, ArrayList<Integer> minuteValues,
             ArrayList<String> minuteLabels, ArrayList<Integer> methodValues,
@@ -382,6 +402,7 @@ public class EventViewUtils {
         items.add(reminderItem);
 
         /** zzz */
+        // zzz 添加提醒时，如果选择了‘提醒并发送短信’，则需要提示用户该提醒功能会带来短信费用(功能9)
         Spinner methodSpinner = (Spinner) reminderItem.findViewById(R.id.reminder_method_value);
         OnItemSelectedListener onItemSelectedListener = new OnItemSelectedListener() {
             boolean check = false;
@@ -390,12 +411,14 @@ public class EventViewUtils {
                     int arg2, long arg3) {
                 Log.d(TAG, "onItemSelected " + arg2);
                 if (check && arg2 == 1) { // warning for msg cost
+                    // zzz 提示用户该提醒功能会带来短信费用
                     new AlertDialog.Builder(activity)
                     .setMessage(R.string.msg_cost_alert)
                     .setIconAttribute(android.R.attr.alertDialogIcon)
                     .setPositiveButton(android.R.string.ok, null).show();
 
                     //no sim card
+                    // zzz 没有sim卡时提醒用户无法发送短信
                     try {
                         TelephonyManager tm = (TelephonyManager) activity
                                 .getSystemService(Context.TELEPHONY_SERVICE);
