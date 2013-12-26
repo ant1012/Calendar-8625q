@@ -44,6 +44,14 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+/**
+ * 北邮ANT实验室
+ * zzz
+ * 
+ * 此文件取自codeaurora提供的适用于高通8625Q的android 4.1.2源码，有修改
+ * 
+ * */
+
 public class SelectSyncedCalendarsMultiAccountAdapter extends CursorTreeAdapter implements
         View.OnClickListener {
 
@@ -213,8 +221,9 @@ public class SelectSyncedCalendarsMultiAccountAdapter extends CursorTreeAdapter 
         // Collect proper description for account types
         
         /** zzz */
-        // mAuthDescs = AccountManager.get(context).getAuthenticatorTypes();
-        mAuthDescs = null;
+        // zzz 和账户相关，具体作用不明
+        mAuthDescs = AccountManager.get(context).getAuthenticatorTypes();
+        //mAuthDescs = null;
 
         for (int i = 0; i < mAuthDescs.length; i++) {
             mTypeToAuthDescription.put(mAuthDescs[i].type, mAuthDescs[i]);

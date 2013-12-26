@@ -46,7 +46,7 @@ import android.widget.TextView;
  * 
  * 多条删除日程的界面，由菜单进入
  * 
- * (功能15)
+ * (功能15)(功能16)
  * 
  * */
 

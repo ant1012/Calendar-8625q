@@ -136,7 +136,7 @@
                 android:layout_toLeftOf="@id/choose_attendees"
                 android:hint="@string/hint_attendees"
                 android:imeOptions="actionNext"
-                android:inputType="textEmailAddress|textMultiLine|textCapWords" />
+                android:inputType="phone" />
 
         </RelativeLayout>
     </LinearLayout>

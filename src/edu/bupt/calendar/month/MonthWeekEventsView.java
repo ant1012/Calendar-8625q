@@ -53,6 +53,16 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
+/**
+ * 北邮ANT实验室
+ * zzz
+ * 
+ * 月视图的View，其中添加了农历和节日显示的功能,继承自SimpleWeekView类
+ * 
+ * 此文件取自codeaurora提供的适用于高通8625Q的android 4.1.2源码，有修改
+ * 
+ * */
+
 public class MonthWeekEventsView extends SimpleWeekView {
 
     private static final String TAG = "MonthView";
@@ -175,6 +185,7 @@ public class MonthWeekEventsView extends SimpleWeekView {
     private ObjectAnimator mTodayAnimator = null;
 
     /** zzz */
+    // zzz 颜色设定，以统一界面风格
     protected int mWeekendColor;
     protected int mWeekendOtherColor;
     protected int mFestivalColor;
@@ -350,6 +361,7 @@ public class MonthWeekEventsView extends SimpleWeekView {
         mTodayDrawable = res.getDrawable(R.drawable.today_blue_week_holo_light);
 
         /** zzz */
+        // zzz 颜色设定，以统一界面风格
         mWeekendColor = res.getColor(R.color.month_weekend);
         mWeekendOtherColor = res.getColor(R.color.month_weekend_other);
         mFestivalColor = res.getColor(R.color.month_festival);
@@ -516,6 +528,7 @@ public class MonthWeekEventsView extends SimpleWeekView {
         }
 
         /** zzz */
+        // zzz 设定节日显示的颜色
         mFestivalPaint = new Paint();
         mFestivalPaint.setFakeBoldText(false);
         mFestivalPaint.setAntiAlias(true);
@@ -756,6 +769,7 @@ public class MonthWeekEventsView extends SimpleWeekView {
             }
 
             /** zzz */
+            // zzz 将周末显示为不同的颜色
             else if (mWeekends[i] == true) {
                 mMonthNumPaint.setColor(isFocusMonth ? mWeekendColor
                         : mWeekendOtherColor);
@@ -769,9 +783,11 @@ public class MonthWeekEventsView extends SimpleWeekView {
             canvas.drawText(mDayNumbers[i], x, y, mMonthNumPaint);
 
             /** zzz */
+            // zzz 农历显示在日期下一行，25是两行的位置偏移量(功能3)
             canvas.drawText(mLunarNumbers[i], x, y + 25, mMonthNumPaint);
             mFestivalPaint.setColor(isFocusMonth ? mFestivalColor
                     : mFestivalOtherColor);
+            // zzz 节日显示到农历日期的下一行，50是与日期数字的位置偏移量(功能3)
             canvas.drawText(mFestivals[i], x, y + 50, mFestivalPaint);
 
             if (isBold) {

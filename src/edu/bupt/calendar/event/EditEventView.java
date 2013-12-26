@@ -152,7 +152,10 @@ public class EditEventView implements View.OnClickListener, DialogInterface.OnCa
     TextView mTimezoneTextView;
     TextView mTimezoneLabel;
     LinearLayout mRemindersContainer;
-    MultiAutoCompleteTextView mAttendeesList;
+    
+    /** zzz */
+    // MultiAutoCompleteTextView mAttendeesList;
+    RecipientEditTextView mAttendeesList;
 
     /** zzz */
     // zzz 添加选择联系人的ImageButton
@@ -896,7 +899,10 @@ public class EditEventView implements View.OnClickListener, DialogInterface.OnCa
         mDescriptionGroup = view.findViewById(R.id.description_row);
         mStartHomeGroup = view.findViewById(R.id.from_row_home_tz);
         mEndHomeGroup = view.findViewById(R.id.to_row_home_tz);
-        mAttendeesList = (MultiAutoCompleteTextView) view.findViewById(R.id.attendees);
+        
+        /** zzz */
+        // mAttendeesList = (MultiAutoCompleteTextView)view.findViewById(R.id.attendees);
+        mAttendeesList = (RecipientEditTextView) view.findViewById(R.id.attendees);
 
         /** zzz */
         // zzz 添加参与者的ImageButton
@@ -1307,6 +1313,16 @@ public class EditEventView implements View.OnClickListener, DialogInterface.OnCa
         sendAccessibilityEvent();
     }
 
+    /** zzz */
+    /**
+     * 北邮ANT实验室
+     * zzz
+     * 
+     * 被EditEventActivity的onActivityResult调用
+     * 
+     * 从选择联系人的Activity返回后，获得号码，并显示到参与人的RecipientEditTextView中
+     * 
+     * */
     public void onContactsChoosed(String num, String name) {
         Log.i(TAG, "onContactsChoosed, num - " + num);
         jumpedToChooser = false;
@@ -1321,6 +1337,8 @@ public class EditEventView implements View.OnClickListener, DialogInterface.OnCa
             String strip3 = replacePattern(strip2, "(\\ )", ""); // strip -
 
             mAttendeesList.append(strip3);
+            //Log.i(TAG, "mAttendeesList.getCompletionHint().toString() - " + mAttendeesList.getCompletionHint().toString());
+            
         }
     }
 

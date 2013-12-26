@@ -17,6 +17,19 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
+/**
+ * 北邮ANT实验室
+ * zzz
+ * 
+ * 通过公历日期确定农历(功能3)
+ * 
+ * 此文件取自https://code.google.com/p/android-project-sse-ustc/，有修改
+ * Licensed under the Apache License, Version 2.0
+ * 
+ * 添加了部分输出格式，添加了节日判断
+ * 
+ * */
+
 public final class Lunar {
     private static int monCyl;
     private static int dayCyl;
@@ -25,12 +38,15 @@ public final class Lunar {
     private static int month;
     private static int day;
     /** zzz */
+    // zzz 保存公历日期，
     private static int syear; //公历
     private static int smonth;
     private static int sday;
     private static boolean isSetShowLunar = true;
 
     private static boolean isLeap;
+
+    // zzz 用于计算农历的重要数组
     private static int[] lunarInfo = { 19416, 19168, 42352, 21717, 53856,
             55632, 91476, 22176, 39632, 21970, 19168, 42422, 42192, 53840,
             119381, 46400, 54944, 44450, 38320, 84343, 18800, 42160, 46261,
@@ -129,6 +145,13 @@ public final class Lunar {
         return isLeap;
     }
 
+    /**
+     * 北邮ANT实验室
+     * zzz
+     * 
+     * 设置公历日期，必须先设置后才能通过getLunar方法获取正确的农历
+     * 
+     * */
     public static void setLunar(Context context, int year, int month, int day) {
 
         SharedPreferences prefs = GeneralPreferences
@@ -146,6 +169,13 @@ public final class Lunar {
         Lunar1(sDObj);
     }
 
+    /**
+     * 北邮ANT实验室
+     * zzz
+     * 
+     * 获取农历日期
+     * 
+     * */
     public static String getLunar() {
         if (!isSetShowLunar) {
             return "";
@@ -179,6 +209,13 @@ public final class Lunar {
         return cDay(getDay());
     }
 
+    /**
+     * 北邮ANT实验室
+     * zzz
+     * 
+     * 获取农历日期
+     * 
+     * */
     public static String getLunarDayForDisplay() {
         String disp = "";
         if (isSetShowLunar) {
@@ -208,6 +245,13 @@ public final class Lunar {
     //
     // }
 
+    /**
+     * 北邮ANT实验室
+     * zzz
+     * 
+     * 判断当天是否是节日
+     * 
+     * */
     public static boolean isFestival() {
         if (Festival.showSFtv(smonth, sday) != ""
                 || Festival.showLFtv(month, day, monthDays(year, month)) != "")
@@ -216,6 +260,13 @@ public final class Lunar {
         return false;
     }
 
+    /**
+     * 北邮ANT实验室
+     * zzz
+     * 
+     * 获取当天的节日
+     * 
+     * */
     public static String getFestival() {
         String sf = Festival.showSFtv(smonth, sday);
         String lf = Festival.showLFtv(month, day, monthDays(year, month));
@@ -231,6 +282,13 @@ public final class Lunar {
         }
     }
 
+    /**
+     * 北邮ANT实验室
+     * zzz
+     * 
+     * 获取农历日期
+     * 
+     * */
     public static String getLunarWithComma() {
         if (!isSetShowLunar) {
             return "";
@@ -275,6 +333,13 @@ public final class Lunar {
         return lunarInfo[(y - 1900)] & 0xF;
     }
 
+    /**
+     * 北邮ANT实验室
+     * zzz
+     * 
+     * 公历到农历的计算方法
+     * 
+     * */
     private static void Lunar1(Date objDate) {
         int i;
         int leap = 0;

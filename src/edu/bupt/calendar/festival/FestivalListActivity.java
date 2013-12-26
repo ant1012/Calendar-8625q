@@ -42,6 +42,14 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+/**
+ * 北邮ANT实验室
+ * zzz
+ * 
+ * 显示节日列表的Activity(功能6)
+ * 
+ * */
+
 public class FestivalListActivity extends Activity {
 
     ListView lv;
@@ -66,6 +74,7 @@ public class FestivalListActivity extends Activity {
         lv = new ListView(this);
         final MyAdapter adapter = new MyAdapter(this, lv);
 
+        // zzz 点击列表中的节日项时，跳转到新建日程
         lv.setOnItemClickListener(new OnItemClickListener() {
 
             @Override
@@ -84,6 +93,7 @@ public class FestivalListActivity extends Activity {
         String curTime = currentTime2.format("%Y-%m-%d");
 
         /** zzz */
+        // zzz 触摸可查看xxx之后的活动
         mFooterView.setText(getString(R.string.show_newer_events, curTime));
 
         mFooterView.setOnClickListener(new OnClickListener() {

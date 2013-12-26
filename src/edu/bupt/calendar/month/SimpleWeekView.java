@@ -40,6 +40,16 @@ import java.util.HashMap;
 import edu.bupt.calendar.festival.Lunar;
 
 /**
+ * 北邮ANT实验室
+ * zzz
+ * 
+ * 月视图中的一行，即一周，被MonthWeekEventsView继承
+ * 
+ * 此文件取自codeaurora提供的适用于高通8625Q的android 4.1.2源码，有修改
+ * 
+ * */
+
+/**
  * <p>
  * This is a dynamic view for drawing a single week. It can be configured to
  * display the week number, start the week on a given day, or show a reduced
@@ -171,6 +181,7 @@ public class SimpleWeekView extends View {
     protected int mWeekNumColor;
 
     /** zzz */
+    // zzz 保存农历日期、节日、周末信息
     protected String[] mLunarNumbers;
     protected String[] mFestivals;
     protected boolean[] mWeekends;
@@ -262,6 +273,7 @@ public class SimpleWeekView extends View {
         time.setJulianDay(julianMonday);
 
         /** zzz */
+        // zzz 初始化数组
         mLunarNumbers = new String[mNumCells];
         mFestivals = new String[mNumCells];
         mWeekends = new boolean[mNumCells];
@@ -317,6 +329,7 @@ public class SimpleWeekView extends View {
             }
 
             /** zzz */
+            // zzz 根据公历计算当日的农历日期，由MonthWeekEventsView类继承SimpleWeekView类，拿到这些属性后显示到界面中
             Context context = getContext();
             Lunar.setLunar(context, time.year, time.month + 1, time.monthDay);
             mLunarNumbers[i] = Lunar.getLunarDayForDisplay();

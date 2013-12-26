@@ -45,6 +45,14 @@ import java.util.HashMap;
 import java.util.Locale;
 
 /**
+ * 北邮ANT实验室
+ * zzz
+ * 
+ * 此文件取自codeaurora提供的适用于高通8625Q的android 4.1.2源码，未作修改
+ * 
+ * */
+
+/**
  * <p>
  * This displays a titled list of weeks with selectable days. It can be
  * configured to display the week number, start the week on a given day, show a

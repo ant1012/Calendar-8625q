@@ -21,7 +21,7 @@ import android.widget.TextView;
  * 
  * 多条删除日程的界面的Adapter
  * 
- * (功能15)
+ * (功能15)(功能16)
  * 
  * */
 

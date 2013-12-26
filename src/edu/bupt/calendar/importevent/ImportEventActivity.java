@@ -40,6 +40,13 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+/**
+ * 北邮ANT实验室
+ * zzz
+ * 
+ * 导入日程的Activity，由ACTION_VIEW调起，解析vcard文件并显示内容，提供保存方法(功能14)
+ * 
+ * */
 public class ImportEventActivity extends Activity {
     private String TAG = "ImportEventActivity";
     private View view;
@@ -55,6 +62,8 @@ public class ImportEventActivity extends Activity {
     private Context context = this;
     private CalendarEventModel model;
     private int event_id = 1;
+
+    // zzz 用来保存日程解析结果的全局变量
     private String event_title = null;
     private long event_datetime = 0;
     private String event_where = null;
@@ -71,43 +80,63 @@ public class ImportEventActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_import_event);
 
+        // zzz 控件初始化
         textviewTitle = (TextView) findViewById(R.id.title);
         textViewDatetime = (TextView) findViewById(R.id.when_datetime);
         textViewWhere = (TextView) findViewById(R.id.where);
         textViewDisc = (TextView) findViewById(R.id.disc);
         attendeesView = (AttendeesView) findViewById(R.id.long_attendee_list);
 
+        // zzz 读取打开的文件到数组，后面对此数组进行分析
         String s = getStringFromFile();
         if (s != null) {
+            // zzz 读取pareant事件
             parent = getEventFromString(s);
             // just test first event
+            // zzz 读取pareant事件中的第一个子事件，因为分享日程时只打包了一个
             child = parent.getComponents().get(0);
+            // zzz 读取日程内容，读取结果保存在了全局变量中
             getDetails(child);
         }
-        textviewTitle.setText(event_title);
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
-                "yyyy'/'MM'/'dd'-'HH':'mm");
 
-        textViewDatetime.setText(simpleDateFormat.format(new Date(
-                event_datetime)));
+        // zzz 显示标题
+        textviewTitle.setText(event_title);
+        // zzz 时间格式
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy'/'MM'/'dd'-'HH':'mm");
+
+        // zzz 显示时间
+        textViewDatetime.setText(simpleDateFormat.format(new Date(event_datetime)));
+        // zzz 显示地点
         textViewWhere.setText(event_where);
+        // zzz 显示描述
         textViewDisc.setText(event_disc);
 
         mContext = getApplicationContext();
     }
 
     /** zzz */
+    /**
+     * 北邮ANT实验室
+     * zzz
+     * 
+     * 从打开的文件中读取数组
+     * 
+     * 此Activity通过打开文件的ACTION_VIEW调起，从intent中可以拿到文件的信息
+     * 
+     * */
     private String getStringFromFile() {
+        // zzz 获取intent中的信息，包含了文件路经
         Intent intent = getIntent();
         Uri data = intent.getData();
         if (data != null) {
+            // zzz 解析数据，拿到文件路径
             Uri uri = Uri.parse(data.toString());
             String filename = uri.getPath();
             File file = new File(filename);
             Log.i(TAG, "filename - " + filename);
             if (file.exists()) {
                 FileInputStream fin;
-                try {
+                try { // zzz 打开文件读取数组
                     fin = new FileInputStream(file);
                     int buffersize = fin.available();
                     byte buffer[] = new byte[buffersize];
@@ -134,27 +163,35 @@ public class ImportEventActivity extends Activity {
                     e.printStackTrace();
                 }
             } else {
+                // zzz 如果是从不合法的路径调起，可能会无法打开文件
                 Log.d(TAG, "file_not_exist");
-                Toast.makeText(this, R.string.file_not_exist,
-                        Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.file_not_exist, Toast.LENGTH_SHORT).show();
             }
         }
         return null;
     }
 
+    /**
+     * 北邮ANT实验室
+     * zzz
+     * 
+     * 解析日程，获取详细信息，利用ICalendar.Component类中提供的方法
+     * 
+     * */
     private void getDetails(ICalendar.Component c) {
+
+        // zzz 可以直接通过ICalendar.Component类中提供的方法获取属性值
         event_title = c.getFirstProperty("SUMMARY").getValue();
 
         ICalendar.Property dtstart_prop = c.getFirstProperty("DTSTART");
         ICalendar.Property dtend_prop = c.getFirstProperty("DTEND");
+
+        // zzz 根据时区格式化时间信息
         event_tz = dtstart_prop.getFirstParameter("TZID").value;
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
-                "yyyyMMdd'T'HHmmss");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd'T'HHmmss");
         try {
-            event_datetime = simpleDateFormat.parse(dtstart_prop.getValue())
-                    .getTime();
-            event_dateendtime = simpleDateFormat.parse(dtend_prop.getValue())
-                    .getTime();
+            event_datetime = simpleDateFormat.parse(dtstart_prop.getValue()).getTime();
+            event_dateendtime = simpleDateFormat.parse(dtend_prop.getValue()).getTime();
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -163,6 +200,7 @@ public class ImportEventActivity extends Activity {
         event_disc = child.getFirstProperty("DISCRIPTION").getValue();
 
         // attendee
+        // zzz 参与者的电话是扩展的属性，可能存在多个
         try {
             if (!child.getProperties("X-ATTENDEE-PHONE").isEmpty()) {
                 for (Property pr : child.getProperties("X-ATTENDEE-PHONE")) {
@@ -177,9 +215,18 @@ public class ImportEventActivity extends Activity {
         return;
     }
 
+
+    /**
+     * 北邮ANT实验室
+     * zzz
+     * 
+     * 从数组中取出ICalendar.Component类
+     * 
+     * */
     private ICalendar.Component getEventFromString(String s) {
         ICalendar.Component c = null;
         try {
+            // zzz 利用ICalendar类提供的方法解析
             c = ICalendar.parseCalendar(s);
         } catch (FormatException e) {
             e.printStackTrace();
@@ -222,17 +269,24 @@ public class ImportEventActivity extends Activity {
         return true;
     }
 
+
+    /**
+     * 北邮ANT实验室
+     * zzz
+     * 
+     * 保存日程，菜单项被设置为showasaction作为按钮显示
+     * 
+     * */
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_done) {
             Log.d(TAG, "action_done");
             // save
             String calId = "";
-            Cursor userCursor = getContentResolver().query(
-                    Uri.parse("content://com.android.calendar/calendars"),
-                    null, null, null, null);
+            Cursor userCursor = getContentResolver().query(Uri.parse("content://com.android.calendar/calendars"), null,
+                    null, null, null);
             if (userCursor.getCount() > 0) {
                 userCursor.moveToFirst();
-                calId = userCursor.getString(userCursor.getColumnIndex("_id"));
+                calId = userCursor.getString(userCursor.getColumnIndex("_id")); // zzz 获取calendar_id用于存储
 
             }
             userCursor.close();
@@ -247,57 +301,59 @@ public class ImportEventActivity extends Activity {
             event.put("hasAlarm", 1);
             event.put("eventTimezone", event_tz);
             event.put("eventStatus", 1);
-//            if (event_attendees.isEmpty()) {
-//                event.put("hasAttendeeData", 0);
-//            } else {
-                event.put("hasAttendeeData", 1);
-//            }
+            // if (event_attendees.isEmpty()) {
+            // event.put("hasAttendeeData", 0);
+            // } else {
+            event.put("hasAttendeeData", 1);
+            // }
 
-            Uri newEvent = getContentResolver().insert(
-                    Uri.parse("content://com.android.calendar/events"), event);
-            long id = Long.parseLong(newEvent.getLastPathSegment());
+            // zzz 插入操作
+            Uri newEvent = getContentResolver().insert(Uri.parse("content://com.android.calendar/events"), event);
+            long id = Long.parseLong(newEvent.getLastPathSegment()); // zzz 拿到id用于后面的参与人的保存
             ContentValues values = new ContentValues();
             values.put("event_id", id);
             // reminder
-//            values.put("minutes", 10);
-//            getContentResolver().insert(
-//                    Uri.parse("content://com.android.calendar/reminders"),
-//                    values);
+            // values.put("minutes", 10);
+            // getContentResolver().insert(
+            // Uri.parse("content://com.android.calendar/reminders"),
+            // values);
 
             Log.d(TAG, "import success");
 
             // attendee
-//            Cursor cursor = mContext.getContentResolver().query(
-//                    Events.CONTENT_URI, new String[] { "MAX(_id) as max_id" },
-//                    null, null, "_id");
-//            cursor.moveToFirst();
-//            long max_val = cursor.getLong(cursor.getColumnIndex("max_id"));
-//            Log.i(TAG, "max_val - " + max_val);
-//            cursor.close();
+            // Cursor cursor = mContext.getContentResolver().query(
+            // Events.CONTENT_URI, new String[] { "MAX(_id) as max_id" },
+            // null, null, "_id");
+            // cursor.moveToFirst();
+            // long max_val = cursor.getLong(cursor.getColumnIndex("max_id"));
+            // Log.i(TAG, "max_val - " + max_val);
+            // cursor.close();
+            
+            // zzz 保存参与人，由于不在系统提供的provider中保存，需要另外的数据库
             mgr = new DBManager(mContext);
 
             for (String s : event_attendees) {
-                if (attendeesView
-                        .isMarkAsRemoved(event_attendees.indexOf(s) + 1)) { // first
-                                                                            // one
-                                                                            // is
-                                                                            // a
-                                                                            // seperator
+                // zzz 导入操作前可以删除联系人，即isMarkAsRemoved
+                // zzz 第一条是空的，从第二条开始
+                if (attendeesView.isMarkAsRemoved(event_attendees.indexOf(s) + 1)) { // first
+                                                                                     // one
+                                                                                     // is
+                                                                                     // a
+                                                                                     // seperator
                     Log.i(TAG, "isMarkAsRemoved");
                     continue;
                 }
                 Attendee attendee = new Attendee(s, s);
                 ArrayList<AttendeePhone> attendeePhones = new ArrayList<AttendeePhone>();
-                AttendeePhone attendeePhone = new AttendeePhone(id,
-                        attendee.mName, attendee.mEmail);
+                AttendeePhone attendeePhone = new AttendeePhone(id, attendee.mName, attendee.mEmail);
                 attendeePhones.add(attendeePhone);
-                mgr.add(attendeePhones);
+                mgr.add(attendeePhones); // zzz 插入操作
                 Log.d(TAG, "import attendee");
             }
             mgr.closeDB();
 
-            Toast.makeText(this, R.string.title_activity_import_event,
-                    Toast.LENGTH_SHORT).show();
+            // zzz 倒入成功的提示
+            Toast.makeText(this, R.string.title_activity_import_event, Toast.LENGTH_SHORT).show();
             this.finish();
             return true;
         }
