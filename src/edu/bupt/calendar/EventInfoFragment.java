@@ -107,6 +107,7 @@ import edu.bupt.calendar.event.AttendeesView;
 import edu.bupt.calendar.event.EditEventActivity;
 import edu.bupt.calendar.event.EditEventHelper;
 import edu.bupt.calendar.event.EventViewUtils;
+import edu.bupt.calendar.util.PhoneQueryUtils;
 
 import com.android.calendarcommon.EventRecurrence;
 import com.android.calendarcommon.ICalendar;
@@ -463,11 +464,11 @@ public class EventInfoFragment extends DialogFragment implements OnCheckedChange
 
                         // zzz 数据库中只保存了号码，需要根据号码查询参与人姓名
                         Log.i(TAG, "Msg from " + attendeePhone.phoneNumber);
-                        Log.i(TAG, "formatted " + fomatNumber(attendeePhone.phoneNumber));
-                        Log.i(TAG, "formatted with space " + fomatNumberWithSpace(attendeePhone.phoneNumber));
+                        Log.i(TAG, "formatted " + PhoneQueryUtils.fomatNumberWithDash(attendeePhone.phoneNumber));
+                        Log.i(TAG, "formatted with space " + PhoneQueryUtils.fomatNumberWithSpace(attendeePhone.phoneNumber));
                         try {
                             // zzz 如果存在联系人，则显示姓名和号码
-                            attendeePhone.name = getDispNameFromNumber(attendeePhone.phoneNumber).get(0) + '/'
+                            attendeePhone.name = PhoneQueryUtils.getDispNameFromNumber(attendeePhone.phoneNumber, mContext).get(0) + " / "
                                     + attendeePhone.phoneNumber;
                         } catch (Exception e) {
                             Log.w(TAG, e.toString());
@@ -2467,29 +2468,29 @@ public class EventInfoFragment extends DialogFragment implements OnCheckedChange
      * 用于在数据中根据号码查询参与人姓名
      * 
      * */
-    private String fomatNumber(String input) {
-        if (input.startsWith("1")) {
-            if (input.length() == 1) {
-                return input;
-            } else if (input.length() > 1 && input.length() < 5) {
-                return input.substring(0, 1) + "-" + input.substring(1, input.length());
-            } else if (input.length() >= 5 && input.length() < 8) {
-                return input.substring(0, 1) + "-" + input.substring(1, 4) + "-" + input.substring(4, input.length());
-            } else if (input.length() >= 8) {
-                return input.substring(0, 1) + "-" + input.substring(1, 4) + "-" + input.substring(4, 7) + "-"
-                        + input.substring(7, input.length());
-            }
-        } else {
-            if (input.length() <= 3) {
-                return input;
-            } else if (input.length() > 3 && input.length() < 7) {
-                return input.substring(0, 3) + "-" + input.substring(3, input.length());
-            } else if (input.length() >= 7) {
-                return input.substring(0, 3) + "-" + input.substring(3, 6) + "-" + input.substring(6, input.length());
-            }
-        }
-        return "";
-    }
+//    private String fomatNumber(String input) {
+//        if (input.startsWith("1")) {
+//            if (input.length() == 1) {
+//                return input;
+//            } else if (input.length() > 1 && input.length() < 5) {
+//                return input.substring(0, 1) + "-" + input.substring(1, input.length());
+//            } else if (input.length() >= 5 && input.length() < 8) {
+//                return input.substring(0, 1) + "-" + input.substring(1, 4) + "-" + input.substring(4, input.length());
+//            } else if (input.length() >= 8) {
+//                return input.substring(0, 1) + "-" + input.substring(1, 4) + "-" + input.substring(4, 7) + "-"
+//                        + input.substring(7, input.length());
+//            }
+//        } else {
+//            if (input.length() <= 3) {
+//                return input;
+//            } else if (input.length() > 3 && input.length() < 7) {
+//                return input.substring(0, 3) + "-" + input.substring(3, input.length());
+//            } else if (input.length() >= 7) {
+//                return input.substring(0, 3) + "-" + input.substring(3, 6) + "-" + input.substring(6, input.length());
+//            }
+//        }
+//        return "";
+//    }
 
     /**
      * 北邮ANT实验室
@@ -2500,17 +2501,17 @@ public class EventInfoFragment extends DialogFragment implements OnCheckedChange
      * 用于在数据中根据号码查询参与人姓名
      * 
      * */
-    private String fomatNumberWithSpace(String input) {
-        if (input.startsWith("1")) {
-            if (input.length() == 11) {
-                return input.substring(0, 3) + ' ' + input.substring(3, 7) + ' ' + input.substring(7, 11);
-            } else {
-                return input;
-            }
-        } else {
-            return input;
-        }
-    }
+//    private String fomatNumberWithSpace(String input) {
+//        if (input.startsWith("1")) {
+//            if (input.length() == 11) {
+//                return input.substring(0, 3) + ' ' + input.substring(3, 7) + ' ' + input.substring(7, 11);
+//            } else {
+//                return input;
+//            }
+//        } else {
+//            return input;
+//        }
+//    }
 
     /**
      * 北邮ANT实验室
@@ -2519,26 +2520,26 @@ public class EventInfoFragment extends DialogFragment implements OnCheckedChange
      * 根据号码查询联系人姓名
      * 
      * */
-    private ArrayList<String> getDispNameFromNumber(String phoneNumber) {
-        Log.d(TAG, "getContactidFromNumber");
-        ArrayList<String> contactidList = new ArrayList<String>();
-
-        // zzz 需要考虑多种情况，因为在数据库中存储的号码可能是正常号码，也可能用‘-’分隔，也可能用‘ ’分隔
-        StringBuilder selectionSB = new StringBuilder();
-        selectionSB.append(ContactsContract.CommonDataKinds.Phone.NUMBER + " like ? or "); // zzz 原始
-        selectionSB.append(ContactsContract.CommonDataKinds.Phone.NUMBER + " like ? or "); // zzz 减号
-        selectionSB.append(ContactsContract.CommonDataKinds.Phone.NUMBER + " like ?"); // zzz 空格
-
-        String[] selectionArgsSB = new String[] { "%" + phoneNumber,// zzz 原始
-                "%" + fomatNumber(phoneNumber), // zzz 减号
-                "%" + fomatNumberWithSpace(phoneNumber) }; // zzz 空格
-
-        Cursor pCur = mContext.getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
-                selectionSB.toString(), selectionArgsSB, null);
-        while (pCur.moveToNext()) {
-            contactidList.add(pCur.getString(pCur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME)));
-        }
-        pCur.close();
-        return contactidList;
-    }
+//    private ArrayList<String> getDispNameFromNumber(String phoneNumber) {
+//        Log.d(TAG, "getContactidFromNumber");
+//        ArrayList<String> contactidList = new ArrayList<String>();
+//
+//        // zzz 需要考虑多种情况，因为在数据库中存储的号码可能是正常号码，也可能用‘-’分隔，也可能用‘ ’分隔
+//        StringBuilder selectionSB = new StringBuilder();
+//        selectionSB.append(ContactsContract.CommonDataKinds.Phone.NUMBER + " like ? or "); // zzz 原始
+//        selectionSB.append(ContactsContract.CommonDataKinds.Phone.NUMBER + " like ? or "); // zzz 减号
+//        selectionSB.append(ContactsContract.CommonDataKinds.Phone.NUMBER + " like ?"); // zzz 空格
+//
+//        String[] selectionArgsSB = new String[] { "%" + phoneNumber,// zzz 原始
+//                "%" + fomatNumber(phoneNumber), // zzz 减号
+//                "%" + fomatNumberWithSpace(phoneNumber) }; // zzz 空格
+//
+//        Cursor pCur = mContext.getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
+//                selectionSB.toString(), selectionArgsSB, null);
+//        while (pCur.moveToNext()) {
+//            contactidList.add(pCur.getString(pCur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME)));
+//        }
+//        pCur.close();
+//        return contactidList;
+//    }
 }
