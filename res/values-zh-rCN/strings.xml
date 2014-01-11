@@ -256,7 +256,7 @@
     <string name="file_not_exist">文件不存在！</string>
     <string name="msg_cost_alert">选择“通知并发送短信”提醒方式会在设定的时间点自动给参与者发送短信，将会带来短信费用</string>
     <string name="no_sim_card">没有SIM卡</string>
-    <string name="preference_time_setting">默认显示时间</string>
+    <string name="preference_time_setting">时间显示方案</string>
     <string name="preference_category_test">漫游测试</string>
     <string name="preference_roaming">漫游测试</string>
     <string name="time_setting">时间显示设置</string>
